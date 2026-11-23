@@ -539,7 +539,7 @@ export class DataProviderService {
     statusIndex: number,
     search: string,
   ) {
-    return this.http.get<any>(`${environment.apiBaseUrl}data/list`, {
+    return this.http.get<any>(`${environment.apiBaseUrl}admin/list`, {
       params: { page, size, statusIndex, search },
     });
   }
@@ -560,7 +560,7 @@ export class DataProviderService {
 
   saveDataAdmin(data: any) {
     return this.http.post<any>(
-      `${environment.apiBaseUrl}data/save-or-update`,
+      `${environment.apiBaseUrl}admin/save-or-update`,
       data,
     );
   }
