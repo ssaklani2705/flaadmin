@@ -539,7 +539,7 @@ export class DataProviderService {
     statusIndex: number,
     search: string,
   ) {
-    return this.http.get<any>(`${environment.apiBaseUrl}admin/list`, {
+    return this.http.get<any>(`${environment.apiBaseUrl}admin/data/list`, {
       params: { page, size, statusIndex, search },
     });
   }
@@ -552,16 +552,20 @@ export class DataProviderService {
     return this.http.post<any>(`${environment.apiBaseUrl}/saveData`, payload);
   }
 
-  getDataById(dataId: number) {
-    return this.http.get<any>(
-      `${environment.apiBaseUrl}/getDataById/${dataId}`,
-    );
-  }
+  // getDataById(dataId: number) {
+  //   return this.http.get<any>(
+  //     `${environment.apiBaseUrl}/getDataById/${dataId}`,
+  //   );
+  // }
 
   saveDataAdmin(data: any) {
     return this.http.post<any>(
-      `${environment.apiBaseUrl}admin/save-or-update`,
+      `${environment.apiBaseUrl}admin/data/save-or-update`,
       data,
     );
   }
+
+  getDataById(dataId: number) {
+  return this.http.get<any>(`${environment.apiBaseUrl}admin/data/getDataById/${dataId}`);
+}
 }

@@ -12,7 +12,7 @@ export class DashPipe implements PipeTransform {
 }
 
 /** Set to false once the backend API is ready */
-const USE_MOCK = true;
+const USE_MOCK = false;
 
 @Component({
   selector: 'app-view-data',
@@ -55,23 +55,29 @@ export class ViewDataComponent implements OnInit {
   }
 
   private loadData(): void {
-    if (USE_MOCK) {
-      this.loadMock();
-      return;
-    }
+  if (USE_MOCK) {
+    this.loadMock();
+    return;
+  }
 
-    this.dataprovider.getDataById(this.dataId).subscribe({
-      next: (res: any) => {
+  this.loading = true;
+  this.dataprovider.getDataById(this.dataId).subscribe({
+    next: (res: any) => {
+      if (res?.success === false) {
+        this.data = null;               // shows "Record not found."
+      } else {
         this.data = res.data;
         this.history = res.history ?? [];
-        this.loading = false;
-      },
-      error: (err: any) => {
-        console.error('Error loading data:', err);
-        this.loading = false;
       }
-    });
-  }
+      this.loading = false;
+    },
+    error: (err: any) => {
+      console.error('Error loading data:', err);
+      this.data = null;
+      this.loading = false;
+    }
+  });
+}
 
   private loadMock(): void {
     this.data = {
