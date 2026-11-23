@@ -566,6 +566,8 @@ export class DataProviderService {
   }
 
   getDataById(dataId: number) {
-  return this.http.get<any>(`${environment.apiBaseUrl}admin/data/getDataById/${dataId}`);
-}
+    return this.http.get<any>(
+      `${environment.apiBaseUrl}admin/data/getDataById/${dataId}`,
+    );
+  }
 }

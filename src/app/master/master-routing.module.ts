@@ -42,96 +42,165 @@ import { ViewGalleryGroupComponent } from './GalleryGroup/view-gallery-group/vie
 import { DataIndexComponent } from './data/data-index/data-index.component';
 import { AddDataComponent } from './data/add-data/add-data.component';
 import { ViewDataComponent } from './data/view-data/view-data.component';
-
-
+import { DataIndexAdminComponent } from './data-index-admin/data-index-admin/data-index-admin.component';
+import { DataIndexAdminViewComponent } from './data-index-admin/data-index-admin-view/data-index-admin-view.component';
 
 const routes: Routes = [
+  // { path: 'forgot-password', component: ForgetPasswordComponent },
+  { path: 'committeeMembers', component: CommitteeMembersComponent },
+  {
+    path: 'viewCommitteeMembers/:committeeId',
+    component: ViewCommitteeMembersComponent,
+    data: { renderMode: 'csr' },
+  },
+  { path: 'addCommitteeMembers', component: AddCommitteeMembersComponent },
+  {
+    path: 'addCommitteeMembers/:committeeId',
+    component: AddCommitteeMembersComponent,
+    data: { renderMode: 'csr' },
+  },
+  { path: 'addData', component: AddDataComponent },
 
-// { path: 'forgot-password', component: ForgetPasswordComponent },
-{path:'committeeMembers', component: CommitteeMembersComponent},
-{path: 'viewCommitteeMembers/:committeeId', component: ViewCommitteeMembersComponent,    data: { renderMode: 'csr' } },
-{path: 'addCommitteeMembers', component: AddCommitteeMembersComponent},
-{path: 'addCommitteeMembers/:committeeId', component: AddCommitteeMembersComponent,    data: { renderMode: 'csr' } },
-{path: 'addData', component: AddDataComponent},
-
-
-//User Management
-{ path: 'userManagement', component: UserManagementIndexComponent },
+  //User Management
+  { path: 'userManagement', component: UserManagementIndexComponent },
   { path: 'addUserManagement', component: AddUserManagementComponent },
-{ path: 'viewUserManagement/:userId', component: UserManagementViewComponent,    data: { renderMode: 'csr' } },
-{ path: 'editUserManagement/:userId', component: EditUserManagementComponent,    data: { renderMode: 'csr' } },
+  {
+    path: 'viewUserManagement/:userId',
+    component: UserManagementViewComponent,
+    data: { renderMode: 'csr' },
+  },
+  {
+    path: 'editUserManagement/:userId',
+    component: EditUserManagementComponent,
+    data: { renderMode: 'csr' },
+  },
 
-// data
-{ path: 'data', component: DataIndexComponent },
-{ path: 'addData', component: AddDataComponent },
-{ path: 'viewData/:dataId', component: ViewDataComponent,    data: { renderMode: 'csr' } },
-
+  // data
+  { path: 'data', component: DataIndexComponent },
+  { path: 'addData', component: AddDataComponent },
+  {
+    path: 'viewData/:dataId',
+    component: ViewDataComponent,
+    data: { renderMode: 'csr' },
+  },
 
   // Bank User
-  { path: 'view-user/:userId', component: ViewUserComponent,    data: { renderMode: 'csr' } // Force client-side rendering
- },
+  {
+    path: 'view-user/:userId',
+    component: ViewUserComponent,
+    data: { renderMode: 'csr' }, // Force client-side rendering
+  },
   { path: 'addUser', component: AddUserComponent },
-  { path: 'editUser/:bankUserId', component: EditUserComponent,    data: { renderMode: 'csr' } // Force client-side rendering
- },
+  {
+    path: 'editUser/:bankUserId',
+    component: EditUserComponent,
+    data: { renderMode: 'csr' }, // Force client-side rendering
+  },
   { path: 'bankuser', component: IndexComponent },
   { path: 'dashboard', component: DashboardComponent },
 
   // Bank
   { path: 'bank', component: BankIndexComponent },
-   { path: 'view-bank/:bankId', component: ViewBankComponent,    data: { renderMode: 'csr' } // Force client-side rendering
- },
-   { path: 'edit-bank/:bankId', component: EditBankComponent,    data: { renderMode: 'csr' } // Force client-side rendering
- },
+  {
+    path: 'view-bank/:bankId',
+    component: ViewBankComponent,
+    data: { renderMode: 'csr' }, // Force client-side rendering
+  },
+  {
+    path: 'edit-bank/:bankId',
+    component: EditBankComponent,
+    data: { renderMode: 'csr' }, // Force client-side rendering
+  },
   { path: 'add-bank', component: AddBankComponent },
 
-  //Gallery 
-  {path:'gallery', component:GalleryIndexComponent},
-  {path:'addGallery', component:AddGalleryComponent},
-  {path: 'viewGallery/:galleryId', component: ViewGalleryComponent,    data: { renderMode: 'csr' }  },
-  {path: 'edit-gellery/:galleryId', component: EditGalleryComponent,    data: { renderMode: 'csr' }  },
-
+  //Gallery
+  { path: 'gallery', component: GalleryIndexComponent },
+  { path: 'addGallery', component: AddGalleryComponent },
+  {
+    path: 'viewGallery/:galleryId',
+    component: ViewGalleryComponent,
+    data: { renderMode: 'csr' },
+  },
+  {
+    path: 'edit-gellery/:galleryId',
+    component: EditGalleryComponent,
+    data: { renderMode: 'csr' },
+  },
 
   // Regulatory Links
-  {path:'regulatorylinks', component:RegulatoryLinkIndexComponent},
-  {path:'addRegulatorylinks', component:AddRegulatoryLinkComponent},
-  { path: 'edit-regulatorylinks/:linkId', component: EditRegulatoryLinkComponent,    data: { renderMode: 'csr' } // Force client-side rendering
- },
- { path: 'view-regulatorylinks/:linkId', component: ViewRegulatoryLinkComponent,    data: { renderMode: 'csr' } // Force client-side rendering
- },
+  { path: 'regulatorylinks', component: RegulatoryLinkIndexComponent },
+  { path: 'addRegulatorylinks', component: AddRegulatoryLinkComponent },
+  {
+    path: 'edit-regulatorylinks/:linkId',
+    component: EditRegulatoryLinkComponent,
+    data: { renderMode: 'csr' }, // Force client-side rendering
+  },
+  {
+    path: 'view-regulatorylinks/:linkId',
+    component: ViewRegulatoryLinkComponent,
+    data: { renderMode: 'csr' }, // Force client-side rendering
+  },
 
   //EventsAndWebinar
 
-  {path:'eventsandwebinar', component: EventAndWebinarIndexComponent},
-  {path:'addEventsAndWebinar', component:AddEventAndWebinarComponent},
-  { path: 'viewEventsAndWebinar/:eventId', component: ViewEventAndWebinarComponent,    data: { renderMode: 'csr' }  },
-  { path: 'editEventsAndWebinar/:eventId', component: EditEventAndWebinarComponent,    data: { renderMode: 'csr' } },
-  
-//Knowledge Sharing
-    {path:'knowledgesharing', component: KnowledgeSharingIndexComponent},
-    {path:'addKnowledgeSharing', component: AddKnowledgeSharingComponent},
-    { path: 'editKnowledgeSharing/:knowledgeId', component: EditKnowledgeSharingComponent,    data: { renderMode: 'csr' }  },
-    { path: 'viewKnowledgeSharing/:knowledgeId', component: ViewKnowledgeSharingComponent,    data: { renderMode: 'csr' }  },
+  { path: 'eventsandwebinar', component: EventAndWebinarIndexComponent },
+  { path: 'addEventsAndWebinar', component: AddEventAndWebinarComponent },
+  {
+    path: 'viewEventsAndWebinar/:eventId',
+    component: ViewEventAndWebinarComponent,
+    data: { renderMode: 'csr' },
+  },
+  {
+    path: 'editEventsAndWebinar/:eventId',
+    component: EditEventAndWebinarComponent,
+    data: { renderMode: 'csr' },
+  },
 
+  //Knowledge Sharing
+  { path: 'knowledgesharing', component: KnowledgeSharingIndexComponent },
+  { path: 'addKnowledgeSharing', component: AddKnowledgeSharingComponent },
+  {
+    path: 'editKnowledgeSharing/:knowledgeId',
+    component: EditKnowledgeSharingComponent,
+    data: { renderMode: 'csr' },
+  },
+  {
+    path: 'viewKnowledgeSharing/:knowledgeId',
+    component: ViewKnowledgeSharingComponent,
+    data: { renderMode: 'csr' },
+  },
 
-//Gallery Group
-  {path:'gallery-group-index', component: GalleryGroupIndexComponent},
-  {path:'add-gallery-group', component:AddGalleryGroupComponent},
-  { path: 'edit-gallery-group/:groupId', component: AddGalleryGroupComponent,    data: { renderMode: 'csr' }  },
-  { path: 'view-gallery-group/:groupId', component: ViewGalleryGroupComponent,    data: { renderMode: 'csr' } },
-
+  //Gallery Group
+  { path: 'gallery-group-index', component: GalleryGroupIndexComponent },
+  { path: 'add-gallery-group', component: AddGalleryGroupComponent },
+  {
+    path: 'edit-gallery-group/:groupId',
+    component: AddGalleryGroupComponent,
+    data: { renderMode: 'csr' },
+  },
+  {
+    path: 'view-gallery-group/:groupId',
+    component: ViewGalleryGroupComponent,
+    data: { renderMode: 'csr' },
+  },
 
   //Maillog Report
-  {path:'maillogreport', component: MaillogReportComponent},
+  { path: 'maillogreport', component: MaillogReportComponent },
 
   //Access Report
-  {path:'accessreport', component: AccessReportComponent},
+  { path: 'accessreport', component: AccessReportComponent },
 
+  { path: 'data-index', component: DataIndexAdminComponent },
 
-
+  {
+    path: 'view-data-index/:dataId',
+    component: DataIndexAdminViewComponent,
+    data: { renderMode: 'csr' },
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
 export class MasterRoutingModule {}
