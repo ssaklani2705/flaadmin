@@ -374,4 +374,22 @@ getGroupDetailById(groupId: any): Observable<any> {
   });
 }
 
+//Data
+getDataDetails(page: number, size: number, statusIndex: number, search: string) {
+  return this.http.get<any>(`${environment.apiBaseUrl}/getDataDetails`, {
+    params: { page, size, statusIndex, search }
+  });
+}
+
+deleteData(payload: any) {
+  return this.http.post<any>(`${environment.apiBaseUrl}/deleteData`, payload);
+}
+
+saveData(payload: any) {
+  return this.http.post<any>(`${environment.apiBaseUrl}/saveData`, payload);
+}
+
+getDataById(dataId: number) {
+  return this.http.get<any>(`${environment.apiBaseUrl}/getDataById/${dataId}`);
+}
 }

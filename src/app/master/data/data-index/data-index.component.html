@@ -1,0 +1,164 @@
+<div class="page-container">
+
+  <!-- ===== Title ===== -->
+  <div class="module-header">
+    <span class="module-title">{{ moduleName || 'Data' }}</span>
+    <span class="toggle-arrow" (click)="showHeaderBar = !showHeaderBar">
+      {{ showHeaderBar ? '▼' : '▲' }}
+    </span>
+  </div>
+
+  <!-- ===== Header bar ===== -->
+  @if (showHeaderBar) {
+    <div class="header-bar">
+      @if (addPer === 'Y') {
+        <button type="button" (click)="addData()" class="add-button">Add New +</button>
+        <button type="button" (click)="importExcel()" class="imp_excel">
+          <i class="fa-solid fa-upload"></i> Import from Excel
+        </button>
+      }
+
+      <input type="text" [(ngModel)]="searchQuery" class="search-input"
+        placeholder="Search By Code of the entity / State / Category of Branch / Status of Perpetrator/s / Type of fraud"
+        (keyup.enter)="onSearch()" />
+
+      <button type="button" (click)="onSearch()" class="icon-button">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </button>
+
+      <select [(ngModel)]="selectedStatus" class="status-dropdown">
+        <option value="">--All Status--</option>
+        <option value="1">Draft</option>
+        <option value="2">Approval Pending</option>
+        <option value="3">Approved</option>
+      </select>
+
+      <button type="button" (click)="onChangeRecordsPerPage()" class="go-button">Go</button>
+    </div>
+  }
+
+  <!-- ===== Record summary + top pagination ===== -->
+  <div class="summary-pagination-row">
+    <div class="record-summary">{{ recordSummary }}</div>
+
+    <div class="pagination">
+      <button (click)="goToFirstPage()" [disabled]="currentPage === 1">« First</button>
+      <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">‹ Prev</button>
+      @for (p of pages(); track p) {
+        <button (click)="goToPage(p)" [class.active]="p === currentPage">{{ p }}</button>
+      }
+      <button (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages">Next ›</button>
+      <button (click)="goToLastPage()" [disabled]="currentPage === totalPages">Last »</button>
+    </div>
+  </div>
+
+  <!-- ===== Table ===== -->
+  <div class="table_container">
+
+    <div class="top-scroll" #topScroll (scroll)="onScroll(topScroll)">
+      <div class="top-scroll-inner" [style.width.px]="scrollWidth"></div>
+    </div>
+
+    <div class="table-scroll" #mainScroll (scroll)="onScroll(mainScroll)">
+      <table class="custom-table" #dataTable>
+        <colgroup>
+          @for (c of colClasses; track c) {
+            <col [class]="c">
+          }
+        </colgroup>
+
+        <thead>
+          <tr>
+            <th>Code of the entity</th>
+            <th>State (Branch Located)</th>
+            <th>Category of Branch</th>
+            <th>Status of Perpetrator/s</th>
+            <th>Type of Account where the fraud was perpetrated</th>
+            <th>Industry/Sector of the Account where fraud was perpetrated</th>
+            <th>Area of operation where the fraud has occurred</th>
+            <th>Type of fraud</th>
+            <th>Total amount involved</th>
+            <th>Date of occurrence</th>
+            <th>Date of detection of fraud</th>
+            <th>Date of classification as fraud</th>
+            <th>Date on which reported to RBI</th>
+            <th>How the fraud was detected?</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          @for (d of paginatedData; track d.dataId) {
+            <tr class="data-row">
+              <td>{{ d.entityCode }}</td>
+              <td>{{ d.state }}</td>
+              <td>{{ d.branchCategory }}</td>
+              <td>{{ d.perpetratorStatus }}</td>
+              <td>{{ d.accountType }}</td>
+              <td>{{ d.industrySector }}</td>
+              <td>{{ d.areaOfOperation }}</td>
+              <td>{{ d.fraudType }}</td>
+              <td>{{ d.totalAmount | number }}</td>
+              <td>{{ d.dateOfOccurrence | date:'dd-MM-yyyy' }}</td>
+              <td>{{ d.dateOfDetection | date:'dd-MM-yyyy' }}</td>
+              <td>{{ d.dateOfClassification | date:'dd-MM-yyyy' }}</td>
+              <td>{{ d.dateReportedToRbi | date:'dd-MM-yyyy' }}</td>
+              <td>{{ d.howDetected }}</td>
+
+              <td class="status_column">
+                @switch (d.status) {
+                  @case (1) {
+                    <span class="draft_ic"><i class="fa-regular fa-pen-to-square"></i> Draft</span>
+                  }
+                  @case (2) {
+                    <span class="app_pen_ic"><i class="fa-solid fa-clock-rotate-left"></i> Approval Pending</span>
+                  }
+                  @case (3) {
+                    <span class="approved_ic"><i class="fa-regular fa-circle-check"></i> Approved</span>
+                  }
+                }
+              </td>
+
+              <td class="actions_btn">
+                @if ((d.status === 1 || d.status === 2) && editPer === 'Y') {
+                  <a href="javascript:;" class="edit_ic" title="Edit" (click)="editData(d.dataId)">
+                    <i class="fa-solid fa-pen"></i>
+                  </a>
+                }
+                <a href="javascript:;" class="view_ic" title="View" (click)="viewData(d.dataId)">
+                  <i class="fa-solid fa-magnifying-glass"></i>
+                </a>
+                @if ((d.status === 1 || d.status === 2) && deletePer === 'Y') {
+                  <a href="javascript:;" class="del_ic" title="Delete" (click)="onDeleteData(d.dataId)">
+                    <i class="fa-solid fa-trash"></i>
+                  </a>
+                }
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="16" class="no-data-found"><span>No data found</span></td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="bottom-scroll" #bottomScroll (scroll)="onScroll(bottomScroll)">
+      <div class="bottom-scroll-inner" [style.width.px]="scrollWidth"></div>
+    </div>
+  </div>
+
+  <!-- ===== Bottom pagination ===== -->
+  <div class="pagination">
+    <button (click)="goToFirstPage()" [disabled]="currentPage === 1">« First</button>
+    <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">‹ Prev</button>
+    @for (p of pages(); track p) {
+      <button (click)="goToPage(p)" [class.active]="p === currentPage">{{ p }}</button>
+    }
+    <button (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages">Next ›</button>
+    <button (click)="goToLastPage()" [disabled]="currentPage === totalPages">Last »</button>
+  </div>
+
+</div>

@@ -38,7 +38,10 @@ import { AddCommitteeMembersComponent } from './CommitteeMembers/add-committee-m
 import { GalleryGroupIndexComponent } from './GalleryGroup/gallery-group-index/gallery-group-index.component';
 import { AddGalleryGroupComponent } from './GalleryGroup/add-gallery-group/add-gallery-group.component';
 import { ViewGalleryGroupComponent } from './GalleryGroup/view-gallery-group/view-gallery-group.component';
-import { AddDataComponent } from './CommitteeMembers/add-data/add-data.component';
+// import { AddDataComponent } from './CommitteeMembers/add-data/add-data.component';
+import { DataIndexComponent } from './data/data-index/data-index.component';
+import { AddDataComponent } from './data/add-data/add-data.component';
+import { ViewDataComponent } from './data/view-data/view-data.component';
 
 
 
@@ -57,6 +60,11 @@ const routes: Routes = [
   { path: 'addUserManagement', component: AddUserManagementComponent },
 { path: 'viewUserManagement/:userId', component: UserManagementViewComponent,    data: { renderMode: 'csr' } },
 { path: 'editUserManagement/:userId', component: EditUserManagementComponent,    data: { renderMode: 'csr' } },
+
+// data
+{ path: 'data', component: DataIndexComponent },
+{ path: 'addData', component: AddDataComponent },
+{ path: 'viewData/:dataId', component: ViewDataComponent,    data: { renderMode: 'csr' } },
 
 
   // Bank User
