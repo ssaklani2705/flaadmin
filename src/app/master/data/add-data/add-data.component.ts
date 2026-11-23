@@ -1,11 +1,20 @@
 import { Component, Injectable, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
-  AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { DateAdapter, MAT_DATE_LOCALE, MatNativeDateModule, NativeDateAdapter } from '@angular/material/core';
+import {
+  DateAdapter,
+  MAT_DATE_LOCALE,
+  MatNativeDateModule,
+  NativeDateAdapter,
+} from '@angular/material/core';
 import { DataProviderService } from '../../../service/data-provider.service';
 
 /** Shows dates as dd-mm-yyyy in the datepicker input */
@@ -24,13 +33,18 @@ const isOther = (v: string) => /other/i.test(v || '');
 @Component({
   selector: 'app-add-data',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatDatepickerModule, MatNativeDateModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+  ],
   providers: [
     { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
-    { provide: DateAdapter, useClass: DashDateAdapter }
+    { provide: DateAdapter, useClass: DashDateAdapter },
   ],
   templateUrl: './add-data.component.html',
-  styleUrls: ['./add-data.component.scss']
+  styleUrls: ['./add-data.component.scss'],
 })
 export class AddDataComponent implements OnInit {
   dataForm!: FormGroup;
@@ -43,53 +57,134 @@ export class AddDataComponent implements OnInit {
   statusOptions = [
     { value: 1, label: 'Draft' },
     { value: 2, label: 'Pending for Approval' },
-    { value: 3, label: 'Approved' }
+    { value: 3, label: 'Approved' },
   ];
 
   // ===== Dropdown data =====
-  states = ['Andhra Pradesh','Arunachal Pradesh','Assam','Bihar','Chhattisgarh','Goa','Gujarat','Haryana',
-    'Himachal Pradesh','Jharkhand','Karnataka','Kerala','Madhya Pradesh','Maharashtra','Manipur','Meghalaya',
-    'Mizoram','Nagaland','Odisha','Punjab','Rajasthan','Sikkim','Tamil Nadu','Telangana','Tripura',
-    'Uttar Pradesh','Uttarakhand','West Bengal','Andaman and Nicobar Islands','Chandigarh',
-    'Dadra and Nagar Haveli and Daman and Diu','Delhi','Jammu and Kashmir','Ladakh','Lakshadweep','Puducherry'];
+  states = [
+    'Andhra Pradesh',
+    'Arunachal Pradesh',
+    'Assam',
+    'Bihar',
+    'Chhattisgarh',
+    'Goa',
+    'Gujarat',
+    'Haryana',
+    'Himachal Pradesh',
+    'Jharkhand',
+    'Karnataka',
+    'Kerala',
+    'Madhya Pradesh',
+    'Maharashtra',
+    'Manipur',
+    'Meghalaya',
+    'Mizoram',
+    'Nagaland',
+    'Odisha',
+    'Punjab',
+    'Rajasthan',
+    'Sikkim',
+    'Tamil Nadu',
+    'Telangana',
+    'Tripura',
+    'Uttar Pradesh',
+    'Uttarakhand',
+    'West Bengal',
+    'Andaman and Nicobar Islands',
+    'Chandigarh',
+    'Dadra and Nagar Haveli and Daman and Diu',
+    'Delhi',
+    'Jammu and Kashmir',
+    'Ladakh',
+    'Lakshadweep',
+    'Puducherry',
+  ];
 
   branchCategories = ['Metro', 'Urban', 'Semi Urban', 'Rural'];
   perpetratorStatuses = ['Known', 'Unknown'];
   yesNo = ['Yes', 'No'];
-  bankingArrangements = ['Consortium', 'Multiple Banking Arrangement (MBA)', 'Sole banking'];
+  bankingArrangements = [
+    'Consortium',
+    'Multiple Banking Arrangement (MBA)',
+    'Sole banking',
+  ];
   committedByList = ['Staff', 'Customers', 'Outsiders'];
 
-  accountTypes = ['Corporate', 'Individuals/HUF', 'Sole proprietorship', 'Partnership firm',
-    'Limited Liability Partnership firm', 'Society/non-profit organisations (including NGOs)', 'Trust',
-    'Others (Please specify)'];
+  accountTypes = [
+    'Corporate',
+    'Individuals/HUF',
+    'Sole proprietorship',
+    'Partnership firm',
+    'Limited Liability Partnership firm',
+    'Society/non-profit organisations (including NGOs)',
+    'Trust',
+    'Others (Please specify)',
+  ];
 
   industrySectors = [
-    'Crop and animal production, hunting and related service activitie', 'Forestry and logging',
-    'Fishing and aquaculture', 'Mining of coal and lignite', 'Extraction of crude petroleum and natural gas',
-    'Mining of metal ores', 'Other mining and quarrying', 'Manufacture of food products',
-    'Manufacture of beverages', 'Manufacture of tobacco products', 'Manufacture of textiles',
+    'Crop and animal production, hunting and related service activitie',
+    'Forestry and logging',
+    'Fishing and aquaculture',
+    'Mining of coal and lignite',
+    'Extraction of crude petroleum and natural gas',
+    'Mining of metal ores',
+    'Other mining and quarrying',
+    'Manufacture of food products',
+    'Manufacture of beverages',
+    'Manufacture of tobacco products',
+    'Manufacture of textiles',
     'Manufacture of wearing apparel',
     'Manufacture of leather and related products and harness; dressing and dyeing of fur',
     'Manufacture of wood and products of wood and cork, except furniture',
-    'Manufacture of paper and paper products', 'Printing and reproduction of recorded media',
+    'Manufacture of paper and paper products',
+    'Printing and reproduction of recorded media',
     'Manufacture of coke and refined petroleum products',
     'Manufacture of chemicals and chemical products and synthetic rubber in primary forms',
     'Manufacture of pharmaceuticals, medicinal chemical and botanical products',
-    'Manufacture of rubber and plastics products', 'Manufacture of other non-metallic mineral products',
+    'Manufacture of rubber and plastics products',
+    'Manufacture of other non-metallic mineral products',
     'Manufacture of basic metals',
     'Manufacture of fabricated metal products, except machinery and equipment',
-    'Manufacture of computer, electronic and optical products', 'Manufacture of electrical equipment'];
+    'Manufacture of computer, electronic and optical products',
+    'Manufacture of electrical equipment',
+  ];
 
-  areasOfOperation = ['Advances-Agriculture', 'Advances-Bills', 'Advances-Cash Credit',
-    'Advances-against gold/gold ornament', 'Advances-MSME', 'Advances-Vehicle', 'advances-Housing Loan',
-    'advances-Personal loans', 'Advances-Educational loans', 'Advances-Digital Lending (App based)',
-    'Advances-credit card (Using Fake Documents)', 'Advances-Other Term loans', 'Advances-Other (Please specify)',
-    'Digital Payments-Credit Card', 'Digital Payments-Debit/ATM cards', 'Digital Payments-Internet Banking',
-    'Digital Payments-UPI', 'Digital Payments-Wallet/Prepaid Cards', 'Digital Payments-IMPS/NEFT/RTGS',
-    'Digital Payments-AEPS/Other Aadhar Related Frauds', 'Digital Payments-USSD',
-    'Digital Payments- Other(Please Specify)', 'Cash Shortage', 'Cheque/Demand Drafts', 'Clearing Operations',
-    'Deposits-Current', 'Deposits-Saving', 'Deposits-Term', 'Foreign Exchange Transactions', 'Internal Accounts',
-    'Off Balance sheet- Letter of credit', 'Off Balance Sheet - LOU', "Off Balance Sheet - BG's", 'Other'];
+  areasOfOperation = [
+    'Advances-Agriculture',
+    'Advances-Bills',
+    'Advances-Cash Credit',
+    'Advances-against gold/gold ornament',
+    'Advances-MSME',
+    'Advances-Vehicle',
+    'advances-Housing Loan',
+    'advances-Personal loans',
+    'Advances-Educational loans',
+    'Advances-Digital Lending (App based)',
+    'Advances-credit card (Using Fake Documents)',
+    'Advances-Other Term loans',
+    'Advances-Other (Please specify)',
+    'Digital Payments-Credit Card',
+    'Digital Payments-Debit/ATM cards',
+    'Digital Payments-Internet Banking',
+    'Digital Payments-UPI',
+    'Digital Payments-Wallet/Prepaid Cards',
+    'Digital Payments-IMPS/NEFT/RTGS',
+    'Digital Payments-AEPS/Other Aadhar Related Frauds',
+    'Digital Payments-USSD',
+    'Digital Payments- Other(Please Specify)',
+    'Cash Shortage',
+    'Cheque/Demand Drafts',
+    'Clearing Operations',
+    'Deposits-Current',
+    'Deposits-Saving',
+    'Deposits-Term',
+    'Foreign Exchange Transactions',
+    'Internal Accounts',
+    'Off Balance sheet- Letter of credit',
+    'Off Balance Sheet - LOU',
+    "Off Balance Sheet - BG's",
+    'Other',
+  ];
 
   fraudClassifications = [
     'Misappropriation of funds and criminal breach of trust',
@@ -102,7 +197,8 @@ export class AddDataComponent implements OnInit {
     'Cash shortages on account of frauds',
     'Fraudulent transactions involving foreign exchange',
     'Fraudulent electronic banking/ digital payment related transactions',
-    'Other'];
+    'Other',
+  ];
 
   fraudTypes = [
     'Collateral (Fake title deeds, spurious gold and/or its appraisal, FDRs, Bank Guarantees, Multiple mortgages)',
@@ -111,24 +207,51 @@ export class AddDataComponent implements OnInit {
     'Related Party transactions (Round tripping of funds, fake sales and purchases to inflate turnover)',
     'Clandestine sale of hypothecated/mortgaged security (Stocks, securities, machineries and equipment, vehicles, immovable property)',
     'Violations of FEMA / PMLA / Illegal claim of Input Credit in GST etc',
-    'Non-resident accounts', 'Fake KYC', 'Overvaluation/Misrepresentation by Third Party Entities',
-    'Cash Shortage-Cash Collection', 'Cash Shortage-Embezzlement', 'Cash Shortage-Manipulation',
-    'Cash Shortage-Currency Chest', 'Cheques/demand drafts-Fraudulent encashment',
-    'Cheques/demand drafts-Cloned/ forged', 'Cheques/demand drafts-Demand drafts',
+    'Non-resident accounts',
+    'Fake KYC',
+    'Overvaluation/Misrepresentation by Third Party Entities',
+    'Cash Shortage-Cash Collection',
+    'Cash Shortage-Embezzlement',
+    'Cash Shortage-Manipulation',
+    'Cash Shortage-Currency Chest',
+    'Cheques/demand drafts-Fraudulent encashment',
+    'Cheques/demand drafts-Cloned/ forged',
+    'Cheques/demand drafts-Demand drafts',
     'Routing business transactions outside consortium/Non- routing through TRA & CC accounts',
-    'Account Hacking / Compromise / Identity theft', 'Phishing', 'Vishing', 'Smishing',
-    'Remote Capture of Device', 'Lost / Stolen Device / Instrument', 'Card Skimming', 'SIM Swap',
-    'Fraudulent App', 'Forgery / Modification of Payment', 'Collect Payment Request', 'Merchant Collusion',
-    'New type of digital frauds', 'Other'];
+    'Account Hacking / Compromise / Identity theft',
+    'Phishing',
+    'Vishing',
+    'Smishing',
+    'Remote Capture of Device',
+    'Lost / Stolen Device / Instrument',
+    'Card Skimming',
+    'SIM Swap',
+    'Fraudulent App',
+    'Forgery / Modification of Payment',
+    'Collect Payment Request',
+    'Merchant Collusion',
+    'New type of digital frauds',
+    'Other',
+  ];
 
-  detectionSources = ['Customer Complaints', 'Internal inspections/audit', 'External audit', 'MIS of bank',
-    'News and Media', 'CFR/CRILC', 'Whistleblower', 'Intimation/notice from Law Enforcement Agencies',
-    'Intimation from other banks', 'EWS triggering', 'Other'];
+  detectionSources = [
+    'Customer Complaints',
+    'Internal inspections/audit',
+    'External audit',
+    'MIS of bank',
+    'News and Media',
+    'CFR/CRILC',
+    'Whistleblower',
+    'Intimation/notice from Law Enforcement Agencies',
+    'Intimation from other banks',
+    'EWS triggering',
+    'Other',
+  ];
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private dataprovider: DataProviderService
+    private dataprovider: DataProviderService,
   ) {}
 
   ngOnInit(): void {
@@ -136,64 +259,65 @@ export class AddDataComponent implements OnInit {
     const amount = Validators.pattern(AMOUNT_PATTERN);
 
     this.dataForm = this.fb.group({
-      entityCode: ['', [req, Validators.maxLength(50)]],
+      code: ['', [req, Validators.maxLength(50)]],
       state: ['', req],
-      branchCategory: ['', req],
-      perpetratorStatus: [''],
+      catOfBranch: ['', req],
+      statusOfPerpetrator: [''],
 
-      accountType: ['', req],
-      accountTypeOther: [{ value: '', disabled: true }],
-      industrySector: ['', req],
-      borrowalAccount: ['', req],
+      typeOfAccount: ['', req],
+      typeOfAccOther: [{ value: '', disabled: true }],
+      secOfAcc: ['', req],
+      borrowalAcc: ['', req],
       bankingArrangement: ['', req],
 
       areaOfOperation: ['', req],
       areaOther: [{ value: '', disabled: true }],
-      fraudClassification: ['', req],
+      classificationOfFraud: ['', req],
       classificationOther: [{ value: '', disabled: true }],
-      fraudType: ['', req],
+      typeOfFraud: ['', req],
       fraudTypeOther: [{ value: '', disabled: true }],
 
       totalAmount: ['', [req, amount]],
 
-      dateOfOccurrence: [null, req],
-      dateOfDetection: [null, req],
-      dateOfClassification: [null, req],
-      dateReportedToRbi: [null, req],
+      occurrence: [null, req],
+      detection: [null, req],
+      classification: [null, req],
+      reportedToRbi: [null, req],
       delayReason: ['', req],
-      dateOfFullPayment: [null],
+      fullPaymentSettlement: [null],
 
-      howDetected: ['', req],
-      otherSources: [{ value: '', disabled: true }],
-      committedBy: ['', req],
-      controlOfficeDetected: ['', req],
+      detectionMethod: ['', req],
+      detectionOtherSource: [{ value: '', disabled: true }],
+      fraudCommittedBy: ['', req],
+      controllingOfficeDetect: ['', req],
       internalAuditConducted: ['', req],
-      whyNotDetected: ['', req],
-      actionTaken: ['', req],
+      auditDetectionReason: ['', req],
+      auditActionTaken: ['', req],
       leaComplaint: [''],
-      stepsTaken: ['', req],
+      preventiveSteps: ['', req],
       amountRecovered: ['', amount],
       lossToBank: ['', [req, amount]],
       provisionHeld: ['', [req, amount]],
       amountWrittenOff: ['', [req, amount]],
-      compromiseDone: ['', req],
+      compromiseSettlement: ['', req],
       compromiseAmount: [{ value: '', disabled: true }],
 
-      status: [{ value: this.STATUS_DRAFT, disabled: true }]
+      status: [{ value: this.STATUS_DRAFT, disabled: true }],
     });
 
-    // "If Other" fields: enabled + required only when the matching dropdown is "Other..."
-    this.linkOther('accountType', 'accountTypeOther');
+    this.linkOther('typeOfAccount', 'typeOfAccOther');
     this.linkOther('areaOfOperation', 'areaOther');
-    this.linkOther('fraudClassification', 'classificationOther');
-    this.linkOther('fraudType', 'fraudTypeOther');
-    this.linkOther('howDetected', 'otherSources');
+    this.linkOther('classificationOfFraud', 'classificationOther');
+    this.linkOther('typeOfFraud', 'fraudTypeOther');
+    this.linkOther('detectionMethod', 'detectionOtherSource');
 
-    // Compromise amount: only when compromise settlement = Yes
-    this.dataForm.get('compromiseDone')!.valueChanges.subscribe(v => {
+    this.dataForm.get('compromiseSettlement')!.valueChanges.subscribe((v) => {
       const c = this.dataForm.get('compromiseAmount')!;
       if (v === 'Yes') {
-        c.setValidators([Validators.required, Validators.pattern(AMOUNT_PATTERN)]);
+        c.setValidators([
+          Validators.required,
+          Validators.pattern(AMOUNT_PATTERN),
+        ]);
         c.enable();
       } else {
         c.clearValidators();
@@ -205,7 +329,7 @@ export class AddDataComponent implements OnInit {
   }
 
   private linkOther(selectName: string, otherName: string): void {
-    this.dataForm.get(selectName)!.valueChanges.subscribe(v => {
+    this.dataForm.get(selectName)!.valueChanges.subscribe((v) => {
       const other = this.dataForm.get(otherName)!;
       if (isOther(v)) {
         other.setValidators(Validators.required);
@@ -237,39 +361,33 @@ export class AddDataComponent implements OnInit {
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
   }
 
-  private buildPayload(status: number) {
-    const v = this.dataForm.getRawValue(); // includes disabled controls
-    return {
-      ...v,
-      dateOfOccurrence: this.toDateStr(v.dateOfOccurrence),
-      dateOfDetection: this.toDateStr(v.dateOfDetection),
-      dateOfClassification: this.toDateStr(v.dateOfClassification),
-      dateReportedToRbi: this.toDateStr(v.dateReportedToRbi),
-      dateOfFullPayment: this.toDateStr(v.dateOfFullPayment),
-      userId: Number(sessionStorage.getItem('userId')) || null,
-      status
-    };
-  }
-
   private send(status: number): void {
     this.isSubmitting = true;
-    this.dataprovider.saveData(this.buildPayload(status)).subscribe({
+    this.dataprovider.saveDataAdmin(this.buildPayload(status)).subscribe({
       next: (res: any) => {
         this.isSubmitting = false;
-        alert(res?.message || (status === this.STATUS_DRAFT ? 'Saved as draft' : 'Submitted for approval'));
+        alert(
+          res?.message ||
+            (status === this.STATUS_DRAFT
+              ? 'Saved as draft'
+              : 'Submitted for approval'),
+        );
         if (res?.success !== false) this.backToIndexPage();
       },
       error: (err: any) => {
         this.isSubmitting = false;
-        console.error('Error saving data:', err);
-      }
+        alert(err?.error?.message || 'Failed to save. Please try again.');
+        console.error(
+          err?.error?.message || 'Failed to save. Please try again.',
+        );
+      },
     });
   }
 
   // ===== Actions =====
   /** Save -> Draft (1). Only the entity code is mandatory for a draft. */
   onSave(): void {
-    const code = this.dataForm.get('entityCode')!;
+    const code = this.dataForm.get('code')!;
     if (code.invalid) {
       code.markAsTouched();
       return;
@@ -282,7 +400,11 @@ export class AddDataComponent implements OnInit {
   onSubmit(): void {
     if (this.dataForm.invalid) {
       this.dataForm.markAllAsTouched();
-      setTimeout(() => document.querySelector('.error')?.scrollIntoView({ behavior: 'smooth', block: 'center' }));
+      setTimeout(() =>
+        document
+          .querySelector('.error')
+          ?.scrollIntoView({ behavior: 'smooth', block: 'center' }),
+      );
       return;
     }
     this.dataForm.get('status')!.setValue(this.STATUS_PENDING);
@@ -290,20 +412,79 @@ export class AddDataComponent implements OnInit {
   }
 
   onReset(): void {
+    this.recordId = null;
     this.dataForm.reset({
-      entityCode: '', state: '', branchCategory: '', perpetratorStatus: '',
-      accountType: '', industrySector: '', borrowalAccount: '', bankingArrangement: '',
-      areaOfOperation: '', fraudClassification: '', fraudType: '', totalAmount: '',
-      dateOfOccurrence: null, dateOfDetection: null, dateOfClassification: null,
-      dateReportedToRbi: null, delayReason: '', dateOfFullPayment: null,
-      howDetected: '', committedBy: '', controlOfficeDetected: '', internalAuditConducted: '',
-      whyNotDetected: '', actionTaken: '', leaComplaint: '', stepsTaken: '', amountRecovered: '',
-      lossToBank: '', provisionHeld: '', amountWrittenOff: '', compromiseDone: '',
-      status: this.STATUS_DRAFT
+      entityCode: '',
+      state: '',
+      branchCategory: '',
+      perpetratorStatus: '',
+      accountType: '',
+      industrySector: '',
+      borrowalAccount: '',
+      bankingArrangement: '',
+      areaOfOperation: '',
+      fraudClassification: '',
+      fraudType: '',
+      totalAmount: '',
+      dateOfOccurrence: null,
+      dateOfDetection: null,
+      dateOfClassification: null,
+      dateReportedToRbi: null,
+      delayReason: '',
+      dateOfFullPayment: null,
+      howDetected: '',
+      committedBy: '',
+      controlOfficeDetected: '',
+      internalAuditConducted: '',
+      whyNotDetected: '',
+      actionTaken: '',
+      leaComplaint: '',
+      stepsTaken: '',
+      amountRecovered: '',
+      lossToBank: '',
+      provisionHeld: '',
+      amountWrittenOff: '',
+      compromiseDone: '',
+      status: this.STATUS_DRAFT,
     });
   }
 
   backToIndexPage(): void {
-    this.router.navigate(['/data-index'], { queryParamsHandling: 'preserve' });
+    this.router.navigate(['/data'], { queryParamsHandling: 'preserve' });
+  }
+
+  recordId: number | null = null;
+
+  private readonly DATE_FIELDS = [
+    'occurrence',
+    'detection',
+    'classification',
+    'reportedToRbi',
+    'fullPaymentSettlement',
+  ];
+  private readonly AMOUNT_FIELDS = [
+    'totalAmount',
+    'amountRecovered',
+    'lossToBank',
+    'provisionHeld',
+    'amountWrittenOff',
+    'compromiseAmount',
+  ];
+
+  private buildPayload(status: number) {
+    const raw = this.dataForm.getRawValue(); // includes disabled controls
+    const payload: any = { id: this.recordId };
+
+    Object.keys(raw).forEach((k) => {
+      let val = raw[k];
+      if (this.DATE_FIELDS.includes(k)) val = this.toDateStr(val);
+      else if (this.AMOUNT_FIELDS.includes(k))
+        val = val === '' || val == null ? null : Number(val);
+      else if (val === '') val = null;
+      payload[k] = val;
+    });
+
+    payload.status = status;
+    return payload;
   }
 }
