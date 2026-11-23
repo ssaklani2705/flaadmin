@@ -1,0 +1,49 @@
+  .app-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+  }
+
+  .app-container {
+    margin-top: 0px;
+    /* space for fixed header */
+    display: flex;
+    transition: all 0.3s ease;
+    height: calc(100vh - 70px);
+    /* so scrollbar is only inside here */
+    overflow: hidden;
+  }
+
+  /* Sidebar default */
+  app-sidebar {
+    width: 250px;
+    /* Expanded width */
+    transition: width 0.3s ease;
+  }
+
+  /* Sidebar collapsed */
+  .app-container.sidebar-collapsed app-sidebar {
+    width: 60px;
+    /* Collapsed width */
+  }
+
+  /* Content default */
+  .content {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    /* scroll only inside content */
+  }
+
+  /* If you want shifting effect when collapsed */
+  .app-container:not(.sidebar-collapsed) .content {
+    margin-left: 0;
+    /* or 0 if you want flush alignment */
+  }
+
+  .app-container.sidebar-collapsed .content {
+    margin-left: 0;
+    /* Keep same if you want fixed content size */
+  }

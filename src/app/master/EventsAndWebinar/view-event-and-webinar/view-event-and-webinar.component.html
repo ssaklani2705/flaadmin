@@ -1,0 +1,279 @@
+<div class="view-user-container">
+  <mat-tab-group>
+    <!-- Tab 1: VIEW EVENT AND WEBINAR -->
+    <mat-tab label="VIEW EVENT/WEBINAR">
+      <div class="tab-content">
+        <!-- Your existing VIEW EVENT AND WEBINAR code -->
+        <div class="user-header">
+          <h2 class="section-title">VIEW EVENT/WEBINAR</h2>
+          <div class="action-buttons">
+            <button mat-raised-button class="btn-back" color="accent" (click)="backToIndexPage()">
+              Back to Index
+            </button>
+          </div>
+        </div>
+
+        <mat-card class="user-info-card">
+          <mat-card-content>
+            <div class="user-info-grid-container">
+              <div class="user-info-grid">
+                <!-- Existing fields -->
+                <div class="user-info-item">
+                  <span class="label">Event Title:</span>
+                  <span class="value">{{ bank.title }}</span>
+                </div>
+
+                <div class="user-info-item">
+                  <span class="label">Date & Time :</span>
+                  <!-- <span class="value">{{ bank.eventDate | date:'dd-MM-yyyy' }}</span> -->
+                  <span class="value">
+                    📅 {{ bank.eventDate | date:'dd-MM-yyyy' }}
+                    ⏰ {{ bank.time }}
+                    <ng-container
+                      *ngIf="bank.durationHours > 0 || (bank.durationMinutes && bank.durationMinutes !== '00')">
+                      ⏳
+                      {{ bank.durationHours > 0 ? (bank.durationHours + 'h') : '' }}
+                      <span
+                        *ngIf="bank.durationHours > 0 && bank.durationMinutes && bank.durationMinutes !== '00'">&nbsp;</span>
+                      {{ (bank.durationMinutes && bank.durationMinutes !== '00') ? (bank.durationMinutes + 'm') : '' }}
+                    </ng-container>
+                  </span>
+                </div>
+
+                <div class="user-info-item">
+                  <span class="label">Type:</span>
+                  <span class="value">{{ bank.type === 'event' ? 'Event' : 'Webinar' }}</span>
+                </div>
+
+                <div class="user-info-item" *ngIf="bank.type === 'event'">
+                  <span class="label">Location:</span>
+                  <span class="value">{{ bank.location }}</span>
+                </div>
+
+                <div class="user-info-item" *ngIf="bank.type !== 'event'">
+                  <span class="label">Webinar Link:</span>
+                  <span class="value">{{ bank.link}}</span>
+                </div>
+
+                <div class="user-info-item">
+                  <span class="label">Status:</span>
+                  <span [ngClass]="common.getStatusClass(bank.status)">
+                    {{ common.getStatusLabel(bank.status) }}
+                  </span>
+                </div>
+
+                <div class="user-info-item full-row">
+                  <span class="label">Short Description:</span>
+                  <span class="value">{{ bank.shortDescription }}</span>
+                </div>
+
+                <div class="user-info-item full-row">
+                  <span class="label">Description:</span>
+                  <span class="value" [innerHTML]="safeDescription"></span>
+                </div>
+              </div>
+
+              <!-- Right side: image -->
+              <div class="event-image-box" *ngIf="bank.imageUrl">
+                <img [src]="bank.imageUrl" alt="Event Image" class="event-image" />
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Action History Table -->
+        <mat-card class="action-history-card">
+          <mat-card-header>
+            <mat-card-title class="section-title action-title">ACTION HISTORY</mat-card-title>
+          </mat-card-header>
+
+          <mat-card-content>
+            <div *ngIf="transactionhistory?.length === 0" class="no-records-box">
+              No record(s) found.
+            </div>
+
+            <div *ngIf="hasTransactionHistory" class="table-container">
+              <table mat-table [dataSource]="transactionhistory" class="mat-elevation-z1">
+                <ng-container matColumnDef="name">
+                  <th mat-header-cell *matHeaderCellDef> Performed By </th>
+                  <td mat-cell *matCellDef="let record"> {{ record.name }} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="entryDate">
+                  <th mat-header-cell *matHeaderCellDef> Date & Time </th>
+                  <td mat-cell *matCellDef="let record"> {{ record.entryDate }} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="action">
+                  <th mat-header-cell *matHeaderCellDef> Action </th>
+                  <td mat-cell *matCellDef="let record"> {{ record.action }} </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="['name','entryDate','action']"></tr>
+                <tr mat-row *matRowDef="let row; columns: ['name','entryDate','action'];"></tr>
+              </table>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </mat-tab>
+
+    <!-- Tab 2: Event Gallery -->
+    <mat-tab label="EVENT GALLERY">
+      <div class="user-header">
+        <h2 class="section-title">EVENT GALLERY</h2>
+        <div class="action-buttons">
+          <button mat-raised-button class="btn-back" color="accent" (click)="backToIndexPage()">
+            Back to Index
+          </button>
+        </div>
+      </div>
+      @if (addPer === 'Y') {
+      <div class="tab-content">
+  
+        <!-- <mat-card class="upload-card">
+          <mat-card-content>
+            <div class="upload-row">
+
+              <div class="upload-type">
+                <label class="type-label">Type:</label>
+                <mat-radio-group [(ngModel)]="uploadType" class="type-radio">
+                  <mat-radio-button value="1">Image</mat-radio-button>
+                  <mat-radio-button value="2">Video</mat-radio-button>
+                </mat-radio-group>
+              </div>
+
+              <input *ngIf="uploadType === '1'" type="file" accept="image/*" (change)="onFileSelected($event)"
+                class="upload-input" />
+
+              <input *ngIf="uploadType === '2'" type="text" placeholder="Video URL" [(ngModel)]="videoUrl"
+                class="upload-input" />
+
+              <input type="text" placeholder="Caption" [(ngModel)]="caption" class="upload-input" />
+
+              <button class="add-button" (click)="uploadContent()">Add New +</button>
+
+            </div>
+          </mat-card-content>
+        </mat-card> -->
+
+         <mat-card class="upload-card">
+          <mat-card-content>
+            <div class="upload-row">
+
+              <!-- Type -->
+              <div class="upload-field">
+                <label class="mat-body-2"><b>Type:</b></label>
+                <mat-radio-group [(ngModel)]="uploadType" class="type-radio" (change)="onUploadTypeChange()">
+                  <mat-radio-button value="1">Image</mat-radio-button>
+                  <mat-radio-button value="2">Video</mat-radio-button>
+                </mat-radio-group>
+              </div>
+
+              <!-- File Upload (Image) -->
+              <div *ngIf="uploadType === '1'" class="upload-field">
+                <!-- <label class="mat-body-2">Image</label> -->
+                <button mat-stroked-button color="primary" (click)="fileInput.click()">
+                  <mat-icon>upload</mat-icon>
+                  Choose Image
+                </button>
+                <input type="file" #fileInput hidden accept="image/*" (change)="onFileSelected($event)" />
+                <span *ngIf="selectedFileName" class="file-name">{{ selectedFileName }}</span>
+              </div>
+
+              <!-- Video URL (Video) -->
+              <mat-form-field appearance="outline" class="upload-field equal-width" *ngIf="uploadType === '2'">
+                <mat-label>Video URL</mat-label>
+                <input matInput type="text" [(ngModel)]="videoUrl" required placeholder="Youtube Video URL" />
+              </mat-form-field>
+
+              <!-- Caption -->
+              <mat-form-field appearance="outline" class="upload-field equal-width">
+                <mat-label>Caption</mat-label>
+                <input matInput type="text" [(ngModel)]="caption" maxlength="50" />
+                <mat-hint align="end">{{ caption.length }}/50</mat-hint>
+              </mat-form-field>
+
+              <!-- Add Button -->
+              <div class="upload-field">
+                <label class="mat-body-2">&nbsp;</label> <!-- keeps button aligned -->
+                <button mat-raised-button color="primary" (click)="uploadContent()" class="custom-blue-btn">Add Gallery</button>
+              </div>
+
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Gallery Display -->
+
+
+
+      </div>
+      }
+
+
+      <!-- Lightbox Overlay -->
+      <br>
+      <table class="gallery-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <!-- <th>Type</th> -->
+            <th>Media</th>
+            <th>Caption</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of galleryImages; let i = index">
+            <td>{{ i + 1 }}</td>
+            <!-- <td>{{ item.type === 1 ? 'Image' : 'Video' }}</td> -->
+            <td>
+              <ng-container *ngIf="item.type === 1">
+                <img [src]="item.url" alt="Image" class="table-media" (click)="viewInLightbox(item)" />
+              </ng-container>
+              <ng-container *ngIf="item.type === 2">
+                <iframe [src]="item.filename | safeUrl" frameborder="0" allowfullscreen class="preview-media"
+                  (click)="viewInLightbox(item)"></iframe>
+                <div class="play-overlay">
+                  <mat-icon (click)="viewInLightbox(item)">play_circle_filled</mat-icon>
+                </div>
+              </ng-container>
+            </td>
+            <td>{{ item.caption }}</td>
+            <td>
+              <ng-container *ngIf="item.approval === 1">
+                <!-- <button class="approve-btn" (click)="approveItem(item)">Approve</button> -->
+                @if (approvePer === 'Y') {
+                <button class="pending-btn" (click)="onApproveEventGallery(item.id)">
+                  Pending
+                </button>
+                }
+              </ng-container>
+              <ng-container *ngIf="item.approval === 2">
+                <button class="approve-btn" (click)="onRevertEventGallery(item.id)">
+                  Approved
+                </button>
+              </ng-container>
+
+            </td>
+            <td>
+              @if (deletePer === 'Y') {
+              <button title="Delete" *ngIf="item.approval === 1" (click)="onDeleteGallery(item.id)"
+                class="action-button delete">❌</button>
+              }
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+
+
+    </mat-tab>
+
+
+
+
+  </mat-tab-group>
+</div>

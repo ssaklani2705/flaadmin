@@ -1,0 +1,372 @@
+/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.btn-back {
+      background-color: black !important;
+      color: white !important;
+    }
+
+
+  .btn-reset {
+      background-color: #1bbdc9 !important;
+      color: white !important;
+    }   
+
+
+
+    
+// Base status badge style for Active inactive Deleted
+.status-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  text-align: center;
+  min-width: 70px;
+}
+// Specific statuses
+.active {
+  @extend .status-badge;
+  background-color: #20c7e5; // teal-blue (matches your image)
+}
+
+.inactive {
+  @extend .status-badge;
+  background-color: #f0ad4e; // amber/orange
+}
+
+.deleted {
+  @extend .status-badge;
+  background-color: #e74c3c; // red
+}
+//End
+
+
+/*add Buttons */
+.add-button {
+  background-color: #007bff;
+  color: white;
+  font-weight: 600;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.add-button:hover {
+  background-color: #0056b3;
+}
+/*add Buttons end*/
+
+
+/*Search And Go Buttons */
+.icon-button,
+.go-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+}
+.icon-button:hover,
+.go-button:hover {
+  background-color: #0056b3;
+}
+/*Search And Go Buttons end*/
+
+
+/*activ,inactive,delete Dropdown */
+.header-bar .status-dropdown {
+  min-width: 140px;
+  padding: 6px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+/* Search Input */
+.header-bar .search-input {
+  flex: 1;
+  min-width: 220px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+
+
+/* ===== Table Card ===== */
+.table-card,
+.action-history-card {
+  padding: 15px;
+  margin-top: 16px;
+  border-radius: 6px;
+  background-color: #ffffff;
+  color: #333;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 15px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table th,
+table td {
+  padding: 10px 12px;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+}
+
+table th {
+  background: #f5f5f5;
+  font-weight: 600;
+}
+
+.no-data-found {
+  text-align: center;
+  font-style: italic;
+  color: gray;
+}
+/* ===== Table Card end===== */
+
+
+
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .header-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .header-bar .search-input,
+  .header-bar .status-dropdown,
+  .header-bar button {
+    width: 100%;
+  }
+
+  .summary-pagination-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .pagination {
+    justify-content: flex-start;
+  }
+
+  .table-container {
+    overflow-x: auto;
+  }
+}
+/* ===== Responsive end===== */
+
+/* ===== Pagination ===== */
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: flex-end;
+}
+
+.pagination button {
+  border: 1px solid #ddd;
+  background: white;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.pagination button.active {
+  background: #007bff;
+  color: white;
+}
+
+.pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+/* ===== Pagination end===== */
+
+/* ===== Record Summary + Pagination ===== */
+.summary-pagination-row {
+  display: flex;
+  justify-content: space-between; /* summary left, pagination right */
+  align-items: center;
+  margin-top: 15px;
+  flex-wrap: wrap; /* wrap on smaller screens */
+}
+
+.record-summary {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 6px;
+}
+/* ===== Record Summary + Pagination end===== */
+
+/* Title */
+.section-title {
+  color: #00bcd4;
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+/* Title end*/
+
+/* ===== Validation error===== */
+.error {
+  color: red;
+  font-size: 12px;
+  margin: -8px 0 8px 0;
+}
+/* ===== Validation error end===== */
+
+/* ===== Card Color and all===== */
+
+
+
+
+/* ======================================================
+   DATEPICKER  (navy header) - applies to all datepickers
+   ====================================================== */
+$dp-navy: #1e4a7b;
+$dp-navy-light: #e3eefb;
+$dp-text: #5f6b7a;
+$dp-muted: #9aa5b1;
+
+.mat-datepicker-content {
+  // Material theme tokens (Angular Material 17+)
+  --mat-datepicker-calendar-container-background-color: #fff;
+  --mat-datepicker-calendar-container-text-color: #{$dp-text};
+  --mat-datepicker-calendar-header-text-color: #{$dp-navy};
+  --mat-datepicker-calendar-header-divider-color: transparent;
+  --mat-datepicker-calendar-period-button-text-color: #fff;
+  --mat-datepicker-calendar-period-button-icon-color: #fff;
+  --mat-datepicker-calendar-navigation-button-icon-color: #fff;
+  --mat-datepicker-calendar-date-selected-state-background-color: #{$dp-navy-light};
+  --mat-datepicker-calendar-date-selected-state-text-color: #{$dp-navy};
+  --mat-datepicker-calendar-date-today-outline-color: transparent;
+  --mat-datepicker-calendar-date-hover-state-background-color: #{$dp-navy-light};
+  --mat-datepicker-calendar-date-focus-state-background-color: #{$dp-navy-light};
+
+  background: #fff !important;
+  border-radius: 10px !important;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.2) !important;
+  overflow: hidden;
+
+  // undo the global "table th / table td" rules above inside the calendar
+  .mat-calendar table {
+    border-collapse: separate;
+  }
+
+  .mat-calendar table th,
+  .mat-calendar table td {
+    background: transparent !important;
+    border: none !important;
+    font-weight: normal;
+  }
+
+  .mat-calendar {
+    background: #fff !important;
+    padding-bottom: 10px;
+  }
+
+  // navy header band
+  .mat-calendar-header {
+    background: $dp-navy !important;
+    padding: 6px 10px !important;
+    margin-bottom: 10px;
+  }
+
+  .mat-calendar-controls {
+    margin: 0 !important;
+  }
+
+  .mat-calendar-period-button {
+    color: #fff !important;
+    font-weight: 600;
+    font-size: 15px;
+  }
+
+  .mat-calendar-arrow {
+    fill: #fff !important;
+  }
+
+  .mat-calendar-previous-button,
+  .mat-calendar-next-button {
+    color: #fff !important;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.18) !important;
+    }
+  }
+
+  // weekday letters
+  .mat-calendar-table-header th {
+    color: $dp-navy !important;
+    font-size: 12px;
+    font-weight: 700 !important;
+    padding: 4px 0 10px;
+  }
+
+  .mat-calendar-table-header-divider {
+    display: none;
+  }
+
+  // month label (DEC)
+  .mat-calendar-body-label {
+    color: $dp-muted !important;
+    font-size: 11px;
+    text-transform: uppercase;
+  }
+
+  // day cells
+  .mat-calendar-body-cell-content {
+    color: $dp-text;
+    font-size: 13px;
+    border: none !important;
+  }
+
+  .mat-calendar-body-cell:hover
+    .mat-calendar-body-cell-content:not(.mat-calendar-body-selected):not(.mat-calendar-body-disabled) {
+    background: $dp-navy-light !important;
+    color: $dp-navy;
+  }
+
+  // today
+  .mat-calendar-body-today:not(.mat-calendar-body-selected) {
+    border: none !important;
+    color: $dp-navy !important;
+    font-weight: 700;
+  }
+
+  // selected
+  .mat-calendar-body-selected {
+    background: $dp-navy-light !important;
+    color: $dp-navy !important;
+    font-weight: 700;
+    box-shadow: none !important;
+  }
+
+  // dates before [min]
+  .mat-calendar-body-disabled > .mat-calendar-body-cell-content:not(.mat-calendar-body-selected) {
+    color: #cfd6dd !important;
+  }
+}
+
+// calendar icon in the input
+.mat-datepicker-toggle {
+  --mat-datepicker-toggle-icon-color: #{$dp-navy};
+  --mat-datepicker-toggle-active-icon-color: #{$dp-navy};
+}

@@ -1,0 +1,148 @@
+<div class="view-user-container">
+  <div class="user-header">
+    <h2 class="section-title">EDIT USER</h2>
+    <div class="action-buttons">
+      <button mat-raised-button color="accent" class="btn-back" (click)="backToIndexPage()">Back to Index</button>
+    </div>
+  </div>
+
+  <div class="user-info">
+
+    <!-- LEFT COLUMN -->
+    <div class="user-column">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Name</mat-label>
+        <!-- <input matInput [(ngModel)]="user.name" placeholder="Enter name" (keypress)="allowOnlyLetters($event)" /> -->
+           <input matInput [(ngModel)]="user.name" placeholder="Enter name" tabindex="1" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+  <mat-label>Expiry Date</mat-label>
+  <input
+    matInput
+    [matDatepicker]="expiryPicker"
+    [(ngModel)]="user.expiryDate"
+    readonly
+    placeholder="DD-MM-YYYY" maxlength="10" (keypress)="allowOnlyDateChars($event)" tabindex="3"
+    [min]="minDate"
+    
+  />
+  <mat-datepicker-toggle matSuffix [for]="expiryPicker"></mat-datepicker-toggle>
+  <mat-datepicker #expiryPicker></mat-datepicker>
+</mat-form-field>
+
+
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Telephone Number</mat-label>
+        <input matInput [(ngModel)]="user.telephone" placeholder="Enter telephone" type="tel" maxlength="15" pattern="[0-9]{15}" (keypress)="allowOnlyNumbers($event)" tabindex="5" />
+      </mat-form-field>
+
+      <div class="admin-permission">
+        <mat-checkbox [(ngModel)]="user.permissionCheckbox" (change)="onAdminPermissionToggle()" tabindex="7">
+          Admin Permissions (All modules)
+        </mat-checkbox>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div class="user-column">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>User Name (Email)</mat-label>
+        <input matInput aria-readonly="true" type="email" readonly [(ngModel)]="user.email" placeholder="Enter email" tabindex="2" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Mobile Number</mat-label>
+        <input matInput [(ngModel)]="user.mobile" type="tel" maxlength="10" pattern="[0-9]{10}" (keypress)="allowOnlyNumbers($event)" tabindex="4"
+         placeholder="Enter mobile number" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Status</mat-label>
+        <mat-select [(ngModel)]="user.status" tabindex="6">
+          <mat-option [value]="1">Active</mat-option>
+          <mat-option [value]="2">Inactive</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- PROCESS PERMISSION BLOCK -->
+      <!-- <div>
+        <div class="section-label">Process Permission :</div>
+        <div class="process-box">
+          <mat-checkbox *ngFor="let process of user.processPermission" [(ngModel)]="process.selected" tabindex="8">
+            {{ process.name }}
+          </mat-checkbox>
+        </div>
+      </div> -->
+    </div>
+
+
+  </div>
+
+  <!-- PERMISSIONS TABLE -->
+  <div class="permissions-section" *ngIf="user.permission !== 'Y'">
+    <h3 class="section-title">RIGHTS AND PERMISSIONS</h3>
+
+    <table class="permissions-table">
+      <thead>
+        <tr>
+          <th>Module Name</th>
+          <th>Add</th>
+          <th>Edit</th>
+          <th>Delete</th>
+          <th>Approve</th>
+          <th>Admin Approval</th>
+          <th>View Only</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let group of permissionGroups">
+          <tr class="group-row">
+            <td class="group-title">{{ group.name }}</td>
+            <td *ngFor="let action of permissionActions">
+              <mat-checkbox [(ngModel)]="selectAllRows[group.name][action]"
+                (change)="toggleGroupSelectAll(group.name, action)">
+                Select All
+              </mat-checkbox>
+            </td>
+          </tr>
+
+          <tr *ngFor="let mod of group.modules">
+            <td>{{ mod }}</td>
+            <td>
+              <mat-checkbox [(ngModel)]="permissions[mod].addPer"
+                (change)="updateSelectAll(group.name, 'addPer')"></mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="permissions[mod].editPer"
+                (change)="updateSelectAll(group.name, 'editPer')"></mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="permissions[mod].deletePer"
+                (change)="updateSelectAll(group.name, 'deletePer')"></mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="permissions[mod].approvePer"
+                (change)="updateSelectAll(group.name, 'approvePer')"></mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="permissions[mod].adminApprovePer"
+                (change)="updateSelectAll(group.name, 'adminApprovePer')"></mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="permissions[mod].viewPer"
+                (change)="updateSelectAll(group.name, 'viewPer')"></mat-checkbox>
+            </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ACTION BUTTONS -->
+  <div class="form-actions">
+    <button mat-raised-button color="primary" (click)="onSubmit()">Submit</button>
+    <button mat-stroked-button color="warn" (click)="onReset()">Reset</button>
+  </div>
+</div>

@@ -1,0 +1,99 @@
+<!-- ===== Header Card ===== -->
+<mat-card class="header-card">
+  <div class="module-header">
+    <span class="module-title">
+      {{ moduleName || 'Mail Log' }}
+    </span>
+    <span class="toggle-arrow" (click)="showHeaderBar = !showHeaderBar">
+      {{ showHeaderBar ? '▼' : '▲' }}
+    </span>
+  </div>
+
+  <div class="header-bar" *ngIf="showHeaderBar">
+    <input type="text" [(ngModel)]="searchQuery" placeholder="Search By Name, Email, Subject"
+      class="search-input" (keyup.enter)="onSearch()" />
+    <button type="button" (click)="onSearch()" class="icon-button">
+      🔍
+    </button>
+  </div>
+</mat-card>
+
+<!-- ===== Mail Log Table Card ===== -->
+<mat-card class="table-card">
+  <mat-card-content>
+
+    <!-- Summary & Pagination (Top) -->
+    <div class="summary-pagination-row">
+      <div class="record-summary">
+        {{ recordSummary }}
+      </div>
+
+      <div class="pagination">
+        <button (click)="goToFirstPage()" [disabled]="currentPage === 1">« First</button>
+        <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">‹ Prev</button>
+
+        <button *ngFor="let page of pages()" (click)="goToPage(page)" [class.active]="page === currentPage">
+          {{ page }}
+        </button>
+
+        <button (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages">Next ›</button>
+        <button (click)="goToLastPage()" [disabled]="currentPage === totalPages">Last »</button>
+      </div>
+    </div>
+
+    <!-- Mail Log Table -->
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>To Address</th>
+            <th>Subject</th>
+            <th>Date</th>
+            <th>IP Address</th>
+            <th>Local IP</th>
+            <th>Status</th>
+            <th>View Mail</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let mailLog of paginatedUsers; let i = index">
+            <td>{{ (currentPage - 1) * recordsPerPage + i + 1 }}</td>
+            <td>{{ mailLog.name }}</td>
+            <td>{{ mailLog.to }}</td>
+            <td>{{ mailLog.subject }}</td>
+            <td>{{ mailLog.regDate | date:'dd MMM yyyy HH:mm' }}</td>
+            <td>{{ mailLog.ipAddress }}</td>
+            <td>{{ mailLog.localIp }}</td>
+            <td>
+              {{ mailLog.status === 1 ? 'Sent' : mailLog.status === 2 ? 'Fail' : '' }}
+            </td>
+
+            <td><button mat-icon-button class="view-mail-btn" (click)="viewMail(mailLog.mailLogId)">
+  <mat-icon>mail_outline</mat-icon>
+</button></td>
+          </tr>
+
+          <tr *ngIf="paginatedUsers.length === 0">
+            <td colspan="6" class="no-data">No Mail Log Found.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination (Bottom) -->
+    <div class="pagination">
+      <button (click)="goToFirstPage()" [disabled]="currentPage === 1">« First</button>
+      <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">‹ Prev</button>
+
+      <button *ngFor="let page of pages()" (click)="goToPage(page)" [class.active]="page === currentPage">
+        {{ page }}
+      </button>
+
+      <button (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages">Next ›</button>
+      <button (click)="goToLastPage()" [disabled]="currentPage === totalPages">Last »</button>
+    </div>
+
+  </mat-card-content>
+</mat-card>

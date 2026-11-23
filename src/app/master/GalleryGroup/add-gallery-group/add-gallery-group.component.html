@@ -1,0 +1,110 @@
+<form #bankForm="ngForm" (ngSubmit)="onSubmit(bankForm)" novalidate>
+  <div class="view-user-container">
+
+    <!-- HEADER -->
+    <div class="user-header">
+      <h2 class="section-title">
+        {{ isEditMode ? 'UPDATE GROUP' : 'ADD GROUP' }}
+      </h2>
+
+      <div class="action-buttons">
+        <button mat-raised-button
+                color="accent"
+                type="button"
+                (click)="backToIndexPage()">
+          Back to Index
+        </button>
+      </div>
+    </div>
+
+    <div class="user-info">
+
+      <!-- NAME -->
+      <div class="user-column">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Name</mat-label>
+          <input matInput
+                 [(ngModel)]="group.name"
+                 name="name"
+                 required
+                 minlength="3"
+                 maxlength="200"
+                 #nameCtrl="ngModel"
+                 placeholder="Enter name" />
+        </mat-form-field>
+
+        <div class="error" *ngIf="nameCtrl.invalid && nameCtrl.touched">
+          <span *ngIf="nameCtrl.errors?.['required']">Name is required</span>
+          <span *ngIf="nameCtrl.errors?.['minlength']">Minimum 3 characters required</span>
+        </div>
+
+        <!-- <div class="error" *ngIf="nameError">
+          {{ nameError }}
+        </div> -->
+      </div>
+
+      <!-- DATE -->
+      <div class="user-column">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Select Date</mat-label>
+          <input matInput
+                 [matDatepicker]="picker"
+                 [(ngModel)]="group.date"
+                 name="date"
+                 required
+                 placeholder="DD-MM-YYYY"
+                 [readonly]="isEditMode"
+                 #dateCtrl="ngModel" />
+
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+
+          <mat-error *ngIf="dateCtrl.invalid && dateCtrl.touched">
+            Date is required
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+
+      <div class="user-column"  *ngIf="isEditMode">
+       <!-- Status -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Status</mat-label>
+          <mat-select 
+            [(ngModel)]="group.status" 
+            name="status" 
+            required 
+            #statusCtrl="ngModel" 
+            tabindex="2">
+            <mat-option [value]="1">Active</mat-option>
+            <mat-option [value]="2">Inactive</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Status Validation -->
+        <div class="error" *ngIf="statusCtrl.touched && statusCtrl.invalid">
+          <div *ngIf="statusCtrl.errors?.['required']">Status is required</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="form-actions">
+      <button mat-raised-button
+              color="primary"
+              type="submit"
+              [disabled]="bankForm.invalid">
+        {{ isEditMode ? 'Update' : 'Submit' }}
+      </button>
+
+      <button mat-stroked-button
+              color="warn"
+              type="button"
+              (click)="onReset()">
+        Reset
+      </button>
+    </div>
+
+  </div>
+</form>

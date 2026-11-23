@@ -1,0 +1,208 @@
+<div class="user-header">
+  <h2 class="section-title">EDIT EVENT/WEBINAR</h2>
+  <div class="action-buttons">
+    <button mat-raised-button color="accent" class="btn-back" (click)="backToIndexPage()">Back to Index</button>
+  </div>
+</div>
+
+<mat-card class="form-card">
+  <mat-card-content>
+    <form #galleryForm="ngForm" (ngSubmit)="onSubmit(galleryForm)" novalidate>
+
+     <!-- Row 1: Type / Title / Date -->
+<div class="row">
+  <mat-form-field appearance="outline" class="field">
+    <mat-label>Select Type</mat-label>
+    <mat-select [(ngModel)]="event.type" name="type" required #typeCtrl="ngModel">
+      <mat-option value="event">Event</mat-option>
+      <mat-option value="webinar">Webinar</mat-option>
+    </mat-select>
+    <mat-error *ngIf="typeCtrl.invalid && typeCtrl.touched">Type is required.</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="field">
+    <mat-label>
+      {{ event.type === 'event' ? 'Event Title *' : event.type === 'webinar' ? 'Webinar Title *' : 'Title *' }}
+    </mat-label>
+    <input
+      matInput
+      [(ngModel)]="event.title"
+      maxlength="1000"
+      name="title"
+      required
+      #titleCtrl="ngModel"
+    />
+    <mat-error *ngIf="titleCtrl.invalid && titleCtrl.touched">
+      {{ event.type === 'event' ? 'Event Title is required.' : event.type === 'webinar' ? 'Webinar Title is required.' : 'Title is required.' }}
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="field">
+    <mat-label>Date</mat-label>
+    <input
+      matInput
+      [matDatepicker]="picker"
+      [(ngModel)]="event.date"
+      name="date"
+      required
+  
+      placeholder="DD-MM-YYYY"
+      readonly
+      #dateCtrl="ngModel"
+    />
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+    <mat-error *ngIf="dateCtrl.invalid && dateCtrl.touched">Date is required.</mat-error>
+    <!-- <mat-error *ngIf="!dateCtrl.invalid && isPastDate(event.date)">Date cannot be in the past.</mat-error> -->
+  </mat-form-field>
+</div>
+
+<!-- Row 2: Time / Duration Hour / Duration Minute / Location or Webinar Link -->
+<div class="row">
+  <mat-form-field appearance="outline" class="field small-field">
+    <mat-label>Time</mat-label>
+    <input matInput type="time" [(ngModel)]="event.time" name="time"  #timeCtrl="ngModel" />
+    <!-- <mat-error *ngIf="timeCtrl.invalid && timeCtrl.touched">Time is required.</mat-error> -->
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="field small-field">
+    <mat-label>Duration (Hours)</mat-label>
+    <mat-select [(ngModel)]="event.durationHours" name="durationHours"  #durHourCtrl="ngModel">
+      <mat-option *ngFor="let h of durationHours" [value]="h">{{ h }}</mat-option>
+    </mat-select>
+    <!-- <mat-error *ngIf="durHourCtrl.invalid && durHourCtrl.touched">Hour is required.</mat-error> -->
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="field small-field">
+    <mat-label>Duration (Minutes)</mat-label>
+    <mat-select [(ngModel)]="event.durationMinutes" name="durationMinutes"  #durMinCtrl="ngModel">
+      <mat-option *ngFor="let m of durationMinutes" [value]="m">{{ m }}</mat-option>
+    </mat-select>
+    <!-- <mat-error *ngIf="durMinCtrl.invalid && durMinCtrl.touched">Minute is required.</mat-error> -->
+  </mat-form-field>
+
+  <mat-form-field *ngIf="event.type === 'event'" appearance="outline" class="field small-field">
+    <mat-label>Location</mat-label>
+    <input matInput [(ngModel)]="event.location" name="location"  #locationCtrl="ngModel" />
+    <!-- <mat-error *ngIf="locationCtrl.invalid && locationCtrl.touched">Location is required.</mat-error> -->
+  </mat-form-field>
+
+  <mat-form-field *ngIf="event.type === 'webinar'" appearance="outline" class="field small-field">
+    <mat-label>Webinar Link</mat-label>
+    <input matInput [(ngModel)]="event.link" name="link"  #linkCtrl="ngModel" />
+    <!-- <mat-error *ngIf="linkCtrl.invalid && linkCtrl.touched">Webinar link is required.</mat-error> -->
+  </mat-form-field>
+</div>
+
+
+      <!-- Row 3: Short Description -->
+      <div class="row">
+        <mat-form-field appearance="outline" class="field full">
+          <mat-label>Short Description</mat-label>
+          <textarea matInput [(ngModel)]="event.shortDescription" name="shortDescription"  #shortDescCtrl="ngModel"></textarea>
+           <!-- Character counter -->
+  <mat-hint align="end">
+  {{ event.shortDescription.length }}/200
+</mat-hint>
+          <!-- <mat-error *ngIf="shortDescCtrl.invalid && shortDescCtrl.touched">Short description is required.</mat-error> -->
+        </mat-form-field>
+      </div>
+
+      <!-- Row 4: Long Description (Summernote) -->
+      <!-- <div class="user-info">
+        <div class="user-column full-width">
+          <label for="description">Description:</label>
+          <div #summernoteEditor id="summernote"></div>
+
+          
+          <input type="hidden" name="description" [(ngModel)]="event.description" required #descCtrl="ngModel" />
+
+          <div class="error" *ngIf="descCtrl.invalid && (descCtrl.touched || descTouched)">
+            Description is required.
+          </div>
+        </div>
+      </div> -->
+
+      <!-- Row 4: Long Description (Summernote) -->
+<div class="user-info">
+  <div class="user-column full-width">
+    <label for="description">Description:</label>
+    <div #summernoteEditor id="summernote"></div>
+
+    <!-- Hidden input for Angular validation -->
+    <input
+      type="hidden"
+      name="description"
+      [(ngModel)]="event.description"
+      
+      #descCtrl="ngModel"
+    />
+
+    <!-- <div
+      class="error"
+      *ngIf="
+        (!event.description || event.description.trim() === '') &&
+        (descCtrl.touched || descTouched)
+      "
+    >
+      Description is required.
+    </div> -->
+  </div>
+</div>
+
+
+<br>
+
+      <!-- File Upload + Preview -->
+      <div class="existing-image-upload">
+        <div class="image-upload-row-right">
+          <div class="upload-file">
+            <div class="file-label-row">
+              <label for="file1">Upload File</label>
+              <span class="file-info">File type: jpg, png, jpeg | Max size: 5MB</span>
+            </div>
+            <input type="file" id="file1" name="file"
+                   (change)="onFileSelected($event)"
+                   accept=".jpg,.jpeg,.png"
+                   #fileInput />
+            <div class="error" *ngIf="fileError">
+              {{ fileError }}
+            </div>
+          </div>
+
+            <!-- Status Dropdown -->
+
+<mat-form-field appearance="outline" class="field small-field">
+  <mat-label>Status</mat-label>
+  <mat-select [(ngModel)]="event.status" name="status" required #statusCtrl="ngModel">
+    <mat-option [value]="1">Active</mat-option>
+    <mat-option [value]="2">Inactive</mat-option>
+  </mat-select>
+  <mat-error *ngIf="statusCtrl.invalid && statusCtrl.touched">
+    Status is required.
+  </mat-error>
+</mat-form-field>
+
+
+          
+
+          <div class="existing-image" *ngIf="existingImageUrl">
+            <p>Existing Image:</p>
+            <img [src]="existingImageUrl" alt="Existing Event Image" class="hover-zoom"/>
+          </div>
+        </div>
+      </div>
+
+    
+
+      
+
+      <!-- Actions -->
+      <div class="form-actions">
+        <button mat-raised-button color="primary" type="submit" [disabled]="galleryForm.invalid">Submit</button>
+        <button mat-stroked-button color="warn" type="button" (click)="onReset(galleryForm)">Reset</button>
+      </div>
+
+    </form>
+  </mat-card-content>
+</mat-card>

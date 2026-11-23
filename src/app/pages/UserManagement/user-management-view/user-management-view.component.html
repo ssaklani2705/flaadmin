@@ -1,0 +1,108 @@
+<div class="view-user-container">
+  <div class="user-header">
+    <h2 class="section-title">VIEW USER</h2>
+    <div class="action-buttons">
+      <!-- <button mat-raised-button class="btn-reset" color="primary"  *ngIf="user.status === 1"  (click)="confirmResetPassword(user.email,user.userId)">Reset Password</button> -->
+      <button mat-raised-button class="btn-back" color="accent" (click)="backToIndexPage()">Back to Index</button>
+    </div>
+  </div>
+
+  <div class="user-info">
+    <div class="user-column">
+      <p><strong>Name:</strong> {{ user.name }}</p>
+      <p><strong>Expiry Date:</strong> {{ user.expiryDate | date:'dd-MM-yyyy' }}</p>
+      <p><strong>Telephone Number:</strong> {{ user.telephone }}</p>
+      <div class="admin-permission">
+  <mat-icon [ngClass]="user.permission === 'Y' ? 'icon-green' : 'icon-red'">
+    {{ user.permission === 'Y' ? 'verified_user' : 'close' }}
+  </mat-icon>
+  <span class="admin-permission-text">Admin Permissions (All modules)</span>
+</div>
+
+    </div>
+    <div class="user-column">
+      <p><strong>User Name (Email):</strong> {{ user.email }}</p>
+      <p><strong>Mobile Number:</strong> {{ user.mobile }}</p>
+      <p><strong>Status:</strong> &nbsp;&nbsp; <span [ngClass]="common.getStatusClass(user.status)">{{ getStatusText(user.status) }}</span></p>
+      <!-- <p><strong>Process Permission:</strong> {{ user.processPermission }}</p> -->
+    </div>
+  </div>
+
+  <div class="permissions-section" *ngIf="user.permission !== 'Y'">
+    <h3 class="section-title">RIGHTS AND PERMISSIONS</h3>
+
+    <table class="permissions-table">
+      <thead>
+        <tr>
+          <th>Module Name</th>
+          <th>Add</th>
+          <th>Edit</th>
+          <th>Delete</th>
+          <th>Approve</th>
+          <th>Admin Approval</th>
+          <th>View Only</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let group of permissionGroups">
+          <tr class="group-row">
+            <td colspan="7" class="group-title">{{ group.name }}</td>
+          </tr>
+          <tr *ngFor="let mod of group.modules">
+            <td>{{ mod }}</td>
+            <td>
+              <mat-icon *ngIf="permissions[mod]?.addPer" class="font-green">check</mat-icon>
+              <mat-icon *ngIf="!permissions[mod]?.addPer" class="font-red">close</mat-icon>
+            </td>
+            <td>
+              <mat-icon *ngIf="permissions[mod]?.editPer" class="font-green">check</mat-icon>
+              <mat-icon *ngIf="!permissions[mod]?.editPer" class="font-red">close</mat-icon>
+            </td>
+            <td>
+              <mat-icon *ngIf="permissions[mod]?.deletePer" class="font-green">check</mat-icon>
+              <mat-icon *ngIf="!permissions[mod]?.deletePer" class="font-red">close</mat-icon>
+            </td>
+            <td>
+              <mat-icon *ngIf="permissions[mod]?.approvePer" class="font-green">check</mat-icon>
+              <mat-icon *ngIf="!permissions[mod]?.approvePer" class="font-red">close</mat-icon>
+            </td>
+            <td>
+              <mat-icon *ngIf="permissions[mod]?.adminApprovePer" class="font-green">check</mat-icon>
+              <mat-icon *ngIf="!permissions[mod]?.adminApprovePer" class="font-red">close</mat-icon>
+            </td>
+            <td>
+              <mat-icon *ngIf="permissions[mod]?.viewPer" class="font-green">check</mat-icon>
+              <mat-icon *ngIf="!permissions[mod]?.viewPer" class="font-red">close</mat-icon>
+            </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+
+<div class="action-history-section">
+  <h3 class="section-title action-title">ACTION HISTORY</h3>
+
+  <div class="action-history-table">
+    <div *ngIf="transactionhistory?.length === 0" class="no-records-box">
+      No record(s) found.
+    </div>
+
+   <table *ngIf="hasTransactionHistory" class="mat-elevation-z1 action-table">
+      <thead>
+        <tr>
+          <th>Date & Time</th>
+          <th>Action</th>
+          <th>Performed By</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let record of transactionhistory">
+          <td>{{ record.entryDate }}</td>
+          <td>{{ record.action }}</td>
+          <td>{{ record.name }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,53 @@
+<h2 mat-dialog-title>ADD BANK USER</h2>
+
+<form #bankUserForm="ngForm" (ngSubmit)="onSubmit(bankUserForm)" novalidate>
+  <mat-dialog-content class="dialog-content">
+
+    <div class="bank-label">Bank: <b>{{ data.bankName }}</b></div>
+
+    <!-- User Name -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>User Name</mat-label>
+      <input matInput [(ngModel)]="user.name" name="name" required
+             minlength="3" maxlength="100" #nameCtrl="ngModel"
+             (blur)="validateBankName()" placeholder="Enter User name" />
+    </mat-form-field>
+    <div class="error" *ngIf="nameError">User {{ nameError }}</div>
+
+    <!-- Email -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>User Email ID</mat-label>
+      <input matInput [(ngModel)]="user.email" name="email" required maxlength="50" email
+             pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+             #emailCtrl="ngModel" placeholder="Enter Email ID" />
+    </mat-form-field>
+    <div class="error" *ngIf="emailCtrl.touched && emailCtrl.invalid">
+      <div *ngIf="emailCtrl.errors?.['required']">Email ID is required</div>
+      <div *ngIf="emailCtrl.errors?.['email']">Enter a valid email ID</div>
+      <div *ngIf="emailCtrl.errors?.['pattern']">
+        Email ID must end with a valid domain (e.g. <b>.com</b>, <b>.in</b>, <b>.org</b>)
+      </div>
+    </div>
+
+    <!-- Mobile -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Mobile No.</mat-label>
+      <input matInput [(ngModel)]="user.mobile" name="mobile" type="tel"
+             (keypress)="allowOnlyNumbers($event)" maxlength="10"
+             pattern="^[0-9]{10}$" #mobileCtrl="ngModel" placeholder="Enter Mobile No." />
+    </mat-form-field>
+    <div class="error" *ngIf="mobileCtrl.touched && mobileCtrl.invalid">
+      <div *ngIf="mobileCtrl.errors?.['pattern']">Enter a valid 10-digit number</div>
+    </div>
+
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-stroked-button type="button" (click)="onCancel()">Cancel</button>
+    <button mat-stroked-button color="warn" type="button" (click)="onReset(bankUserForm)">Reset</button>
+    <button mat-raised-button color="primary" type="submit"
+            [disabled]="bankUserForm.invalid || isSubmitting">
+      {{ isSubmitting ? 'Submitting...' : 'Submit' }}
+    </button>
+  </mat-dialog-actions>
+</form>

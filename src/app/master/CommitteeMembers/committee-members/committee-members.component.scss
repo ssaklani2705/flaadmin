@@ -1,0 +1,138 @@
+/* ===== Header Card ===== */
+.header-card {
+  padding: 15px 20px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  background: #fff;
+}
+
+.module-header {
+  display: flex;
+  align-items: center;
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #00bcd4;
+  user-select: none;
+}
+
+.module-title {
+  margin-right: 10px;
+}
+
+.toggle-arrow {
+  font-size: 16px;
+  transform: translateY(1px);
+  cursor: pointer;
+}
+
+.header-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ===== Table Styles ===== */
+.table-container {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.no-data-found {
+  text-align: center;
+  font-style: italic;
+  color: #888;
+}
+
+/* ===== Actions ===== */
+/* ===== Actions ===== */
+.actions {
+  text-align: left;   /* ✅ move icons to left side */
+}
+
+.actions-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;  /* ✅ align left instead of center */
+  gap: 8px;
+}
+
+
+.action-button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+}
+
+.action-button.delete {
+  color: red;
+}
+
+/* ===== Pagination ===== */
+.summary-pagination-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.pagination {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.pagination button {
+  border: 1px solid #ccc;
+  background: #fff;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.pagination button.active {
+  background: #00bcd4;
+  color: #fff;
+  font-weight: bold;
+}
+
+.pagination button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Bottom pagination → right aligned */
+.pagination-bottom {
+  justify-content: flex-end;
+  margin-top: 15px;
+}
+
+/* ===== Card ===== */
+.table-card {
+  background-color: #ffffff;
+  color: #333;
+  margin-top: 16px;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}

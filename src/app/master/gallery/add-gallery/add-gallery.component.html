@@ -1,0 +1,143 @@
+<form #galleryForm="ngForm" (ngSubmit)="onSubmit(galleryForm)" novalidate>
+  <div class="view-user-container">
+    <div class="user-header">
+      <h2 class="section-title">ADD GALLERY</h2>
+      <div class="action-buttons">
+        <button mat-raised-button color="accent" type="button" class="btn-back" (click)="backToIndexPage()">
+          Back to Index
+        </button>
+      </div>
+    </div>
+  <!-- ROW 1 : 3 columns -->
+  <div class="form-row row-3">
+    <!-- ONE ROW: Type + File/Video + Caption -->
+    <div class="user-info">
+      <!-- Type -->
+      <div class="user-column">
+        <mat-label><b>Type:</b></mat-label>
+        <mat-radio-group
+          [(ngModel)]="gallery.type"
+          name="type"
+          class="full-width"
+          (change)="onTypeChange()"
+        >
+          <mat-radio-button [value]="1">Image</mat-radio-button>
+          <mat-radio-button [value]="2">Video</mat-radio-button>
+        </mat-radio-group>
+      </div>
+
+      <!-- Image File -->
+      <div class="user-column" *ngIf="gallery.type === 1">
+        <label class="section-label" for="fileInput">
+          Select Image
+          <small class="file-info">[Only .jpg, .jpeg, .png allowed up to 6 MB]</small>
+        </label>
+        <input
+          type="file"
+          id="fileInput"
+          (change)="onFileSelected($event)"
+          [accept]="'image/*'"
+          class="full-width"
+          #fileInputRef
+        />
+        <div class="error" *ngIf="!gallery.file && fileTouched">
+          Image is required.
+        </div>
+      </div>
+
+      <!-- Video URL -->
+      <div class="user-column" *ngIf="gallery.type === 2">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Video URL</mat-label>
+          <input
+            matInput
+            [(ngModel)]="gallery.videoUrl"
+            name="videoUrl"
+            placeholder="Enter Youtube Video URL"
+            maxlength="200"
+            #videoCtrl="ngModel"
+            (blur)="videoTouched = true"
+            required
+           
+
+          />
+        </mat-form-field>
+         <!-- pattern="^https:\/\/www\.youtube\.com\/embed\/[a-zA-Z0-9_-]+$"? -->
+        <div class="error" *ngIf="videoCtrl.errors?.['required'] && videoTouched">
+          Video URL is required.
+        </div>
+        <!-- 
+        pattern="^https:\/\/www\.youtube\.com\/embed\/[a-zA-Z0-9_-]+(\?.*)?$"
+        <div class="error" *ngIf="videoCtrl.errors?.['pattern'] && videoTouched">
+          Please enter a valid YouTube embed URL.
+        </div> -->
+      </div>
+     
+
+        <!-- ROW 2 : 4 columns -->
+
+<div class="user-column">
+      <mat-form-field appearance="outline">
+  <mat-label>Group</mat-label>
+
+  <mat-select
+    [(ngModel)]="gallery.groupId"
+    name="groupId"
+    required
+    #groupIdCtrl="ngModel"
+    tabindex="2">
+
+    <mat-option *ngFor="let g of groups" [value]="g.groupId">
+      {{ g.name }}
+    </mat-option>
+
+  </mat-select>
+
+</mat-form-field>
+
+<div class="error" *ngIf="groupIdCtrl.invalid && groupIdCtrl.touched">
+  Group is required.
+</div>
+
+        </div>
+       
+
+        
+      <!-- Caption -->
+      <div class="user-column">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Caption</mat-label>
+          <input
+            matInput
+            [(ngModel)]="gallery.caption"
+            name="caption"
+           
+            minlength="3"
+            maxlength="250"
+            #captionCtrl="ngModel"
+            placeholder="Enter Caption"
+          />
+          <mat-hint align="end" [ngClass]="{ 'error-counter': gallery.caption.length > 250 }">
+            {{ gallery.caption.length }}/250
+          </mat-hint>
+        </mat-form-field>
+        <!-- <div class="error" *ngIf="captionCtrl.touched && captionCtrl.invalid">
+          <div *ngIf="captionCtrl.errors?.['required']">Caption is required.</div>
+          <div *ngIf="captionCtrl.errors?.['minlength']">Caption must be at least 3 characters long.</div>
+          <div *ngIf="captionCtrl.errors?.['maxlength']">Caption cannot exceed 100 characters.</div>
+        </div> -->
+     
+    </div>
+</div></div>
+
+    <!-- ACTION BUTTONS -->
+    <div class="form-actions">
+      <button mat-raised-button color="primary" type="submit" [disabled]="galleryForm.invalid">
+        Submit
+      </button>
+      <button mat-stroked-button color="warn" type="button" (click)="onReset(galleryForm)">
+        Reset
+      </button>
+    </div>
+  </div>
+</form>

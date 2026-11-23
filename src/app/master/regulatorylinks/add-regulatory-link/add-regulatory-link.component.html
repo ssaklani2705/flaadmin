@@ -1,0 +1,89 @@
+<form #bankForm="ngForm" (ngSubmit)="onSubmit(bankForm)" novalidate>
+    <div class="view-user-container">
+        <div class="user-header">
+            <h2 class="section-title">ADD REGULATORY LINK</h2>
+            <div class="action-buttons">
+                <button mat-raised-button color="accent" type="button"  class="btn-back" (click)="backToIndexPage()">Back to
+                    Index</button>
+            </div>
+        </div>
+
+        <div class="user-info">
+            <!-- LEFT COLUMN -->
+            <div class="user-column">
+                <!--  Name -->
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Link Name</mat-label>
+                    <input matInput [(ngModel)]="gallery.name" name="name" maxlength="100" required minlength="3" #nameCtrl="ngModel"
+                        placeholder="Enter Link name" tabindex="1" />
+                </mat-form-field>
+                <div class="error" *ngIf="nameCtrl.invalid && nameCtrl.touched">
+          <span *ngIf="nameCtrl.errors?.['required']">Link Name is required</span>
+          <span *ngIf="nameCtrl.errors?.['minlength']">Minimum 3 characters required</span>
+        </div>
+
+        <!-- Custom regex validation -->
+        <div class="error" *ngIf="nameError">
+          {{ nameError }}
+        </div>
+            </div>
+
+            <!-- RIGHT COLUMN -->
+            <div class="user-column">
+                <!-- Bank Type -->
+                <!-- <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>URL</mat-label>
+                    <input matInput [(ngModel)]="gallery.url" name="url" required minlength="3" maxlength="200" #nameCtrl="ngModel"
+                        placeholder="Enter URL" tabindex="2" />
+                </mat-form-field> -->
+                   <mat-form-field appearance="outline" class="full-width">
+  <mat-label>URL</mat-label>
+  <input 
+    matInput 
+    [(ngModel)]="gallery.url" 
+    name="url" 
+    maxlength="200" 
+    required 
+    minlength="3" 
+    #urlCtrl="ngModel"
+    pattern="^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$"
+    placeholder="Enter URL" 
+    tabindex="2" />
+</mat-form-field>
+
+<div class="error" *ngIf="urlCtrl.touched && urlCtrl.invalid">
+  <span *ngIf="urlCtrl.errors?.['required']">URL is required.</span>
+  <span *ngIf="urlCtrl.errors?.['minlength']">Minimum 3 characters required.</span>
+  <span *ngIf="urlCtrl.errors?.['pattern']">Please enter a valid URL.</span>
+</div>
+            </div>
+
+ <div class="user-column">
+                <!--  Name -->
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Sequence</mat-label>
+                    <input matInput [(ngModel)]="gallery.sequence" name="sequence"  (input)="validateSequence($event)" required  #sequenceCtrl="ngModel"
+                        placeholder="Enter Sequence" tabindex="3" />
+                </mat-form-field>
+                <div class="error" *ngIf="sequenceCtrl.invalid && sequenceCtrl.touched">
+          <span *ngIf="sequenceCtrl.errors?.['required']">Sequence is required</span>
+        </div>
+
+            </div>
+
+        </div>
+
+
+         
+
+        <!-- ACTION BUTTONS -->
+        <div class="form-actions">
+            <button mat-raised-button color="primary" type="submit" tabindex="4" [disabled]="bankForm.invalid">
+                Submit
+            </button>
+            <button mat-stroked-button color="warn" type="button" tabindex="5" (click)="onReset()">
+                Reset
+            </button>
+        </div>
+    </div>
+</form>

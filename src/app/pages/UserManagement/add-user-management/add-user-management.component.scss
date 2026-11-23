@@ -1,0 +1,192 @@
+/* Container */
+.container {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+.user-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.section-title {
+  color: #00bcd4;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+.action-buttons {
+  display: flex;
+  gap: 12px;
+}
+/* Main Form Title */
+// .form-title {
+//   color: #00aaff;
+//   font-size: 26px; /* Slightly bigger */
+//   font-weight: bold;
+//   margin-bottom: 25px;
+// }
+
+/* Angular Material Form Field Labels */
+.mat-form-field-label {
+  font-size: 15px !important;
+  font-weight: bold !important;
+  color: #333 !important;
+}
+
+/* Bigger Input Fields */
+.mat-form-field {
+  font-size: 15px;
+  height: 60px;
+}
+
+.mat-input-element {
+  font-size: 15px;
+  padding: 14px 0;
+}
+
+/* Datepicker icon alignment */
+.mat-datepicker-toggle {
+  margin-right: 4px;
+}
+
+/* Form Layout */
+.user-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
+.form-column {
+  flex: 1;
+  min-width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+/* Section Labels */
+.section-label {
+  font-weight: bold;
+  font-size: 15px;
+  margin-top: 12px;
+  margin-bottom: 6px;
+  color: #333;
+}
+
+/* Process Permission Box */
+.process-box {
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #f9f9f9;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+/* Rights Section */
+.rights-section {
+  margin-top: 40px;
+}
+
+.section-heading {
+  font-size: 20px;
+  font-weight: bold;
+  color: #00aaff;
+  margin-bottom: 12px;
+}
+
+/* Permissions Table */
+.permissions-table-wrapper {
+  overflow-x: auto;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+.permissions-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.permissions-table th,
+.permissions-table td {
+  text-align: center;
+  padding: 14px;
+  border: 1px solid #eee;
+  font-size: 15px;
+}
+
+.permissions-table th {
+  background-color: #f9f9f9;
+  font-weight: bold;
+  color: #333;
+}
+
+.permissions-table .group-header {
+  background-color: #f0faff;
+  font-weight: bold;
+  color: #00aaff;
+}
+
+.permissions-table .group-header td {
+  text-align: left;
+  padding-left: 15px;
+}
+
+/* Form Actions */
+.form-actions {
+  margin-top: 24px;
+  display: flex;
+  gap: 18px;
+  justify-content: center;
+}
+
+.form-actions button {
+  background-color: #00aaff;
+  color: white;
+  border: none;
+  padding: 14px 28px;
+  font-weight: bold;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.form-actions .secondary {
+  background-color: #eee;
+  color: #333;
+}
+
+.form-actions button:hover:not([disabled]) {
+  background-color: #0077cc;
+}
+
+.error {
+  color: red;
+  font-size: 12px;
+  margin: -10px 0 10px 5px;
+}
+
+
+.form-actions {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+
+// for Datepicker?

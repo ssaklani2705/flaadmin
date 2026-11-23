@@ -1,0 +1,105 @@
+<div class="view-user-container">
+        <div class="user-header">
+      <h2 class="section-title">VIEW KNOWLEDGE SHARING</h2>
+      <div class="action-buttons">
+        <button mat-raised-button color="accent" class="btn-back" (click)="backToIndexPage()">
+          Back to Index
+        </button>
+      </div>
+    </div>
+  <div class="gallery-layout">
+    
+    <!-- LEFT COLUMN: All Fields -->
+    <div class="gallery-details">
+      <!-- Type -->
+      <div class="detail-row">
+        <label class="section-label">Title</label>
+        <span>{{ gallery.name }}</span>
+       
+      </div>
+
+
+      <!-- Status -->
+      <div class="detail-row">
+        <label class="section-label">Status</label>
+        <!-- <span [ngClass]="gallery.status === 1 ? 'status-active' : 'status-inactive'">
+          {{ gallery.status === 1 ? 'Active' : 'Inactive' }}
+        </span> -->
+        <span style="width: 10px;" [ngClass]="getStatusClass(gallery.status)">
+          {{ getStatusLabel(gallery.status) }}
+        </span>
+      </div>
+
+      <!-- Registered Date -->
+      <div class="detail-row">
+        <label class="section-label">Date</label>
+        <div class="caption-box">
+          <!-- {{ gallery.regDate | date:'dd-MMM-yyyy hh:mm a' }} -->
+              {{ gallery.regDate | date:'dd-MMM-yyyy' }}
+        </div>
+      </div>
+
+       <!-- Source -->
+      <div class="detail-row">
+        <label class="section-label">Source</label>
+        <div class="caption-box">
+          {{ gallery.source }}
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT COLUMN: Preview -->
+    <div class="gallery-preview">
+      <!-- <label class="section-label">Preview</label> -->
+
+      <div *ngIf="gallery">
+  <img *ngIf="gallery.type === 'image'" [src]="gallery.url" [alt]="gallery.caption"  class="preview-media"/>
+  <iframe *ngIf="gallery.type === 'pdf'" [src]="gallery.url | safeUrl" width="100%" height="600px"></iframe>
+  <!-- <p>{{ gallery.caption }}</p> -->
+</div>
+    </div>
+  </div>
+
+  
+</div>
+
+<!-- ACTION HISTORY TABLE -->
+<mat-card class="action-history-card">
+  <mat-card-header>
+    <mat-card-title class="section-title action-title">ACTION HISTORY</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+    <div *ngIf="transactionhistory?.length === 0" class="no-records-box">
+      No record(s) found.
+    </div>
+
+    <div *ngIf="hasTransactionHistory" class="table-container">
+      <table mat-table [dataSource]="transactionhistory" class="mat-elevation-z1">
+
+        <!-- Performed By -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef> Performed By </th>
+          <td mat-cell *matCellDef="let record"> {{ record.name }} </td>
+        </ng-container>
+
+        <!-- Date & Time -->
+        <ng-container matColumnDef="entryDate">
+          <th mat-header-cell *matHeaderCellDef> Date & Time </th>
+          <!-- <td mat-cell *matCellDef="let record"> {{ record.entryDate | date:'dd-MMM-yyyy hh:mm a' }} </td> -->
+           <td mat-cell *matCellDef="let record"> {{ record.entryDate  }} </td>
+        </ng-container>
+
+        <!-- Action -->
+        <ng-container matColumnDef="action">
+          <th mat-header-cell *matHeaderCellDef> Action </th>
+          <td mat-cell *matCellDef="let record"> {{ record.action }} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="['name','entryDate','action']"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['name','entryDate','action'];"></tr>
+      </table>
+    </div>
+  </mat-card-content>
+</mat-card>

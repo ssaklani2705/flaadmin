@@ -1,0 +1,174 @@
+view-user-container {
+  padding: 24px;
+  font-family: 'Segoe UI', sans-serif;
+  color: #333;
+}
+
+
+.user-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.user-info {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 16px;
+  border: 1px solid #e0e0e0;
+  padding: 16px;
+  border-radius: 6px;
+}
+
+.user-column {
+  width: 48%;
+}
+
+.admin-permission {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #d32f2f;
+}
+
+.permissions-section {
+  margin-top: 32px;
+}
+
+.permissions-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fafafa;
+}
+
+.permissions-table th,
+.permissions-table td {
+  border: 1px solid #ddd;
+  text-align: center;
+  padding: 8px;
+}
+
+.permissions-table th {
+  background-color: #e1f5fe;
+  color: #333;
+}
+
+.group-row td {
+  background-color: #f5f5f5;
+  font-weight: bold;
+  text-align: left;
+  color: #00bcd4;
+}
+.icon-green {
+  color: green;
+}
+
+.icon-red {
+  color: red; 
+}
+.admin-permission-text {
+  color: black;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+.action-history-section {
+  margin-top: 24px;
+  border: 1px solid #e0e0e0;
+  padding: 16px;
+
+  .action-title {
+    color: #00bcd4; // matches the blue in your screenshot
+    font-weight: bold;
+    margin-bottom: 16px;
+  }
+
+  .no-records-box {
+    border: 1px solid #dcdcdc;
+    padding: 12px;
+    font-size: 14px;
+    color: #333;
+    background-color: #f9f9f9;
+  }
+}
+.group-row {
+  font-weight: bold;
+  color: #007bff;
+}
+
+td mat-checkbox {
+  font-size: 12px;
+}
+
+.form-actions {
+  margin-top: 20px;
+  display: flex;
+  gap: 15px;
+  justify-content: center; /* Center horizontally */
+}
+
+.section-label {
+  font-weight: bold;
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+
+.process-box {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.user-column {
+  flex: 1;
+  padding: 10px;
+}
+
+.user-info {
+  display: flex;
+  gap: 20px;
+}
+
+input[type="file"] {
+  display: block;
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  box-sizing: border-box;
+  background-color: #fff;
+  transition: border-color 0.3s ease;
+}
+
+input[type="file"]:focus {
+  outline: none;
+  border-color: #00bcd4; /* matches your theme color */
+  box-shadow: 0 0 5px rgba(0, 188, 212, 0.5);
+}
+.user-column.full-width {
+  width: 100%;
+}
+
+
+.file-info {
+  // display: block;
+  font-size: 12px;
+  color: red;        /* helper info in red */
+  margin-bottom: 4px;
+}

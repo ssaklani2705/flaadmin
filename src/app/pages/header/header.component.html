@@ -1,0 +1,31 @@
+<header class="app-header">
+  <!-- Left section: logo + toggle button -->
+  <div class="header-left">
+    <!-- Company Logo -->
+    <img [src]="imgUrl + 'assets/logo/ibalogo.png'" [class.logo-collapsed]="isCollapsed" alt="Company Logo" class="logo"
+      (click)="reloadHome()" />
+
+    <!-- Toggle Button -->
+    <div class="toggle-btn" (click)="onToggleClick()"  [class.toggle-collapsed]="isCollapsed" >
+      <!-- <img src="assets/images/sidebar_toggler_icon_darkblue.png" alt="Toggle Sidebar" /> -->
+        <img [src]="imgUrl + 'assets/images/sidebar_toggler_icon_darkblue.png'" alt="Toggle Sidebar" />
+    </div>
+  </div>
+
+  <!-- Right dropdown -->
+  <div class="header-right">
+    <div class="dropdown" [class.open]="isVipulDropdownOpen">
+      <button class="dropdown-toggle" (click)="toggleVipulDropdown()">
+        {{ username }} <span class="caret">&#9662;</span>
+      </button>
+
+      <ul class="dropdown-menu" *ngIf="isVipulDropdownOpen">
+        <li>
+          <a href="javascript:void(0)" (click)="onLogout()">
+            <i class="fas fa-sign-out-alt"></i> Log Out
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</header>

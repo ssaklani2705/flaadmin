@@ -1,0 +1,156 @@
+<form #committeeForm="ngForm" (ngSubmit)="onSubmit(committeeForm)" novalidate>
+  <div class="view-user-container">
+    <div class="user-header">
+      <h2 class="section-title">
+        {{ isEdit ? 'UPDATE COMMITTEE MEMBER' : 'ADD COMMITTEE MEMBER' }}
+      </h2>
+      <div class="action-buttons">
+        <button mat-raised-button color="accent" type="button"  class="btn-back" (click)="backToIndexPage()">
+          Back to Index
+        </button>
+      </div>
+    </div>
+
+    <div class="user-info">
+      <!-- LEFT COLUMN -->
+      <div class="user-column">
+        <!-- Bank -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Select Bank</mat-label>
+          <mat-select 
+            [(ngModel)]="committee.bankId"
+            name="bankId"
+            required
+            #bankIdCtrl="ngModel"
+            tabindex="1">
+            <mat-option *ngFor="let bank of banksdetails" [value]="bank.bankId">
+              {{ bank.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <div class="error" *ngIf="bankIdCtrl.touched && bankIdCtrl.invalid">
+          <div *ngIf="bankIdCtrl.errors?.['required']">Bank is required</div>
+        </div>
+
+        
+
+        <!-- Designation -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Designation</mat-label>
+          <input
+            matInput
+            [(ngModel)]="committee.designation"
+            name="designation"
+            required
+            maxlength="100"
+            #designationCtrl="ngModel"
+            placeholder="Enter Designation"
+            tabindex="3" />
+        </mat-form-field>
+        <div class="error" *ngIf="designationCtrl.touched && designationCtrl.invalid">
+          <span *ngIf="designationCtrl.errors?.['required']">Designation is required</span>
+        </div>
+
+
+         <!-- Sequence -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Sequence</mat-label>
+          <input
+            matInput
+            type="number"
+            [(ngModel)]="committee.sequence"
+            name="sequence"
+            required
+            min="1"
+            #sequenceCtrl="ngModel"
+            placeholder="Enter Sequence"
+            tabindex="5" />
+        </mat-form-field>
+        <div class="error" *ngIf="sequenceCtrl.touched && sequenceCtrl.invalid">
+          <span *ngIf="sequenceCtrl.errors?.['required']">Sequence is required</span>
+          <span *ngIf="sequenceCtrl.errors?.['min']">Sequence must be greater than 0</span>
+        </div>
+
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <div class="user-column">
+
+<!-- Name -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Committee Member Name</mat-label>
+          <input
+            matInput
+            [(ngModel)]="committee.name"
+            name="name"
+            required
+            minlength="2"
+            maxlength="100"
+            #nameCtrl="ngModel"
+            placeholder="Enter Committee Member Name"
+            tabindex="2" />
+        </mat-form-field>
+        <div class="error" *ngIf="nameCtrl.touched && nameCtrl.invalid">
+          <span *ngIf="nameCtrl.errors?.['required']">Committee Member Name is required</span>
+          <span *ngIf="nameCtrl.errors?.['minlength']">Minimum 3 characters required</span>
+        </div>
+
+        <!-- Email -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email ID</mat-label>
+          <input
+            matInput
+            [(ngModel)]="committee.email"
+            name="email"
+            required
+            pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+            maxlength="50"
+             #committeeEmailCtrl="ngModel"
+            placeholder="Enter Email ID"
+            tabindex="4" />
+        </mat-form-field>
+        <div class="error" *ngIf="committeeEmailCtrl.touched && committeeEmailCtrl.invalid">
+  <div *ngIf="committeeEmailCtrl.errors?.['required']">Email ID is required</div>
+  <div *ngIf="committeeEmailCtrl.errors?.['email']">Enter a valid email</div>
+  <div *ngIf="committeeEmailCtrl.errors?.['pattern']">
+    Email must end with a valid domain (e.g. <b>.com</b>, <b>.in</b>, <b>.org</b>)
+  </div>
+</div>
+
+       
+
+          <!-- Status -->
+           <div *ngIf="isEdit">
+<mat-form-field appearance="outline" class="full-width" >
+  <mat-label>Status</mat-label>
+  <mat-select
+    [(ngModel)]="committee.status"
+    name="status"
+    required
+    #statusCtrl="ngModel"
+    tabindex="6">
+    <mat-option [value]="1">Active</mat-option>
+    <mat-option [value]="2">Inactive</mat-option>
+  </mat-select>
+</mat-form-field>
+<div class="error" *ngIf="statusCtrl.touched && statusCtrl.invalid">
+  <div *ngIf="statusCtrl.errors?.['required']">Status is required</div>
+</div>
+</div>
+      </div>
+
+ 
+
+    </div>
+
+    <!-- ACTION BUTTONS -->
+    <div class="form-actions">
+      <button tabindex="6" mat-raised-button color="primary" type="submit" [disabled]="committeeForm.invalid">
+        {{ isEdit ? 'Update' : 'Submit' }}
+      </button>
+      <button tabindex="7" mat-stroked-button color="warn" type="button" (click)="onReset()">
+        Reset
+      </button>
+    </div>
+  </div>
+</form>

@@ -1,0 +1,129 @@
+<form #bankUserForm="ngForm" (ngSubmit)="onSubmit(bankUserForm)" novalidate>
+  <div class="view-user-container">
+    <div class="user-header">
+      <h2 class="section-title">EDIT BANK USER</h2>
+      <div class="action-buttons">
+        <button mat-raised-button color="accent" class="btn-back" type="button"  (click)="backToIndexPage()">Back to Index</button>
+      </div>
+    </div>
+
+    <div class="user-info">
+      <!-- LEFT COLUMN -->
+      <div class="user-column">
+        <!-- User Name -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>User Name</mat-label>
+          <input 
+            matInput
+            [(ngModel)]="user.name"
+            name="name"
+            required
+            minlength="3"
+            #nameCtrl="ngModel"
+            (blur)="validateBankName()"
+            placeholder="Enter User name"
+            tabindex="1" />
+        </mat-form-field>
+        <!-- <div class="error" *ngIf="nameCtrl.touched && nameCtrl.invalid">
+          <div *ngIf="nameCtrl.errors?.['required']">User Name is required</div>
+          <div *ngIf="nameCtrl.errors?.['minlength']">Minimum 3 characters required</div>
+        </div> -->
+        <div class="error" *ngIf="nameError">User {{ nameError }}</div>
+
+        <!-- Mobile No. -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Mobile No.</mat-label>
+          <input 
+            matInput
+            [(ngModel)]="user.mobile"
+            name="mobile"
+            
+            type="tel"
+            (keypress)="allowOnlyNumbers($event)"
+            maxlength="10"
+            pattern="^[0-9]{10}$"
+            #mobileCtrl="ngModel"
+            placeholder="Enter Mobile No."
+            tabindex="3" />
+        </mat-form-field>
+        <div class="error" *ngIf="mobileCtrl.touched && mobileCtrl.invalid">
+          <!-- <div *ngIf="mobileCtrl.errors?.['required']">Mobile No. is required</div> -->
+          <div *ngIf="mobileCtrl.errors?.['pattern']">Enter a valid 10-digit number</div>
+        </div>
+
+        <!-- Status -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Status</mat-label>
+          <mat-select 
+            [(ngModel)]="user.status"
+            name="status"
+            required
+            #statusCtrl="ngModel"
+            tabindex="5">
+            <mat-option [value]="1">Active</mat-option>
+            <mat-option [value]="2">Inactive</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <div class="error" *ngIf="statusCtrl.touched && statusCtrl.invalid">
+          <div *ngIf="statusCtrl.errors?.['required']">Status is required</div>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <div class="user-column">
+        <!-- User Email -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>User Email ID</mat-label>
+          <input 
+            matInput
+            [(ngModel)]="user.email"
+            name="email"
+            required
+            readonly
+            email
+            pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+            #emailCtrl="ngModel"
+            placeholder="Enter Email ID"
+            tabindex="2" />
+        </mat-form-field>
+        <div class="error" *ngIf="emailCtrl.touched && emailCtrl.invalid">
+          <div *ngIf="emailCtrl.errors?.['required']">Email ID is required</div>
+          <div *ngIf="emailCtrl.errors?.['email']">Enter a valid email ID</div>
+          <div *ngIf="emailCtrl.errors?.['pattern']">
+  Email ID must end with a valid domain (e.g. <b>.com</b>, <b>.in</b>, <b>.org</b>)
+</div>
+          <!-- <div *ngIf="emailCtrl.errors?.['pattern']">Email must end with <b>.com</b></div> -->
+
+        </div>
+
+        <!-- Bank Name -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Select Bank</mat-label>
+          <mat-select 
+            [(ngModel)]="user.bankId"
+            name="bankId"
+            required
+            #bankIdCtrl="ngModel"
+            tabindex="4">
+            <mat-option *ngFor="let bank of banksdetails" [value]="bank.bankId">
+              {{ bank.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <div class="error" *ngIf="bankIdCtrl.touched && bankIdCtrl.invalid">
+          <div *ngIf="bankIdCtrl.errors?.['required']">Bank Name is required</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACTION BUTTONS -->
+    <div class="form-actions">
+      <button mat-raised-button color="primary" tabindex="6" type="submit" [disabled]="bankUserForm.invalid">
+        Submit
+      </button>
+      <button mat-stroked-button color="warn" tabindex="7" type="button" (click)="onReset(bankUserForm)">
+        Reset
+      </button>
+    </div>
+  </div>
+</form>

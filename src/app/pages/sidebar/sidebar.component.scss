@@ -1,0 +1,117 @@
+.sidebar {
+  background-color: #2c3e50;
+  width: 250px;
+  height: 100vh;
+  overflow-y: auto;
+  color: white;
+  transition: width 0.3s ease; /* Smooth collapse */
+  white-space: nowrap; /* Prevent text wrapping */
+}
+
+.sidebar.collapsed {
+  width: 63px; /* Collapsed width */
+}
+
+.sidebar-header {
+  padding: 10px;
+  text-align: center;
+  background: white;
+}
+
+.logo {
+  max-width: 100%;
+  height: auto;
+}
+
+.menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  cursor: pointer;
+  justify-content: space-between;
+  text-decoration: none;
+  color: white;
+  transition: padding 0.3s ease;
+}
+
+.sidebar.collapsed .menu-item {
+  justify-content: center; /* Center icons when collapsed */
+  padding: 10px;
+}
+
+.menu-item span {
+  flex: 1;
+  transition: opacity 0.3s ease;
+}
+
+.sidebar.collapsed .menu-item span {
+  opacity: 0; /* Hide labels when collapsed */
+  pointer-events: none; /* Prevent clicking invisible text */
+}
+
+.menu-item:hover {
+  background-color: #34495e;
+}
+
+.active {
+  background-color: #1abc9c !important;
+  color: white !important;
+}
+
+.arrow {
+  transition: transform 0.3s;
+}
+
+.sidebar.collapsed .arrow {
+  display: none; /* Hide arrows in collapsed mode */
+}
+
+.rotated {
+  transform: rotate(90deg);
+}
+
+.submenu {
+  list-style: none;
+  padding-left: 0px;
+  background-color: #34495e;
+  transition: all 0.3s ease;
+}
+
+.sidebar.collapsed .submenu {
+  display: none; /* Hide submenu when collapsed */
+}
+
+.submenu li a {
+  display: block;
+  padding: 8px 15px;
+  color: #bdc3c7;
+  text-decoration: none;
+}
+
+.submenu li a:hover {
+  color: white;
+}
+
+
+
+/* Parent active highlight */
+.active-parent > .menu-item {
+  background-color: #16a085 !important; /* same family as active but lighter */
+  color: white !important;
+}
+
+/* Submenu active highlight */
+.submenu li a.active {
+  background: #475c71 !important; /* light green/blue */
+  color: white !important;
+}
+
+
+.menu .submenu li a:hover{background: #475c71 !important;color: #fff}
+.menu .submenu li a.active{text-align: left;font-weight: 500;color: #fff;font-weight: 400;font-size: 16px;}

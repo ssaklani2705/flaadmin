@@ -1,0 +1,205 @@
+<!-- ===== Header Card ===== -->
+<mat-card class="header-card">
+  <div class="module-header">
+    <span class="module-title">
+      {{ moduleName || 'Event/Webinar' }}
+    </span>
+    <span class="toggle-arrow" (click)="showHeaderBar = !showHeaderBar">
+      {{ showHeaderBar ? '▼' : '▲' }}
+    </span>
+  </div>
+
+  <div class="header-bar" *ngIf="showHeaderBar">
+    @if (addPer === 'Y') {
+    <button type="button" (click)="addEventsAndWebinar()" class="add-button">
+      Add New +
+    </button>
+    }
+
+    <input type="text" [(ngModel)]="searchQuery" placeholder="Search By Title And Date And Type" class="search-input"
+      (keyup.enter)="onSearch()" />
+
+    <button type="button" (click)="onSearch()" class="icon-button">
+      🔍
+    </button>
+
+    <select [(ngModel)]="selectedStatus" class="status-dropdown">
+      <option value="">--All Status--</option>
+      <option value="1">Active</option>
+      <option value="2">Inactive</option>
+      <option value="3">Deleted</option>
+    </select>
+
+    <button type="button" (click)="onChangeRecordsPerPage()" class="go-button">
+      Go
+    </button>
+  </div>
+</mat-card>
+
+<!-- ===== Events & Webinars Table Card ===== -->
+<mat-card class="table-card">
+  <mat-card-content>
+
+    <!-- Summary & Pagination (Top) -->
+    <div class="summary-pagination-row">
+      <div class="record-summary">
+        {{ recordSummary }}
+      </div>
+
+      <div class="pagination">
+        <button (click)="goToFirstPage()" [disabled]="currentPage === 1">« First</button>
+        <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">‹ Prev</button>
+
+        <button *ngFor="let page of pages()" (click)="goToPage(page)" [class.active]="page === currentPage">
+          {{ page }}
+        </button>
+
+        <button (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages">Next ›</button>
+        <button (click)="goToLastPage()" [disabled]="currentPage === totalPages">Last »</button>
+      </div>
+    </div>
+
+    <!-- Events Table -->
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Event Title</th>
+            <th>Date And Time</th>
+            <th>Type</th>
+            <th>Added By</th>
+            <th>Status</th>
+            <th>Bank Approval</th>
+            <th>IBA Approval</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let event of paginatedUsers; let i = index">
+            <td>{{ (currentPage - 1) * recordsPerPage + i + 1 }}</td>
+            <td>{{ event.title }}</td>
+            <!-- <td>{{ event.eventDate | date:'dd-MM-yyyy' }} {{ ('1970-01-01T' + event.eventtime) | date:'hh:mm a' }}</td> -->
+            <td style="text-align: left">
+              📅 {{ event.eventDate | date:'dd-MM-yyyy' }}
+              ⏰ {{ event.eventtime }}
+              <ng-container
+                *ngIf="event.durationHours > 0 || (event.durationMinutes && event.durationMinutes !== '00')">
+                ⏳
+                {{ event.durationHours > 0 ? (event.durationHours + 'h') : '' }}
+                <span
+                  *ngIf="event.durationHours > 0 && event.durationMinutes && event.durationMinutes !== '00'">&nbsp;</span>
+                {{ (event.durationMinutes && event.durationMinutes !== '00') ?
+                (event.durationMinutes + 'm') : '' }}
+              </ng-container>
+            </td>
+            <td>{{ event.type === 1 ? 'Event' : event.type === 2 ? 'Webinar' : 'Unknown' }}</td>
+            <td>{{ event.name }}</td>
+
+            <!-- Status -->
+            <td>
+              <span [ngClass]="getStatusClass(event.status)">
+                {{ getStatusLabel(event.status) }}
+              </span>
+            </td>
+
+            <!-- Bank Approval -->
+            <td>
+              <ng-container *ngIf="event.bankUserId === -1; else bankStatus">
+                NA
+              </ng-container>
+              <ng-template #bankStatus>
+                <button mat-raised-button *ngIf="event.bankApproval === 1" class="pending-btn-desabled">
+                  Pending
+                </button>
+                <button mat-raised-button *ngIf="event.bankApproval === 2" class="approve-btn">
+                  Approved
+                </button>
+              </ng-template>
+            </td>
+
+            <!-- IBA Approval -->
+            <td>
+              <ng-container *ngIf="event.approval === 1; else approvedBlock">
+                <ng-container *ngIf="event.bankUserId === -1 || event.bankApproval === 2; else pendingText">
+                  @if (approvePer === 'Y' && event.status === 1) {
+                  <button mat-raised-button class="pending-btn" (click)="onApproveEventAndWebinar(event.eventId)">
+                    Pending
+                  </button>
+                  } @else {
+                  <button mat-raised-button class="pending-btn-desabled">
+                    Pending
+                  </button>
+                  }
+                </ng-container>
+              </ng-container>
+
+              <!-- <ng-template #approvedBlock>
+                <button mat-raised-button class="approve-btn" >
+                  Approved
+                </button>
+              </ng-template> -->
+              <!-- Approved state -->
+              <ng-template #approvedBlock>
+                @if (approvePer === 'Y' && event.status === 1) {
+                <button mat-raised-button class="approve-btn" (click)="onRevertEventAndWebinar(event.eventId)">
+                  Approved
+                </button>
+                } @else {
+                <button mat-raised-button class="approve-btn">
+                  Approved
+                </button>
+                }
+              </ng-template>
+
+              <ng-template #pendingText>
+                <button mat-raised-button class="pending-btn-desabled">
+                  Pending
+                </button>
+              </ng-template>
+            </td>
+
+            <!-- Actions -->
+            <td style="text-align: left;">
+              @if (viewPer === 'Y') {
+              <button title="View" (click)="viewEventsAndWebinar(event.eventId)" class="action-button">
+                🔍
+              </button>
+              }
+
+              <ng-container *ngIf="(event.status === 1 || event.status === 2) && event.approval === 1">
+                @if (editPer === 'Y') {
+                <button title="Edit" class="action-button" (click)="editEventsAndWebinar(event.eventId)">✏️</button>
+                }
+                @if (deletePer === 'Y') {
+                <button title="Delete" class="action-button delete" (click)="onDeleteEventAndWebinar(event.eventId)">
+                  ❌
+                </button>
+                }
+              </ng-container>
+
+            </td>
+          </tr>
+
+          <tr *ngIf="paginatedUsers.length === 0">
+            <td colspan="9" class="no-data">No Event And Webinar found.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination Bottom -->
+    <div class="pagination">
+      <button (click)="goToFirstPage()" [disabled]="currentPage === 1">« First</button>
+      <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">‹ Prev</button>
+
+      <button *ngFor="let page of pages()" (click)="goToPage(page)" [class.active]="page === currentPage">
+        {{ page }}
+      </button>
+
+      <button (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages">Next ›</button>
+      <button (click)="goToLastPage()" [disabled]="currentPage === totalPages">Last »</button>
+    </div>
+
+  </mat-card-content>
+</mat-card>

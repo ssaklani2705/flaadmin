@@ -1,0 +1,195 @@
+<!-- ===== Header Card ===== -->
+<mat-card class="header-card">
+  <div class="module-header">
+    <span class="module-title">
+      {{ moduleName || 'Knowledge Sharing Master' }}
+    </span>
+    <span class="toggle-arrow" (click)="showHeaderBar = !showHeaderBar">
+      {{ showHeaderBar ? '▼' : '▲' }}
+    </span>
+  </div>
+
+  <div class="header-bar" *ngIf="showHeaderBar">
+    @if (addPer === 'Y') {
+      <button type="button" (click)="addKnowledgeSharing()" class="add-button">
+        Add New +
+      </button>
+    }
+
+    <input type="text"
+           [(ngModel)]="searchQuery"
+           placeholder="Search By Title And Date"
+           class="search-input"
+           (keyup.enter)="onSearch()" />
+
+    <button type="button" (click)="onSearch()" class="icon-button">
+      🔍
+    </button>
+
+    <select [(ngModel)]="selectedStatus" class="status-dropdown">
+      <option value="">--All Status--</option>
+      <option value="1">Active</option>
+      <option value="2">Inactive</option>
+      <option value="3">Deleted</option>
+    </select>
+
+    <button type="button" (click)="onChangeRecordsPerPage()" class="go-button">
+      Go
+    </button>
+  </div>
+</mat-card>
+
+<!-- ===== Knowledge Sharing Table Card ===== -->
+<mat-card class="table-card">
+  <mat-card-content>
+
+    <!-- Summary & Pagination (Top) -->
+    <div class="summary-pagination-row">
+      <div class="record-summary">
+        {{ recordSummary }}
+      </div>
+
+      <div class="pagination">
+        <button (click)="goToFirstPage()" [disabled]="currentPage === 1">« First</button>
+        <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">‹ Prev</button>
+
+        <button *ngFor="let page of pages()" (click)="goToPage(page)" [class.active]="page === currentPage">
+          {{ page }}
+        </button>
+
+        <button (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages">Next ›</button>
+        <button (click)="goToLastPage()" [disabled]="currentPage === totalPages">Last »</button>
+      </div>
+    </div>
+
+    <!-- Knowledge Sharing Table -->
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Title</th>
+            <th>Source</th>
+            <th>Date</th>
+            <th>Added By</th>
+            <th>Status</th>
+            <th>Bank Approval</th>
+            <th>IBA Approval</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let knowledge of paginatedUsers; let i = index">
+            <td>{{ (currentPage - 1) * recordsPerPage + i + 1 }}</td>
+            <td>{{ knowledge.name }}</td>
+            <td>{{ knowledge.source }}</td>
+            <td>{{ knowledge.regDate | date:'dd-MM-yyyy' }}</td>
+            <td>{{ knowledge.addedByName }}</td>
+
+            <!-- Status -->
+            <td>
+              <span [ngClass]="getStatusClass(knowledge.status)">
+                {{ getStatusLabel(knowledge.status) }}
+              </span>
+            </td>
+
+            <!-- Bank Approval -->
+            <td>
+              <ng-container *ngIf="knowledge.bankUserId === -1; else bankStatus">
+                NA
+              </ng-container>
+              <ng-template #bankStatus>
+                <button mat-raised-button *ngIf="knowledge.bankApproval === 1" class="pending-btn-desabled">
+                  Pending
+                </button>
+                <button mat-raised-button *ngIf="knowledge.bankApproval === 2" class="approve-btn">
+                  Approved
+                </button>
+              </ng-template>
+            </td>
+
+            <!-- IBA Approval -->
+            <td >
+              <ng-container *ngIf="knowledge.approval === 1; else approvedBlock">
+                <ng-container *ngIf="knowledge.bankUserId === -1 || knowledge.bankApproval === 2; else pendingText">
+                  @if (approvePer === 'Y' && knowledge.status === 1) {
+                    <button mat-raised-button class="pending-btn"
+                            (click)="onApproveKnowledge(knowledge.knowledge)">
+                      Pending
+                    </button>
+                  } @else {
+                    <button mat-raised-button class="pending-btn-desabled"> 
+                      Pending
+                    </button>
+                  }
+                </ng-container>
+              </ng-container>
+
+              <!-- <ng-template #approvedBlock>
+                <button mat-raised-button class="approve-btn">
+                  Approved
+                </button>
+              </ng-template> -->
+               <ng-template #approvedBlock>
+                @if (approvePer === 'Y' && knowledge.status === 1) {
+                <button mat-raised-button class="approve-btn" (click)="onRevertKnowledge(knowledge.knowledge)">
+                  Approved
+                </button>
+                } @else {
+                <button mat-raised-button class="approve-btn">
+                  Approved
+                </button>
+                }
+              </ng-template>
+
+              <ng-template #pendingText>
+                <button mat-raised-button class="pending-btn-desabled">
+                  Pending
+                </button>
+              </ng-template>
+            </td>
+
+            <!-- Actions -->
+            <td style="text-align: left;width: 150px;">
+                <!-- @if (viewPer === 'Y') { -->
+                  <button title="View" (click)="viewKnowledgeSharing(knowledge.knowledge)" class="action-button">
+                    🔍
+                  </button>
+                <!-- } -->
+
+                <ng-container *ngIf="(knowledge.status === 1 || knowledge.status === 2) && knowledge.approval === 1">
+                  @if (editPer === 'Y') {
+                    <button title="Edit" class="action-button"
+                            (click)="editKnowledgeSharing(knowledge.knowledge)">✏️</button>
+                  }
+                  @if (deletePer === 'Y') {
+                    <button title="Delete" class="action-button delete"
+                            (click)="deleteKnowledge(knowledge.knowledge)">❌</button>
+                  }
+                </ng-container>
+              
+            </td>
+          </tr>
+
+          <tr *ngIf="paginatedUsers.length === 0">
+            <td colspan="9" class="no-data">No Knowledge Sharing found.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination (Bottom) -->
+    <div class="pagination">
+      <button (click)="goToFirstPage()" [disabled]="currentPage === 1">« First</button>
+      <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">‹ Prev</button>
+
+      <button *ngFor="let page of pages()" (click)="goToPage(page)" [class.active]="page === currentPage">
+        {{ page }}
+      </button>
+
+      <button (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages">Next ›</button>
+      <button (click)="goToLastPage()" [disabled]="currentPage === totalPages">Last »</button>
+    </div>
+
+  </mat-card-content>
+</mat-card>

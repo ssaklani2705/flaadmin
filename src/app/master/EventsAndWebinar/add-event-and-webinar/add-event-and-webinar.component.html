@@ -1,0 +1,144 @@
+<div class="user-header">
+  <h2 class="section-title">ADD EVENT/WEBINAR</h2>
+  <div class="action-buttons">
+    <button mat-raised-button class="btn-back" type="button" color="accent" (click)="backToIndexPage()">
+      Back to Index
+    </button>
+  </div>
+</div>
+
+<mat-card class="form-card">
+  <mat-card-content>
+    <form #galleryForm="ngForm" (ngSubmit)="onSubmit(galleryForm)" novalidate>
+
+      <!-- Row 1: Type + Event/Webinar Title + Date -->
+<div class="row">
+  <mat-form-field appearance="outline" class="field">
+    <mat-label>Select Type *</mat-label>
+    <mat-select [(ngModel)]="gallery.type" name="type" required #typeCtrl="ngModel">
+      <mat-option value="event">Event</mat-option>
+      <mat-option value="webinar">Webinar</mat-option>
+    </mat-select>
+    <mat-error *ngIf="typeCtrl.invalid && typeCtrl.touched">Type is required.</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="field">
+    <mat-label>
+      {{ gallery.type === 'event' ? 'Event Title *' : gallery.type === 'webinar' ? 'Webinar Title *' : 'Title *' }}
+    </mat-label>
+    <input matInput [(ngModel)]="gallery.title"  name="title" required #titleCtrl="ngModel" />
+    <mat-error *ngIf="titleCtrl.invalid && titleCtrl.touched">
+      {{ gallery.type === 'event' ? 'Event Title is required.' : gallery.type === 'webinar' ? 'Webinar Title is required.' : 'Title is required.' }}
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="field">
+    <mat-label>Select Date</mat-label>
+    <!-- <input matInput [matDatepicker]="picker" [(ngModel)]="gallery.date" name="date" required [min]="minDate"
+      placeholder="DD-MM-YYYY" readonly #dateCtrl="ngModel" /> -->
+      <input matInput [matDatepicker]="picker" [(ngModel)]="gallery.date" name="date" required 
+      placeholder="DD-MM-YYYY" readonly #dateCtrl="ngModel" />
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+    <mat-error *ngIf="dateCtrl.invalid && dateCtrl.touched">Date is required.</mat-error>
+  </mat-form-field>
+</div>
+
+<!-- Row 2: Time + Duration Hours + Duration Minutes + Location/Link -->
+<div class="row">
+  <mat-form-field appearance="outline" class="field small-field">
+    <mat-label>Time</mat-label>
+    <input matInput type="time" [(ngModel)]="gallery.time" name="time" #timeCtrl="ngModel" />
+    <!-- <mat-error *ngIf="timeCtrl.invalid && timeCtrl.touched">Time is required.</mat-error> -->
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="field small-field">
+    <mat-label>Duration (Hours)</mat-label>
+    <mat-select [(ngModel)]="gallery.durationHours" name="durationHours"  #durHourCtrl="ngModel">
+      <mat-option *ngFor="let h of durationHours" [value]="h">{{ h }}</mat-option>
+    </mat-select>
+    <!-- <mat-error *ngIf="durHourCtrl.invalid && durHourCtrl.touched">Hour is required.</mat-error> -->
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="field small-field">
+    <mat-label>Duration (Minutes)</mat-label>
+    <mat-select [(ngModel)]="gallery.durationMinutes" name="durationMinutes"  #durMinCtrl="ngModel">
+      <mat-option *ngFor="let m of durationMinutes" [value]="m">{{ m }}</mat-option>
+    </mat-select>
+    <!-- <mat-error *ngIf="durMinCtrl.invalid && durMinCtrl.touched">Minute is required.</mat-error> -->
+  </mat-form-field>
+
+  <mat-form-field *ngIf="gallery.type === 'event'" appearance="outline" class="field small-field">
+    <mat-label>Location</mat-label>
+    <input matInput maxlength="200" [(ngModel)]="gallery.location" name="location"  #locationCtrl="ngModel" />
+    <!-- <mat-error *ngIf="locationCtrl.invalid && locationCtrl.touched">Location is required.</mat-error> -->
+  </mat-form-field>
+
+  <mat-form-field *ngIf="gallery.type === 'webinar'" appearance="outline" class="field small-field">
+    <mat-label>Webinar Link</mat-label>
+    <input matInput [(ngModel)]="gallery.link" name="link"  #linkCtrl="ngModel" />
+    <!-- <mat-error *ngIf="linkCtrl.invalid && linkCtrl.touched">Webinar link is required.</mat-error> -->
+  </mat-form-field>
+</div>
+
+      <div class="row">
+  <mat-form-field appearance="outline" class="field full">
+    <mat-label>Short Description</mat-label>
+    <textarea 
+      matInput 
+      [(ngModel)]="gallery.shortDescription" 
+      maxlength="200" 
+      name="shortDescription" 
+     
+      #shortDescCtrl="ngModel">
+    </textarea>
+
+    <!-- Character counter -->
+  <mat-hint align="end">
+  {{ gallery.shortDescription.length }}/200
+</mat-hint>
+
+    <!-- <mat-error *ngIf="shortDescCtrl.invalid && shortDescCtrl.touched">
+      Short description is required.
+    </mat-error> -->
+  </mat-form-field>
+</div>
+
+
+      <!-- Row 4: Summernote Description -->
+      <div class="user-info">
+        <div class="user-column full-width">
+          <label for="description">Description</label>
+          <div #summernoteEditor id="summernote"></div>
+          <!-- Hidden input to make description part of Angular form -->
+          <input type="hidden" name="description" [(ngModel)]="gallery.description"  #descCtrl="ngModel" />
+          <br>
+          <!-- <div class="error" *ngIf="descCtrl.invalid && (descCtrl.touched || descTouched)">
+            Description is required.
+          </div> -->
+        </div>
+      </div>
+      <br>
+
+      <!-- Row 5: File Upload -->
+      <div class="file-row">
+        <label for="file">Upload File *</label>
+        <small class="file-info">[Only .jpg, .jpeg, .png allowed up to 5 MB]</small>
+        <input type="file" id="file" name="file" (change)="onFileSelected($event)" accept=".jpg,.jpeg,.png" #fileInput
+          required />
+        <div class="error" *ngIf="fileError">{{ fileError }}</div>
+      </div>
+
+      <!-- Submit / Reset -->
+      <div class="form-actions">
+        <button mat-raised-button color="primary" type="submit" [disabled]="galleryForm.invalid">
+          Submit
+        </button>
+        <button mat-stroked-button color="warn" type="button" (click)="onReset(galleryForm)">
+          Reset
+        </button>
+      </div>
+
+    </form>
+  </mat-card-content>
+</mat-card>

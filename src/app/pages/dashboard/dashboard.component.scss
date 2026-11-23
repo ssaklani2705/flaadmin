@@ -1,0 +1,31 @@
+/* Full-page grey background, no scroll */
+.content {
+  background-color: #eceff1; /* light grey */
+  // height: calc(100vh - 10px); /* account for 50px header */
+    height: calc(100vh - 132px); /* assumes only a 50px header */
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden; /* prevent scroll */
+}
+
+/* Card styling */
+.dashboard-card {
+  background: white;
+  padding: 30px 40px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.dashboard-card img {
+  height: 86px;
+  margin-bottom: 20px;
+}
+
+.dashboard-card h2 {
+  font-size: 18px;
+  font-weight: bold;
+  color: #455a64;
+}

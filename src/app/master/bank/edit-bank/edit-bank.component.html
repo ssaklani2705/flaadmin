@@ -1,0 +1,93 @@
+<form #bankForm="ngForm" (ngSubmit)="onSubmit(bankForm)" novalidate>
+  <div class="view-user-container">
+    <div class="user-header">
+      <h2 class="section-title">EDIT BANK</h2>
+      <div class="action-buttons">
+        <button mat-raised-button color="accent" class="btn-back" type="button"  (click)="backToIndexPage()">Back to Index</button>
+      </div>
+    </div>
+
+    <div class="user-info">
+      <!-- LEFT COLUMN -->
+      <div class="user-column">
+        <!-- Bank Name -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Bank Name</mat-label>
+          <input 
+            matInput 
+            [(ngModel)]="bank.name" 
+            name="name" 
+            required 
+            minlength="3"
+            maxlength="100"
+            #nameCtrl="ngModel" 
+            placeholder="Enter Bank name" 
+            tabindex="1" />
+        </mat-form-field>
+
+       
+        <div class="error" *ngIf="nameCtrl.invalid && nameCtrl.touched">
+          <span *ngIf="nameCtrl.errors?.['required']">Bank Name is required</span>
+          <span *ngIf="nameCtrl.errors?.['minlength']">Minimum 3 characters required</span>
+        </div>
+
+        <!-- Custom regex validation -->
+        <div class="error" *ngIf="nameError">
+          {{ nameError }}
+        </div>
+
+        <!-- Status -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Status</mat-label>
+          <mat-select 
+            [(ngModel)]="bank.status" 
+            name="status" 
+            required 
+            #statusCtrl="ngModel" 
+            tabindex="2">
+            <mat-option [value]="1">Active</mat-option>
+            <mat-option [value]="2">Inactive</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Status Validation -->
+        <div class="error" *ngIf="statusCtrl.touched && statusCtrl.invalid">
+          <div *ngIf="statusCtrl.errors?.['required']">Status is required</div>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <div class="user-column">
+        <!-- Bank Type -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Bank Type</mat-label>
+          <mat-select 
+            [(ngModel)]="bank.typeId" 
+            name="typeId" 
+            required 
+            #typeIdCtrl="ngModel" 
+            tabindex="3">
+            <mat-option *ngFor="let bt of bankTypes" [value]="bt.typeId">
+              {{ bt.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Bank Type Validation -->
+        <div class="error" *ngIf="typeIdCtrl.touched && typeIdCtrl.invalid">
+          <div *ngIf="typeIdCtrl.errors?.['required']">Bank Type is required</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACTION BUTTONS -->
+    <div class="form-actions">
+      <button mat-raised-button color="primary" type="submit" [disabled]="bankForm.invalid">
+        Submit
+      </button>
+      <button mat-stroked-button color="warn" type="button" (click)="onReset()">
+        Reset
+      </button>
+    </div>
+  </div>
+</form>

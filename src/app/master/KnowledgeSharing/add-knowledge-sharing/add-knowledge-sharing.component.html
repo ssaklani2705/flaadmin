@@ -1,0 +1,87 @@
+<form #galleryForm="ngForm" (ngSubmit)="onSubmit(galleryForm)" novalidate>
+  <div class="view-user-container">
+    <div class="user-header">
+      <h2 class="section-title">ADD KNOWLEDGE SHARING</h2>
+      <div class="action-buttons">
+        <button mat-raised-button color="accent" class="btn-back" (click)="backToIndexPage()">
+          Back to Index
+        </button>
+      </div>
+    </div>
+
+    <!-- ROW 1: Event Title + Date & Time -->
+    <div class="user-info">
+      <div class="user-column">
+        <!-- Title -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Title</mat-label>
+          <input matInput [(ngModel)]="Knowledge.title" name="title" required maxlength="1000"  #titleCtrl="ngModel"
+            placeholder="Enter Title" />
+        </mat-form-field>
+        <div class="error" *ngIf="titleCtrl.invalid && titleCtrl.touched">
+          <div *ngIf="titleCtrl.errors?.['required']">Title is required.</div>
+          <div *ngIf="titleCtrl.errors?.['maxlength']">Maximum 1000 characters allowed.</div>
+        </div>
+     
+      </div>
+
+
+      <div class="user-column">
+        <!-- Source -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Source</mat-label>
+          <input matInput [(ngModel)]="Knowledge.source" name="source" maxlength="1000" #sourceCtrl="ngModel"
+            placeholder="Enter Source" />
+        </mat-form-field>
+        <div class="error" *ngIf="sourceCtrl.invalid && sourceCtrl.touched">
+          <!-- <div *ngIf="sourceCtrl.errors?.['required']">Source is required.</div> -->
+          <div *ngIf="sourceCtrl.errors?.['maxlength']">Maximum 1000 characters allowed.</div>
+        </div>
+      </div>
+
+
+      
+
+
+      <div class="user-column" style="margin-top: -11px;">
+
+        <!-- File -->
+        <!-- <div class="user-column"> -->
+        <label for="file">Upload File <small class="file-info">[Only .jpg, .jpeg, .png, .pdf allowed up to 10
+            MB]</small></label>
+        <input   #fileInput style="height: 48px;" type="file" name="file" (change)="onFileSelected($event)"
+          accept=".jpg,.jpeg,.png,.pdf" required />
+        <div class="error" *ngIf="fileError">{{ fileError }}</div>
+        <!-- </div> -->
+      </div>
+
+          
+    <div class="user-column">
+<mat-form-field appearance="outline" class="field">
+    <mat-label>Select Date</mat-label>
+    <input matInput [matDatepicker]="picker" [(ngModel)]="Knowledge.date" name="date" required 
+      placeholder="DD-MM-YYYY" readonly #dateCtrl="ngModel" />
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+    <mat-error *ngIf="dateCtrl.invalid && dateCtrl.touched">Date is required.</mat-error>
+  </mat-form-field>
+    </div>
+
+
+    </div>
+
+
+    
+
+
+    <!-- ACTION BUTTONS -->
+    <div class="form-actions">
+      <button mat-raised-button color="primary" type="submit" [disabled]="galleryForm.invalid">
+        Submit
+      </button>
+      <button mat-stroked-button color="warn" type="button" (click)="onReset()">
+        Reset
+      </button>
+    </div>
+  </div>
+</form>

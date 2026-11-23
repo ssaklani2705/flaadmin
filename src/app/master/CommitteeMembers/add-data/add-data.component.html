@@ -1,0 +1,60 @@
+<div class="container">
+  <div class="page-header">
+    <h2 class="section-title">Add Data</h2>
+    <button mat-raised-button class="btn-back" type="button" (click)="backToIndexPage()">
+      Back to Index
+    </button>
+  </div>
+
+  <p class="mandatory-note">Fields with <span class="req">*</span> mark are mandatory</p>
+
+  <form [formGroup]="dataForm" (ngSubmit)="onSubmit()" novalidate>
+    <div class="form-grid">
+
+      <!-- Code of the entity (text) -->
+      <div class="field">
+        <label for="entityCode">Code of the entity <span class="req">*</span></label>
+        <input id="entityCode" type="text" class="form-input"
+               formControlName="entityCode" placeholder="Enter here"
+               maxlength="50" tabindex="1" />
+        <div class="error" *ngIf="isInvalid('entityCode')">Code is required</div>
+      </div>
+
+      <!-- Code of the entity (dropdown) -->
+      <div class="field">
+        <label for="entityId">Code of the entity <span class="req">*</span></label>
+        <select id="entityId" class="form-input form-select"
+                formControlName="entityId" tabindex="2">
+          <option [ngValue]="null" disabled>Select</option>
+          <option *ngFor="let e of entities" [ngValue]="e.id">{{ e.name }}</option>
+        </select>
+        <div class="error" *ngIf="isInvalid('entityId')">Please select an entity</div>
+      </div>
+
+      <!-- Date -->
+      <div class="field">
+        <label for="dataDate">Date <span class="req">*</span></label>
+        <div class="date-wrap">
+          <input id="dataDate" class="form-input"
+                 readonly
+                 [matDatepicker]="picker"
+                 formControlName="dataDate"
+                 placeholder="dd-mm-yyyy"
+                 tabindex="3"
+                 (click)="picker.open()" />
+          <mat-datepicker-toggle [for]="picker" class="date-toggle"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </div>
+        <div class="error" *ngIf="isInvalid('dataDate')">Date is required</div>
+      </div>
+
+    </div>
+
+    <div class="form-actions">
+      <button mat-raised-button color="primary" type="submit" [disabled]="isSubmitting">
+        {{ isSubmitting ? 'Submitting...' : 'Submit' }}
+      </button>
+      <button mat-stroked-button type="button" (click)="onReset()">Reset</button>
+    </div>
+  </form>
+</div>

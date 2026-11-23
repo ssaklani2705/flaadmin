@@ -1,0 +1,167 @@
+<div class="view-user-container">
+  <div class="user-header">
+    <h2 class="section-title">EDIT GALLERY</h2>
+    <div class="action-buttons">
+      <button mat-raised-button color="accent" type="button"  class="btn-back" (click)="backToIndexPage()">
+        Back to Index
+      </button>
+    </div>
+  </div>
+
+  <form #galleryForm="ngForm" (ngSubmit)="onSubmit(galleryForm)">
+    <div class="gallery-layout">
+      <!-- LEFT COLUMN: All Fields -->
+      <div class="gallery-details">
+
+        <!-- Type -->
+        <div class="detail-row">
+          <label class="section-label">Type</label>
+          <span *ngIf="gallery.type === 1">Image</span>
+          <span *ngIf="gallery.type === 2">Video</span>
+        </div>
+
+        <!-- File Upload (Optional for type=1) -->
+        <div class="detail-row" *ngIf="gallery.type === 1">
+          <label class="section-label" for="fileInput">
+            Select Image 
+            <small class="file-info">[Only .jpg, .jpeg, .png allowed up to 5 MB]</small>
+          </label>
+
+          <input
+            type="file"
+            id="fileInput"
+            (change)="onFileSelected($event)"
+            accept=".jpg,.jpeg,.png"
+            class="full-width"
+          />
+
+          <!-- Error -->
+          <div class="error" *ngIf="fileError">
+            {{ fileError }}
+          </div>
+        </div>
+
+        <!-- Video URL (Optional for type=2) -->
+        <div class="detail-row" *ngIf="gallery.type === 2">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Video URL</mat-label>
+            <input
+              matInput
+              [(ngModel)]="gallery.videoUrl"
+              name="videoUrl"
+              placeholder="Enter video URL"
+              maxlength="200"
+              #videoCtrl="ngModel"
+              (blur)="videoTouched = true"
+             
+            />
+          </mat-form-field>
+
+          <!--
+           pattern="^https:\/\/www\.youtube\.com\/embed\/[a-zA-Z0-9_-]+(\?.*)?$"
+          <div class="error" *ngIf="videoCtrl.errors?.['pattern'] && videoTouched">
+            Please enter a valid YouTube embed URL.
+          </div> -->
+        </div>
+
+
+        <div class="detail-row">
+      <mat-form-field appearance="outline">
+  <mat-label>Group</mat-label>
+
+  <mat-select
+    [(ngModel)]="gallery.groupId"
+    name="groupId"
+    required
+    #groupIdCtrl="ngModel"
+    tabindex="2">
+ <mat-option [value]="null">Select Group</mat-option>
+    <mat-option *ngFor="let g of groups" [value]="g.groupId">
+      {{ g.name }}
+    </mat-option>
+
+  </mat-select>
+
+</mat-form-field>
+
+<div class="error" *ngIf="groupIdCtrl.invalid && groupIdCtrl.touched">
+  Group is required.
+</div>
+
+        </div>
+
+        <!-- Caption -->
+        <div class="detail-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Caption</mat-label>
+            <input
+              matInput
+              [(ngModel)]="gallery.caption"
+              name="caption"
+              
+              minlength="3"
+              maxlength="250"
+              #captionCtrl="ngModel"
+              placeholder="Enter Caption"
+            />
+            <!-- Live counter -->
+            <mat-hint align="end" [ngClass]="{ 'error-counter': gallery.caption?.length > 250 }">
+              {{ gallery.caption?.length || 0 }}/250
+            </mat-hint>
+          </mat-form-field>
+
+          <div class="error" *ngIf="captionCtrl.touched && captionCtrl.invalid">
+            <!-- <div *ngIf="captionCtrl.errors?.['required']">Caption is required.</div> -->
+            <div *ngIf="captionCtrl.errors?.['minlength']">Caption must be at least 3 characters long.</div>
+            <div *ngIf="captionCtrl.errors?.['maxlength']">Caption cannot exceed 50 characters.</div>
+          </div>
+        </div>
+
+        <!-- Status -->
+        <div class="detail-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Status</mat-label>
+            <mat-select [(ngModel)]="gallery.status" name="status" required #statusCtrl="ngModel">
+              <mat-option [value]="1">Active</mat-option>
+              <mat-option [value]="2">Inactive</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <div class="error" *ngIf="statusCtrl.touched && statusCtrl.invalid">
+            <div *ngIf="statusCtrl.errors?.['required']">Status is required</div>
+          </div>
+        </div>
+
+        <!-- ACTION BUTTONS -->
+        <div class="form-actions">
+          <button mat-raised-button color="primary" type="submit" [disabled]="galleryForm.invalid || fileError">
+            Submit
+          </button>
+          <button mat-stroked-button color="warn" type="button" (click)="onReset(galleryForm)">
+            Reset
+          </button>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN: Preview -->
+      <div class="gallery-preview">
+        <!-- Image Preview -->
+        <img
+          *ngIf="gallery.type === 1 && gallery.imageUrl"
+          [src]="gallery.imageUrl"
+          alt="Gallery Image"
+          class="preview-media"
+        />
+
+        <!-- Video Preview -->
+        <iframe
+          *ngIf="gallery.type === 2 && gallery.videoUrl"
+          [src]="gallery.videoUrl | safeUrl"
+          frameborder="0"
+          allowfullscreen
+          class="preview-media">
+        </iframe>
+      </div>
+    </div>
+  </form>
+</div>
+    
