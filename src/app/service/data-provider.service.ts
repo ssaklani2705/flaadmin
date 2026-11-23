@@ -375,8 +375,14 @@ getGroupDetailById(groupId: any): Observable<any> {
 }
 
 //Data
+// getDataDetails(page: number, size: number, statusIndex: number, search: string) {
+//   return this.http.get<any>(`${environment.apiBaseUrl}/getDataDetails`, {
+//     params: { page, size, statusIndex, search }
+//   });
+// }
+
 getDataDetails(page: number, size: number, statusIndex: number, search: string) {
-  return this.http.get<any>(`${environment.apiBaseUrl}/getDataDetails`, {
+  return this.http.get<any>(`${environment.apiBaseUrl}data/getDataDetails`, {
     params: { page, size, statusIndex, search }
   });
 }

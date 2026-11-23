@@ -27,7 +27,7 @@ interface FraudData {
 }
 
 /** Set to false once the backend API is ready */
-const USE_MOCK = true;
+const USE_MOCK = false;
 
 @Component({
   selector: 'app-data-index',
