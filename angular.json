@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "IBAESG": {
+    "flaadmin": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/IBAESG",
+            "outputPath": "dist/flaadmin",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": ["zone.js"],
@@ -72,10 +72,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "IBAESG:build:production"
+              "buildTarget": "flaadmin:build:production"
             },
             "development": {
-              "buildTarget": "IBAESG:build:development"
+              "buildTarget": "flaadmin:build:development"
             }
           },
           "defaultConfiguration": "development"
