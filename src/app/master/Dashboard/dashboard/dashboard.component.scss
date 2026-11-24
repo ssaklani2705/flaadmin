@@ -1,0 +1,81 @@
+.container {
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Minimal grid (replaces Bootstrap row/col) */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -12px;
+
+  > * {
+    box-sizing: border-box;
+    width: 100%;              /* mobile: one card per row */
+    padding: 0 12px;
+  }
+
+  @media (min-width: 576px) {
+    > * { width: 50%; }       /* tablet: two per row */
+  }
+
+  @media (min-width: 768px) {
+    > * { width: 25%; }       /* desktop: four per row */
+  }
+}
+
+/* Card */
+.dashboard-stat {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 25px;
+  padding: 18px 20px;
+  min-height: 135px;
+  border-radius: 4px;
+  color: #fff;
+  text-decoration: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+    color: #fff;
+  }
+
+  /* Large faded icon on the left */
+  .visual {
+    position: absolute;
+    left: 12px;
+    bottom: 5px;
+    font-size: 80px;
+    line-height: 1;
+    opacity: 0.2;
+  }
+
+  /* Number + label on the right */
+  .details {
+    position: relative;
+    text-align: right;
+
+    .number {
+      font-size: 36px;
+      font-weight: 300;
+      line-height: 40px;
+      letter-spacing: -1px;
+    }
+
+    .desc {
+      font-size: 16px;
+      font-weight: 700;
+    }
+  }
+}
+
+/* Card colors */
+.total_records_bg { background-color: #3598dc; }
+.draft_bg         { background-color: #6c757d; }
+.pen_app_bg       { background-color: #ffc107; }
+.approved_bg      { background-color: #198754; }

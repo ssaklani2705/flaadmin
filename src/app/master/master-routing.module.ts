@@ -4,7 +4,7 @@ import { ViewUserComponent } from './view-user/view-user.component';
 import { AddUserComponent } from './add-user/add-user.component';
 import { EditUserComponent } from './edit-user/edit-user.component';
 import { IndexComponent } from './index/index.component';
-import { DashboardComponent } from '../pages/dashboard/dashboard.component';
+import { DashboardComponent } from '../master/Dashboard/dashboard/dashboard.component';
 import { BankIndexComponent } from './bank/bank-index/bank-index.component';
 import { ViewBankComponent } from './bank/view-bank/view-bank.component';
 import { EditBankComponent } from './bank/edit-bank/edit-bank.component';
@@ -84,6 +84,9 @@ const routes: Routes = [
     data: { renderMode: 'csr' },
   },
 
+//Dashboard
+  { path: 'dashboard', component: DashboardComponent },
+
   // Bank User
   {
     path: 'view-user/:userId',
@@ -97,7 +100,7 @@ const routes: Routes = [
     data: { renderMode: 'csr' }, // Force client-side rendering
   },
   { path: 'bankuser', component: IndexComponent },
-  { path: 'dashboard', component: DashboardComponent },
+  // { path: 'dashboard', component: DashboardComponent },
 
   // Bank
   { path: 'bank', component: BankIndexComponent },
