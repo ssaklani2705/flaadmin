@@ -1,7 +1,13 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {
-  AfterViewInit, Component, ElementRef, HostListener, Inject,
-  OnInit, PLATFORM_ID, ViewChild
+  AfterViewInit,
+  Component,
+  ElementRef,
+  HostListener,
+  Inject,
+  OnInit,
+  PLATFORM_ID,
+  ViewChild,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -33,10 +39,9 @@ const USE_MOCK = false;
   selector: 'app-data-index',
   imports: [CommonModule, FormsModule],
   templateUrl: './data-index.component.html',
-  styleUrl: './data-index.component.scss'
+  styleUrl: './data-index.component.scss',
 })
 export class DataIndexComponent implements OnInit, AfterViewInit {
-
   @ViewChild('topScroll') topScroll!: ElementRef<HTMLDivElement>;
   @ViewChild('mainScroll') mainScroll!: ElementRef<HTMLDivElement>;
   @ViewChild('bottomScroll') bottomScroll!: ElementRef<HTMLDivElement>;
@@ -75,11 +80,11 @@ export class DataIndexComponent implements OnInit, AfterViewInit {
     private dataprovider: DataProviderService,
     @Inject(PLATFORM_ID) private platformId: Object,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {}
 
   ngOnInit() {
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.subscribe((params) => {
       this.currentPage = +(params['currentPage'] ?? this.currentPage) || 1;
       this.page = this.currentPage - 1;
 
@@ -126,14 +131,16 @@ export class DataIndexComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    this.dataprovider.getDataDetails(this.page, this.size, this.statusIndex, this.search).subscribe({
-      next: (response) => {
-        this.apiResponseData = response;
-        this.dataList = response.data;
-        this.updateScrollWidth();
-      },
-      error: (error) => console.error('Error fetching data details:', error)
-    });
+    this.dataprovider
+      .getDataDetails(this.page, this.size, this.statusIndex, this.search)
+      .subscribe({
+        next: (response) => {
+          this.apiResponseData = response;
+          this.dataList = response.data;
+          this.updateScrollWidth();
+        },
+        error: (error) => console.error('Error fetching data details:', error),
+      });
   }
 
   private loadMock() {
@@ -145,18 +152,19 @@ export class DataIndexComponent implements OnInit, AfterViewInit {
       accountType: 'Society/non-profit organisations (including NGOs)',
       industrySector: 'Extraction of crude petroleum and natural gas',
       areaOfOperation: 'Digital Payments-AEPS/Other Aadhar Related Frauds',
-      fraudType: 'Collateral (Fake title deeds, spurious gold and/or its appraisal, FDRs, Bank Guarantees, Multiple mortgages)',
+      fraudType:
+        'Collateral (Fake title deeds, spurious gold and/or its appraisal, FDRs, Bank Guarantees, Multiple mortgages)',
       totalAmount: 10000,
       dateOfOccurrence: '2026-11-20',
       dateOfDetection: '2026-11-20',
       dateOfClassification: '2026-11-20',
       dateReportedToRbi: '2026-11-20',
-      howDetected: 'Intimation/notice from Law Enforcement Agencies'
+      howDetected: 'Intimation/notice from Law Enforcement Agencies',
     };
     this.dataList = [
       { dataId: 1, status: 1, ...base },
       { dataId: 2, status: 2, ...base },
-      { dataId: 3, status: 3, ...base }
+      { dataId: 3, status: 3, ...base },
     ];
     this.apiResponseData = { totalElements: this.dataList.length };
     this.updateScrollWidth();
@@ -180,7 +188,7 @@ export class DataIndexComponent implements OnInit, AfterViewInit {
     this.syncing = true;
 
     const value = source.scrollLeft;
-    [this.topScroll, this.mainScroll, this.bottomScroll].forEach(ref => {
+    [this.topScroll, this.mainScroll, this.bottomScroll].forEach((ref) => {
       const el = ref?.nativeElement;
       if (el && el !== source && el.scrollLeft !== value) {
         el.scrollLeft = value;
@@ -198,8 +206,12 @@ export class DataIndexComponent implements OnInit, AfterViewInit {
     this.getDataDetails();
   }
 
-  goToFirstPage() { this.goToPage(1); }
-  goToLastPage() { this.goToPage(this.totalPages); }
+  goToFirstPage() {
+    this.goToPage(1);
+  }
+  goToLastPage() {
+    this.goToPage(this.totalPages);
+  }
 
   onSearch() {
     this.search = this.searchQuery.trim();
@@ -226,8 +238,12 @@ export class DataIndexComponent implements OnInit, AfterViewInit {
 
   get recordSummary(): string {
     const totalRecords = this.apiResponseData.totalElements || 0;
-    const startRecord = totalRecords === 0 ? 0 : (this.currentPage - 1) * this.recordsPerPage + 1;
-    const endRecord = Math.min(this.currentPage * this.recordsPerPage, totalRecords);
+    const startRecord =
+      totalRecords === 0 ? 0 : (this.currentPage - 1) * this.recordsPerPage + 1;
+    const endRecord = Math.min(
+      this.currentPage * this.recordsPerPage,
+      totalRecords,
+    );
     return `Page ${this.currentPage} of ${this.totalPages}, (${startRecord} - ${endRecord} of ${totalRecords} record${totalRecords > 1 ? 's' : ''})`;
   }
 
@@ -240,13 +256,16 @@ export class DataIndexComponent implements OnInit, AfterViewInit {
   onDeleteData(dataId: number) {
     if (!confirm('Are you sure you want to delete this record?')) return;
 
-    const payload = { dataId, userId: this.userId ? Number(this.userId) : null };
+    const payload = {
+      dataId,
+      userId: this.userId ? Number(this.userId) : null,
+    };
     this.dataprovider.deleteData(payload).subscribe({
       next: (response: any) => {
         alert(response.message);
         if (response.success) this.getDataDetails();
       },
-      error: (error: any) => console.error('Error deleting data:', error)
+      error: (error: any) => console.error('Error deleting data:', error),
     });
   }
 
@@ -255,12 +274,20 @@ export class DataIndexComponent implements OnInit, AfterViewInit {
       currentPage: this.currentPage,
       statusIndex: this.statusIndex || null,
       searchText: this.search || null,
-      size: this.size || 5
+      size: this.size || 5,
     };
   }
 
-  addData()            { this.router.navigate(['/addData'], { queryParams: this.navParams() }); }
-  importExcel()        { this.router.navigate(['/upload-file'], { queryParams: this.navParams() }); }
-  viewData(id: number) { this.router.navigate(['/viewData', id], { queryParams: this.navParams() }); }
-  editData(id: number) { this.router.navigate(['/edit-data', id], { queryParams: this.navParams() }); }
+  addData() {
+    this.router.navigate(['/addData'], { queryParams: this.navParams() });
+  }
+  importExcel() {
+    this.router.navigate(['/upload-file'], { queryParams: this.navParams() });
+  }
+  viewData(id: number) {
+    this.router.navigate(['/viewData', id], { queryParams: this.navParams() });
+  }
+  editData(id: number) {
+    this.router.navigate(['/edit-data', id], { queryParams: this.navParams() });
+  }
 }

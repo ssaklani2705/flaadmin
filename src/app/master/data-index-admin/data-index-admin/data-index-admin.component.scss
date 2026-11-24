@@ -149,7 +149,7 @@
 
 /* ===== Table ===== */
 .custom-table {
-  width: 2840px; /* = sum of column widths below */
+  width: 3440px; /* = sum of column widths below */
   border-collapse: separate;
   border-spacing: 0;
   table-layout: fixed;
@@ -203,6 +203,7 @@
     position: sticky;
     right: 0;
     z-index: 2;
+    width: 100px;
   }
 
   tbody tr.data-row td:nth-last-child(2),
@@ -266,7 +267,7 @@
 .app_pen_ic,
 .approved_ic {
   display: inline-block;
-  padding: 5px 10px;
+  padding: 5px 4px;
   border-radius: 4px;
   font-size: 14px;
   color: #fff;

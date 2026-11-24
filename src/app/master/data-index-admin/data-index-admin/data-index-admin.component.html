@@ -29,6 +29,16 @@
         <option value="3">Approved</option>
       </select>
 
+      <select
+        [(ngModel)]="selectedBank"
+        /* (change)="onChangeRecordsPerPage()" */
+        class="status-dropdown"
+      >
+        <option value="">--All Banks--</option>
+        <option *ngFor="let b of bankList" [value]="b.bankId">
+          {{ b.name }}
+        </option>
+      </select>
       <button
         type="button"
         (click)="onChangeRecordsPerPage()"
@@ -87,6 +97,7 @@
         <thead>
           <tr>
             <th>Code of the entity</th>
+            <th>Bank Name</th>
             <th>State (Branch Located)</th>
             <th>Category of Branch</th>
             <th>Status of Perpetrator/s</th>
@@ -109,6 +120,7 @@
           @for (d of paginatedData; track d.dataId) {
             <tr class="data-row">
               <td>{{ d.entityCode }}</td>
+              <td>{{ d.bankName }}</td>
               <td>{{ d.state }}</td>
               <td>{{ d.branchCategory }}</td>
               <td>{{ d.perpetratorStatus }}</td>
@@ -122,6 +134,7 @@
               <td>{{ d.dateOfClassification | date: "dd-MM-yyyy" }}</td>
               <td>{{ d.dateReportedToRbi | date: "dd-MM-yyyy" }}</td>
               <td>{{ d.howDetected }}</td>
+              <!-- <td></td> -->
 
               <td class="status_column">
                 @switch (d.status) {
@@ -157,7 +170,7 @@
             </tr>
           } @empty {
             <tr>
-              <td colspan="16" class="no-data-found">
+              <td colspan="17" class="no-data-found">
                 <span>No data found</span>
               </td>
             </tr>

@@ -30,8 +30,12 @@ interface FraudData {
   dateReportedToRbi: string;
   howDetected: string;
   status: number; // 1 = Draft, 2 = Approval Pending, 3 = Approved
+  bankName?: string;
 }
-
+interface BankItem {
+  bankId: number;
+  name: string;
+}
 /** Set to false once the backend API is ready */
 const USE_MOCK = false;
 @Component({
@@ -41,6 +45,9 @@ const USE_MOCK = false;
   styleUrl: './data-index-admin.component.scss',
 })
 export class DataIndexAdminComponent implements OnInit, AfterViewInit {
+  bankList: BankItem[] = [];
+  selectedBank = '';
+  bankId = 0;
   @ViewChild('topScroll') topScroll!: ElementRef<HTMLDivElement>;
   @ViewChild('mainScroll') mainScroll!: ElementRef<HTMLDivElement>;
   @ViewChild('bottomScroll') bottomScroll!: ElementRef<HTMLDivElement>;
@@ -73,7 +80,7 @@ export class DataIndexAdminComponent implements OnInit, AfterViewInit {
   // Scrollbars
   scrollWidth = 0;
   private syncing = false;
-  colClasses = Array.from({ length: 16 }, (_, i) => `col-${i + 1}`);
+  colClasses = Array.from({ length: 17 }, (_, i) => `col-${i + 1}`);
 
   constructor(
     private dataprovider: DataProviderService,
@@ -83,7 +90,11 @@ export class DataIndexAdminComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit() {
+    this.loadBanks();
+
     this.route.queryParams.subscribe((params) => {
+      this.bankId = +(params['bankId'] ?? this.bankId) || 0;
+      this.selectedBank = this.bankId ? String(this.bankId) : '';
       this.currentPage = +(params['currentPage'] ?? this.currentPage) || 1;
       this.page = this.currentPage - 1;
 
@@ -110,7 +121,7 @@ export class DataIndexAdminComponent implements OnInit, AfterViewInit {
         }
       }
 
-      this.getDataDetails();
+      this.getAdminDataIndexList();
     });
   }
 
@@ -124,14 +135,20 @@ export class DataIndexAdminComponent implements OnInit, AfterViewInit {
   }
 
   // ===== Data =====
-  getDataDetails() {
+  getAdminDataIndexList() {
     if (USE_MOCK) {
       this.loadMock();
       return;
     }
 
     this.dataprovider
-      .getDataDetails(this.page, this.size, this.statusIndex, this.search)
+      .getAdminDataIndexList(
+        this.page,
+        this.size,
+        this.statusIndex,
+        this.search,
+        this.bankId,
+      )
       .subscribe({
         next: (response) => {
           this.apiResponseData = response;
@@ -145,6 +162,7 @@ export class DataIndexAdminComponent implements OnInit, AfterViewInit {
   private loadMock() {
     const base = {
       entityCode: '997',
+      bankName: 'State Bank of India',
       state: 'Maharashtra',
       branchCategory: 'Metro',
       perpetratorStatus: 'Known',
@@ -202,7 +220,7 @@ export class DataIndexAdminComponent implements OnInit, AfterViewInit {
     if (pageNumber < 1 || pageNumber > this.totalPages) return;
     this.currentPage = pageNumber;
     this.page = pageNumber - 1;
-    this.getDataDetails();
+    this.getAdminDataIndexList();
   }
 
   goToFirstPage() {
@@ -216,14 +234,15 @@ export class DataIndexAdminComponent implements OnInit, AfterViewInit {
     this.search = this.searchQuery.trim();
     this.currentPage = 1;
     this.page = 0;
-    this.getDataDetails();
+    this.getAdminDataIndexList();
   }
 
   onChangeRecordsPerPage(): void {
+    this.bankId = this.selectedBank === '' ? 0 : +this.selectedBank;
     this.statusIndex = this.selectedStatus === '' ? 0 : +this.selectedStatus;
     this.currentPage = 1;
     this.page = 0;
-    this.getDataDetails();
+    this.getAdminDataIndexList();
   }
 
   pages(): number[] {
@@ -262,7 +281,7 @@ export class DataIndexAdminComponent implements OnInit, AfterViewInit {
     this.dataprovider.deleteData(payload).subscribe({
       next: (response: any) => {
         alert(response.message);
-        if (response.success) this.getDataDetails();
+        if (response.success) this.getAdminDataIndexList();
       },
       error: (error: any) => console.error('Error deleting data:', error),
     });
@@ -290,5 +309,14 @@ export class DataIndexAdminComponent implements OnInit, AfterViewInit {
   }
   editData(id: number) {
     this.router.navigate(['/edit-data', id], { queryParams: this.navParams() });
+  }
+
+  private loadBanks() {
+    this.dataprovider.getAllBank().subscribe({
+      next: (res: any) => {
+        this.bankList = Array.isArray(res) ? res : (res?.data ?? []);
+      },
+      error: (err) => console.error('Error fetching bank list:', err),
+    });
   }
 }

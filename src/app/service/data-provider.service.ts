@@ -61,7 +61,7 @@ export class DataProviderService {
 
   // Bank Module
   getAllBank(): Observable<any> {
-    return this.http.get(`${environment.apiBaseUrl}admin/getAllBank`);
+    return this.http.get(`${environment.apiBaseUrl}admin/all-bank-list`);
   }
 
   getBankDetails(
@@ -568,6 +568,21 @@ export class DataProviderService {
   getDataById(dataId: number) {
     return this.http.get<any>(
       `${environment.apiBaseUrl}admin/data/getDataById/${dataId}`,
+    );
+  }
+
+  getAdminDataIndexList(
+    page: number,
+    size: number,
+    statusIndex: number,
+    search: string,
+    bankId: number,
+  ) {
+    return this.http.get<any>(
+      `${environment.apiBaseUrl}admin/data/admin-data-index`,
+      {
+        params: { page, size, statusIndex, search, bankId },
+      },
     );
   }
 }
