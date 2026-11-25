@@ -22,6 +22,7 @@ interface FraudData {
   branchCategory: string;
   perpetratorStatus: string;
   accountType: string;
+  accountTypeOther?: string;
   industrySector: string;
   areaOfOperation: string;
   fraudType: string;
@@ -417,7 +418,10 @@ export class DataIndexAdminComponent
               State: d.state,
               'Branch Category': d.branchCategory,
               'Perpetrator Status': d.perpetratorStatus,
-              'Account Type': d.accountType,
+              'Account Type': this.resolveOther(
+                d.accountType,
+                d.accountTypeOther,
+              ),
               'Industry Sector': d.industrySector ?? '',
               'Area of Operation': d.areaOfOperation,
               'Fraud Type': d.fraudType,
@@ -496,5 +500,20 @@ export class DataIndexAdminComponent
       default:
         return '';
     }
+  }
+
+  /** If the dropdown value is "Other", use the typed-in text instead */
+  private resolveOther(
+    main: string | null | undefined,
+    other: string | null | undefined,
+  ): string {
+    const value = (main ?? '').trim();
+    if (value.toLowerCase() == 'other') {
+      return (
+        (other ?? '').trim() ||
+        '      ssssssssssssssssssssssssssssssssssssssssss'
+      ); // fall back to "Other" if nothing was typed
+    }
+    return value;
   }
 }
