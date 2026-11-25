@@ -145,4 +145,10 @@ export class DataIndexAdminViewComponent implements OnInit {
   backToIndexPage(): void {
     this.router.navigate(['/data-index']);
   }
+
+  formatAmount(value: any): string {
+  if (value === null || value === undefined || value === '') return '';
+  const n = Number(String(value).replace(/,/g, ''));
+  return isNaN(n) ? String(value) : n.toLocaleString('en-IN');
+}
 }
