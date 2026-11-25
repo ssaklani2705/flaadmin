@@ -110,7 +110,7 @@
           >Total amount involved
           <span class="in-actual">(as actual)</span></label
         >
-        <div class="det-value">{{ data.totalAmount | number }}</div>
+        <div class="det-value">{{ data.totalAmount }}</div>
       </div>
       <div class="span-8 spacer"></div>
 
@@ -215,20 +215,20 @@
       </div>
       <div class="field span-4">
         <label>Amount Recovered</label>
-        <div class="det-value">{{ data.amountRecovered | number | dash }}</div>
+        <div class="det-value">{{ data.amountRecovered }}</div>
       </div>
       <div class="field span-4">
         <label>Extent of loss to the bank</label>
-        <div class="det-value">{{ data.lossToBank | number | dash }}</div>
+        <div class="det-value">{{ data.lossToBank }}</div>
       </div>
 
       <div class="field span-4">
         <label>Provision held</label>
-        <div class="det-value">{{ data.provisionHeld | number | dash }}</div>
+        <div class="det-value">{{ data.provisionHeld }}</div>
       </div>
       <div class="field span-4">
         <label>Amount written off</label>
-        <div class="det-value">{{ data.amountWrittenOff | number | dash }}</div>
+        <div class="det-value">{{ data.amountWrittenOff }}</div>
       </div>
       <div class="field span-4">
         <label>Whether compromise settlement done</label>
@@ -237,7 +237,7 @@
 
       <div class="field span-4">
         <label>Compromise settled amount</label>
-        <div class="det-value">{{ data.compromiseAmount | number | dash }}</div>
+        <div class="det-value">{{ data.compromiseAmount }}</div>
       </div>
     </div>
 

@@ -39,6 +39,15 @@
           {{ b.name }}
         </option>
       </select>
+
+      <button
+        type="button"
+        class="go-button"
+        (click)="exportToExcel()"
+        [disabled]="exporting"
+      >
+        {{ exporting ? "Exporting..." : "Export Excel" }}
+      </button>
       <button
         type="button"
         (click)="onChangeRecordsPerPage()"
@@ -128,7 +137,7 @@
               <td>{{ d.industrySector }}</td>
               <td>{{ d.areaOfOperation }}</td>
               <td>{{ d.fraudType }}</td>
-              <td>{{ d.totalAmount | number }}</td>
+              <td>{{ d.totalAmount }}</td>
               <td>{{ d.dateOfOccurrence | date: "dd-MM-yyyy" }}</td>
               <td>{{ d.dateOfDetection | date: "dd-MM-yyyy" }}</td>
               <td>{{ d.dateOfClassification | date: "dd-MM-yyyy" }}</td>

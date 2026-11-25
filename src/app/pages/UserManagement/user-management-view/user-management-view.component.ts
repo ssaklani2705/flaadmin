@@ -17,14 +17,13 @@ import { Common } from '../../../classes/common';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
   ],
   templateUrl: './user-management-view.component.html',
-  styleUrl: './user-management-view.component.scss'
+  styleUrl: './user-management-view.component.scss',
 })
 export class UserManagementViewComponent {
-
-userId!: number;
+  userId!: number;
   currentPage = 0;
   searchText = '';
   statusIndex = 0;
@@ -32,28 +31,34 @@ userId!: number;
   size = 0;
   user: any = {};
   permissions: { [moduleName: string]: any } = {};
-  permissionActions: string[] = ['addPer', 'editPer', 'deletePer', 'approvePer', 'adminApprovePer', 'viewPer'];
-  permissionGroups: { name: string, modules: string[] }[] = [];
+  permissionActions: string[] = [
+    'addPer',
+    'editPer',
+    'deletePer',
+    'approvePer',
+    'adminApprovePer',
+    'viewPer',
+  ];
+  permissionGroups: { name: string; modules: string[] }[] = [];
   transactionhistory: any[] = []; // ✅ initialized to avoid undefined error
 
-    common = new Common();  
-  
+  common = new Common();
 
   constructor(
     private route: ActivatedRoute,
     private dataprovider: DataProviderService,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
     this.userId = +this.route.snapshot.paramMap.get('userId')!;
-     const queryParams = this.route.snapshot.queryParamMap;
-  this.currentPage = Number(queryParams.get('currentPage')) || 1;
+    const queryParams = this.route.snapshot.queryParamMap;
+    this.currentPage = Number(queryParams.get('currentPage')) || 1;
     this.searchText = queryParams.get('searchText') || '';
     this.statusIndex = Number(queryParams.get('statusIndex')) || 0;
-    this.page = Number(queryParams.get('page')) || this.currentPage -1;
+    this.page = Number(queryParams.get('page')) || this.currentPage - 1;
     this.size = Number(queryParams.get('size')) || 5;
-   
+
     this.getUserDetails();
   }
 
@@ -70,30 +75,36 @@ userId!: number;
           status: response.status,
           processPermission: response.pcbName || 'NA',
           isAdmin: response.isAdmin === 'Y',
-          permission: response.permission
+          permission: response.permission,
         };
 
         // ✅ Assign and sort transaction history (latest first)
-        this.transactionhistory = (response.transactionhistory || []).sort((a: any, b: any) => {
-          const dateA = this.parseEntryDate(a.entryDate);
-          const dateB = this.parseEntryDate(b.entryDate);
-          return dateB.getTime() - dateA.getTime();
-        });
+        this.transactionhistory = (response.transactionhistory || []).sort(
+          (a: any, b: any) => {
+            const dateA = this.parseEntryDate(a.entryDate);
+            const dateB = this.parseEntryDate(b.entryDate);
+            return dateB.getTime() - dateA.getTime();
+          },
+        );
 
         // Filter out modules where viewPer is null
-        const filteredModules = response.module.filter((mod: any) => mod.viewPer !== null);
+        const filteredModules = response.module.filter(
+          (mod: any) => mod.viewPer !== null,
+        );
 
         // Map permissions only for filtered modules
         this.permissions = this.mapPermissions(filteredModules);
 
         // Grouping by 'type'
-        const groupMap: { [type: number]: { name: string, modules: string[] } } = {
+        const groupMap: {
+          [type: number]: { name: string; modules: string[] };
+        } = {
           1: { name: 'Masters', modules: [] },
           2: { name: 'Activity', modules: [] },
           3: { name: 'Reports', modules: [] },
           4: { name: 'Reports - 1', modules: [] },
           5: { name: 'Marketing', modules: [] },
-          6: { name: 'CAPA Marketing', modules: [] }
+          6: { name: 'CAPA Marketing', modules: [] },
         };
 
         filteredModules.forEach((mod: any) => {
@@ -104,16 +115,15 @@ userId!: number;
           }
         });
 
-
         // Final sorted, filtered group array
         this.permissionGroups = Object.keys(groupMap)
           .sort((a, b) => +a - +b)
-          .map(key => groupMap[+key])
-          .filter(group => group.modules.length > 0);
+          .map((key) => groupMap[+key])
+          .filter((group) => group.modules.length > 0);
       },
       error: (err) => {
         console.error('Failed to fetch user details', err);
-      }
+      },
     });
   }
 
@@ -121,15 +131,15 @@ userId!: number;
     const perms: { [moduleName: string]: any } = {};
 
     modules
-      .filter(mod => mod.viewPer !== null)
-      .forEach(mod => {
+      .filter((mod) => mod.viewPer !== null)
+      .forEach((mod) => {
         perms[mod.name.trim()] = {
           addPer: mod.addPer === 'Y',
           editPer: mod.editPer === 'Y',
           deletePer: mod.deletePer === 'Y',
           approvePer: mod.approvePer === 'Y',
           adminApprovePer: mod.adminApprovePer === 'Y',
-          viewPer: mod.viewPer === 'Y'
+          viewPer: mod.viewPer === 'Y',
         };
       });
 
@@ -138,19 +148,27 @@ userId!: number;
 
   getStatusLabel(status: number | string): string {
     switch (+status) {
-      case 1: return 'Active';
-      case 2: return 'Inactive';
-      case 3: return 'Deleted';
-      default: return 'Unknown';
+      case 1:
+        return 'Active';
+      case 2:
+        return 'Inactive';
+      case 3:
+        return 'Deleted';
+      default:
+        return 'Unknown';
     }
   }
 
   getStatusClass(status: number | string): string {
     switch (+status) {
-      case 1: return 'status-active';
-      case 2: return 'status-inactive';
-      case 3: return 'status-deleted';
-      default: return '';
+      case 1:
+        return 'status-active';
+      case 2:
+        return 'status-inactive';
+      case 3:
+        return 'status-deleted';
+      default:
+        return '';
     }
   }
 
@@ -170,42 +188,38 @@ userId!: number;
   }
 
   get hasTransactionHistory(): boolean {
-  return Array.isArray(this.transactionhistory) && this.transactionhistory.length > 0;
-}
-
- backToIndexPage() {
-    this.router.navigate(['/userManagement'], {
-      queryParams: {
-         currentPage: this.currentPage,
-        statusIndex: this.statusIndex,
-        searchText: this.searchText,
-        size: this.size || 5
-      }
-    });
+    return (
+      Array.isArray(this.transactionhistory) &&
+      this.transactionhistory.length > 0
+    );
   }
 
-getStatusText(status: number): string {
-  switch (status) {
-    case 1:
-      return 'Active';
-    case 2:
-      return 'Inactive';
-    case 3:
-      return 'Deleted';
-    default:
-      return 'Unknown';
+  backToIndexPage() {
+    this.router.navigate(['/userManagement']);
   }
-}
 
-confirmResetPassword(email: string, userId: number) {
-  if (confirm(`This will reset the user password and an email will be sent to the user. Do you wish to reset?`)) {
-    this.resetPassword(email, userId);
+  getStatusText(status: number): string {
+    switch (status) {
+      case 1:
+        return 'Active';
+      case 2:
+        return 'Inactive';
+      case 3:
+        return 'Deleted';
+      default:
+        return 'Unknown';
+    }
   }
-}
 
-resetPassword(email: string, userId: number) {
-  
-}
+  confirmResetPassword(email: string, userId: number) {
+    if (
+      confirm(
+        `This will reset the user password and an email will be sent to the user. Do you wish to reset?`,
+      )
+    ) {
+      this.resetPassword(email, userId);
+    }
+  }
 
+  resetPassword(email: string, userId: number) {}
 }
-

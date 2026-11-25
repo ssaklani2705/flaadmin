@@ -54,11 +54,6 @@ export class DataIndexAdminViewComponent implements OnInit {
   }
 
   private loadData(): void {
-    if (USE_MOCK) {
-      this.loadMock();
-      return;
-    }
-
     this.loading = true;
     this.dataprovider.getDataById(this.dataId).subscribe({
       next: (res: any) => {
@@ -148,6 +143,6 @@ export class DataIndexAdminViewComponent implements OnInit {
   }
 
   backToIndexPage(): void {
-    this.router.navigate(['/data-index'], { queryParamsHandling: 'preserve' });
+    this.router.navigate(['/data-index']);
   }
 }

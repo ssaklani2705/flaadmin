@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
+import {
+  ReactiveFormsModule,
+  FormBuilder,
+  Validators,
+  FormGroup,
+} from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { LoginService } from '../../service/login.service';
@@ -10,11 +15,9 @@ import { environment } from '../../../environments/environment';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
 })
-
 export class LoginComponent implements OnInit {
-
   loginForm!: FormGroup;
   captchaValue!: string;
   errorMessage: string = '';
@@ -23,17 +26,19 @@ export class LoginComponent implements OnInit {
 
   isProcessingForgotPassword: boolean = false;
 
-
-
-  constructor(private fb: FormBuilder, private router: Router, private loginService: LoginService) { }
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private loginService: LoginService,
+  ) {}
 
   ngOnInit() {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
-      captcha: ['', Validators.required]
+      captcha: ['', Validators.required],
     });
-    this.loadCaptcha()
+    this.loadCaptcha();
   }
 
   loadCaptcha() {
@@ -45,7 +50,7 @@ export class LoginComponent implements OnInit {
       },
       error: (err: any) => {
         console.error('Error loading captcha:', err);
-      }
+      },
     });
   }
 
@@ -83,7 +88,7 @@ export class LoginComponent implements OnInit {
       username: email,
       password: password,
       captcha: captcha,
-      captchaAns: this.captchaValue
+      captchaAns: this.captchaValue,
     };
     this.loginService.checkLogin(payload).subscribe({
       next: (res: any) => {
@@ -92,12 +97,12 @@ export class LoginComponent implements OnInit {
           sessionStorage.setItem('username', res.data.username);
           sessionStorage.setItem('userId', res.data.userId);
           sessionStorage.setItem('sessionId', res.data.sessionId);
-           sessionStorage.setItem('modules', JSON.stringify(res.data.modules));
+          sessionStorage.setItem('modules', JSON.stringify(res.data.modules));
           sessionStorage.removeItem('bankTypes');
           sessionStorage.removeItem('banks');
           sessionStorage.removeItem('selectedModuleDetail');
           // this.router.navigate(['/IBAESG']);
-           this.router.navigate(['/dashboard']);
+          this.router.navigate(['/dashboard']);
         } else {
           this.errorMessage = res.message || 'Invalid login credentials';
         }
@@ -105,9 +110,8 @@ export class LoginComponent implements OnInit {
       error: (err) => {
         this.errorMessage = err.error?.message;
         // this.errorMessage = "Server Error";
-      }
+      },
     });
-
   }
 
   onForgotPassword() {
@@ -119,7 +123,6 @@ export class LoginComponent implements OnInit {
 
     this.isProcessingForgotPassword = true;
 
-
     this.loginService.forgotPasswordMail(email).subscribe({
       next: (res) => {
         if (res.success) {
@@ -127,14 +130,15 @@ export class LoginComponent implements OnInit {
         } else {
           alert(res.message || 'Unable to send password reset email.');
         }
-         this.isProcessingForgotPassword = false;
+        this.isProcessingForgotPassword = false;
       },
       error: (err) => {
         console.error('Forgot password error:', err);
         alert(err.error?.message || 'Error while processing request.');
-          this.isProcessingForgotPassword = false;
-      }
-      
+        this.isProcessingForgotPassword = false;
+      },
     });
   }
+
+  currentYear = new Date().getFullYear();
 }

@@ -5,12 +5,14 @@ import {
   ElementRef,
   HostListener,
   Inject,
+  OnDestroy,
   OnInit,
   PLATFORM_ID,
   ViewChild,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { NavigationStart, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { DataProviderService } from '../../../service/data-provider.service';
 
 interface FraudData {
@@ -23,7 +25,7 @@ interface FraudData {
   industrySector: string;
   areaOfOperation: string;
   fraudType: string;
-  totalAmount: number;
+  totalAmount: any;
   dateOfOccurrence: string;
   dateOfDetection: string;
   dateOfClassification: string;
@@ -36,18 +38,41 @@ interface BankItem {
   bankId: number;
   name: string;
 }
+
 /** Set to false once the backend API is ready */
 const USE_MOCK = false;
+
 @Component({
   selector: 'app-data-index-admin',
   imports: [CommonModule, FormsModule],
   templateUrl: './data-index-admin.component.html',
   styleUrl: './data-index-admin.component.scss',
 })
-export class DataIndexAdminComponent implements OnInit, AfterViewInit {
+export class DataIndexAdminComponent
+  implements OnInit, AfterViewInit, OnDestroy
+{
+  /** sessionStorage key for this list's state */
+  private readonly STATE_KEY = 'dataIndexAdminState';
+  private readonly DEFAULT_SIZE = 5;
+
+  /**
+   * Routes that belong to this module. Going to any of these keeps the saved
+   * state. Going anywhere else (another module) destroys it.
+   * Adjust to your real route paths.
+   */
+  private readonly MODULE_ROUTES = [
+    '/view-data-index',
+    '/edit-data',
+    '/addData',
+    '/upload-file',
+  ];
+
+  private routerSub?: Subscription;
+
   bankList: BankItem[] = [];
   selectedBank = '';
   bankId = 0;
+
   @ViewChild('topScroll') topScroll!: ElementRef<HTMLDivElement>;
   @ViewChild('mainScroll') mainScroll!: ElementRef<HTMLDivElement>;
   @ViewChild('bottomScroll') bottomScroll!: ElementRef<HTMLDivElement>;
@@ -86,47 +111,49 @@ export class DataIndexAdminComponent implements OnInit, AfterViewInit {
     private dataprovider: DataProviderService,
     @Inject(PLATFORM_ID) private platformId: Object,
     private router: Router,
-    private route: ActivatedRoute,
   ) {}
 
+  // ===== Lifecycle =====
   ngOnInit() {
     this.loadBanks();
+    this.loadState();
 
-    this.route.queryParams.subscribe((params) => {
-      this.bankId = +(params['bankId'] ?? this.bankId) || 0;
-      this.selectedBank = this.bankId ? String(this.bankId) : '';
-      this.currentPage = +(params['currentPage'] ?? this.currentPage) || 1;
-      this.page = this.currentPage - 1;
+    if (isPlatformBrowser(this.platformId)) {
+      this.userId = sessionStorage.getItem('userId');
 
-      this.statusIndex = +(params['statusIndex'] ?? this.statusIndex) || 0;
-      this.search = (params['searchText'] ?? this.search) || '';
-
-      this.size = +(params['size'] ?? this.size) || this.size;
-      this.recordsPerPage = this.size;
-
-      this.searchQuery = this.search;
-      this.selectedStatus = this.statusIndex ? String(this.statusIndex) : '';
-
-      if (isPlatformBrowser(this.platformId)) {
-        this.userId = sessionStorage.getItem('userId');
-
-        const storedModules = sessionStorage.getItem('selectedModuleDetail');
-        if (storedModules) {
-          const parsed = JSON.parse(storedModules);
-          this.moduleName = parsed.name ?? '';
-          this.addPer = parsed.addPer ?? 'N';
-          this.editPer = parsed.editPer ?? 'N';
-          this.deletePer = parsed.deletePer ?? 'N';
-          this.viewPer = parsed.viewPer ?? 'N';
-        }
+      const storedModules = sessionStorage.getItem('selectedModuleDetail');
+      if (storedModules) {
+        const parsed = JSON.parse(storedModules);
+        this.moduleName = parsed.name ?? '';
+        this.addPer = parsed.addPer ?? 'N';
+        this.editPer = parsed.editPer ?? 'N';
+        this.deletePer = parsed.deletePer ?? 'N';
+        this.viewPer = parsed.viewPer ?? 'N';
       }
 
-      this.getAdminDataIndexList();
-    });
+      // Destroy the saved state when navigating to another module
+      this.routerSub = this.router.events.subscribe((event) => {
+        if (event instanceof NavigationStart) {
+          const url = event.url.split('?')[0];
+          const staysInModule = this.MODULE_ROUTES.some((r) =>
+            url.startsWith(r),
+          );
+          if (!staysInModule) {
+            this.clearState();
+          }
+        }
+      });
+    }
+
+    this.getAdminDataIndexList();
   }
 
   ngAfterViewInit() {
     this.updateScrollWidth();
+  }
+
+  ngOnDestroy() {
+    this.routerSub?.unsubscribe();
   }
 
   @HostListener('window:resize')
@@ -134,12 +161,50 @@ export class DataIndexAdminComponent implements OnInit, AfterViewInit {
     this.updateScrollWidth();
   }
 
+  // ===== Session state =====
+  private loadState() {
+    if (isPlatformBrowser(this.platformId)) {
+      try {
+        const s = JSON.parse(sessionStorage.getItem(this.STATE_KEY) || '{}');
+        this.bankId = +s.bankId || 0;
+        this.currentPage = +s.currentPage || 1;
+        this.statusIndex = +s.statusIndex || 0;
+        this.search = s.search || '';
+      } catch {
+        /* ignore corrupted state */
+      }
+    }
+    this.size = this.DEFAULT_SIZE; // always 2 per page
+    this.page = this.currentPage - 1;
+    this.recordsPerPage = this.size;
+    this.searchQuery = this.search;
+    this.selectedBank = this.bankId ? String(this.bankId) : '';
+    this.selectedStatus = this.statusIndex ? String(this.statusIndex) : '';
+  }
+
+  private saveState() {
+    if (!isPlatformBrowser(this.platformId)) return;
+    sessionStorage.setItem(
+      this.STATE_KEY,
+      JSON.stringify({
+        currentPage: this.currentPage,
+        size: this.size,
+        statusIndex: this.statusIndex,
+        search: this.search,
+        bankId: this.bankId,
+      }),
+    );
+  }
+
+  private clearState() {
+    if (isPlatformBrowser(this.platformId)) {
+      sessionStorage.removeItem(this.STATE_KEY);
+    }
+  }
+
   // ===== Data =====
   getAdminDataIndexList() {
-    if (USE_MOCK) {
-      this.loadMock();
-      return;
-    }
+    this.saveState();
 
     this.dataprovider
       .getAdminDataIndexList(
@@ -151,6 +216,14 @@ export class DataIndexAdminComponent implements OnInit, AfterViewInit {
       )
       .subscribe({
         next: (response) => {
+          // If the last record of a page was deleted, step back one page
+          if (
+            (!response.data || response.data.length === 0) &&
+            this.currentPage > 1
+          ) {
+            this.goToPage(this.currentPage - 1);
+            return;
+          }
           this.apiResponseData = response;
           this.dataList = response.data;
           this.updateScrollWidth();
@@ -287,28 +360,17 @@ export class DataIndexAdminComponent implements OnInit, AfterViewInit {
     });
   }
 
-  private navParams() {
-    return {
-      currentPage: this.currentPage,
-      statusIndex: this.statusIndex || null,
-      searchText: this.search || null,
-      size: this.size || 5,
-    };
-  }
-
   addData() {
-    this.router.navigate(['/addData'], { queryParams: this.navParams() });
+    this.router.navigate(['/addData']);
   }
   importExcel() {
-    this.router.navigate(['/upload-file'], { queryParams: this.navParams() });
+    this.router.navigate(['/upload-file']);
   }
   viewData(id: number) {
-    this.router.navigate(['/view-data-index', id], {
-      queryParams: this.navParams(),
-    });
+    this.router.navigate(['/view-data-index', id]);
   }
   editData(id: number) {
-    this.router.navigate(['/edit-data', id], { queryParams: this.navParams() });
+    this.router.navigate(['/edit-data', id]);
   }
 
   private loadBanks() {
@@ -318,5 +380,121 @@ export class DataIndexAdminComponent implements OnInit, AfterViewInit {
       },
       error: (err) => console.error('Error fetching bank list:', err),
     });
+  }
+
+  formatAmount(value: any): string {
+    if (value === null || value === undefined || value === '') return '';
+    return Number(String(value).replace(/,/g, '')).toLocaleString('en-IN');
+  }
+  exporting = false;
+  exportToExcel() {
+    if (!isPlatformBrowser(this.platformId) || this.exporting) return;
+
+    const total = this.apiResponseData?.totalElements || 0;
+    if (total === 0) {
+      alert('No data to export.');
+      return;
+    }
+
+    this.exporting = true;
+
+    // Fetch ALL records for the current filters (page 0, size = total)
+    this.dataprovider
+      .getAdminDataIndexList(
+        0,
+        total,
+        this.statusIndex,
+        this.search,
+        this.bankId,
+      )
+      .subscribe({
+        next: async (response) => {
+          try {
+            const rows = (response.data as FraudData[]).map((d, i) => ({
+              'Sr No': i + 1,
+              Bank: d.bankName ?? '',
+              'Entity Code': d.entityCode,
+              State: d.state,
+              'Branch Category': d.branchCategory,
+              'Perpetrator Status': d.perpetratorStatus,
+              'Account Type': d.accountType,
+              'Industry Sector': d.industrySector ?? '',
+              'Area of Operation': d.areaOfOperation,
+              'Fraud Type': d.fraudType,
+              'Total Amount': d.totalAmount,
+              'Date of Occurrence': d.dateOfOccurrence,
+              'Date of Detection': d.dateOfDetection,
+              'Date of Classification': d.dateOfClassification,
+              'Date Reported to RBI': d.dateReportedToRbi,
+              'How Detected': d.howDetected,
+              Status: this.statusText(d.status),
+            }));
+
+            // Load the library only when needed (keeps the main bundle small)
+            const XLSX = await import('xlsx');
+
+            const ws = XLSX.utils.json_to_sheet(rows);
+
+            // Column widths
+            ws['!cols'] = [
+              { wch: 7 },
+              { wch: 18 },
+              { wch: 12 },
+              { wch: 22 },
+              { wch: 16 },
+              { wch: 18 },
+              { wch: 35 },
+              { wch: 35 },
+              { wch: 35 },
+              { wch: 45 },
+              { wch: 16 },
+              { wch: 18 },
+              { wch: 18 },
+              { wch: 20 },
+              { wch: 20 },
+              { wch: 35 },
+              { wch: 18 },
+            ];
+
+            // Indian digit grouping for the amount column (K)
+            const range = XLSX.utils.decode_range(ws['!ref']!);
+            for (let r = range.s.r + 1; r <= range.e.r; r++) {
+              const cell = ws[XLSX.utils.encode_cell({ r, c: 10 })];
+              if (cell && typeof cell.v === 'number')
+                cell.z =
+                  '[>=10000000]##\\,##\\,##\\,##0;[>=100000]##\\,##\\,##0;##,##0';
+            }
+
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Fraud Data');
+
+            const stamp = new Date().toISOString().slice(0, 10);
+            XLSX.writeFile(wb, `fraud-data-${stamp}.xlsx`);
+          } catch (e) {
+            console.error('Excel export failed:', e);
+            alert('Export failed. Please try again.');
+          } finally {
+            this.exporting = false;
+          }
+        },
+        error: (err) => {
+          console.error('Error fetching data for export:', err);
+          alert('Could not fetch data for export.');
+          this.exporting = false;
+        },
+      });
+  }
+
+  private statusText(status: number): string {
+    switch (+status) {
+      case 1:
+        return 'Draft';
+      case 2:
+        return 'Approval Pending';
+      case 3:
+        return 'Approved';
+      default:
+        return '';
+    }
   }
 }

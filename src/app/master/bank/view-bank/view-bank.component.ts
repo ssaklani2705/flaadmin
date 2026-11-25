@@ -17,7 +17,7 @@ import { AddBankUserDialogComponent } from '../add-bank-user-dialog/add-bank-use
 @Component({
   selector: 'app-view-bank',
   imports: [
-     CommonModule,
+    CommonModule,
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
@@ -28,11 +28,10 @@ import { AddBankUserDialogComponent } from '../add-bank-user-dialog/add-bank-use
     MatListModule,
   ],
   templateUrl: './view-bank.component.html',
-  styleUrl: './view-bank.component.scss'
+  styleUrl: './view-bank.component.scss',
 })
 export class ViewBankComponent {
-
-bankId!: number;
+  bankId!: number;
   currentPage = 0;
   searchText = '';
   statusIndex = 0;
@@ -40,53 +39,49 @@ bankId!: number;
   size = 0;
   bank: any = {};
   transactionhistory: any[] = []; // ✅ initialized to avoid undefined error
-  common = new Common();  
+  common = new Common();
   bankUsers: any[] = [];
-userColumns = ['name', 'email', 'contactNo', 'status'];
-
+  userColumns = ['name', 'email', 'contactNo', 'status'];
 
   constructor(
     private route: ActivatedRoute,
     private dataprovider: DataProviderService,
     private router: Router,
-      private dialog: MatDialog
-
+    private dialog: MatDialog,
   ) {}
 
   ngOnInit(): void {
     this.bankId = +this.route.snapshot.paramMap.get('bankId')!;
-     const queryParams = this.route.snapshot.queryParamMap;
-  this.currentPage = Number(queryParams.get('currentPage')) || 1;
+    const queryParams = this.route.snapshot.queryParamMap;
+    this.currentPage = Number(queryParams.get('currentPage')) || 1;
     this.searchText = queryParams.get('searchText') || '';
     this.statusIndex = Number(queryParams.get('statusIndex')) || 0;
-    this.page = Number(queryParams.get('page')) || this.currentPage -1;
+    this.page = Number(queryParams.get('page')) || this.currentPage - 1;
     this.size = Number(queryParams.get('size')) || 5;
-   
+
     this.getBankDetails();
     this.getBankDetailsById(); // Fetch bank users when the component initializes
   }
 
-  
-
   get hasBankUsers(): boolean {
-  return Array.isArray(this.bankUsers) && this.bankUsers.length > 0;
-}
-addBankUser() {
-  const dialogRef = this.dialog.open(AddBankUserDialogComponent, {
-    width: '500px',
-    disableClose: true,
-    data: {
-      bankId: this.bankId,
-      bankName: this.bank?.name
-    }
-  });
+    return Array.isArray(this.bankUsers) && this.bankUsers.length > 0;
+  }
+  addBankUser() {
+    const dialogRef = this.dialog.open(AddBankUserDialogComponent, {
+      width: '500px',
+      disableClose: true,
+      data: {
+        bankId: this.bankId,
+        bankName: this.bank?.name,
+      },
+    });
 
-  dialogRef.afterClosed().subscribe(saved => {
-    if (saved) {
-      this.getBankDetailsById();   // reload bank users list
-    }
-  });
-}
+    dialogRef.afterClosed().subscribe((saved) => {
+      if (saved) {
+        this.getBankDetailsById(); // reload bank users list
+      }
+    });
+  }
 
   getBankDetails() {
     this.dataprovider.getBankById(this.bankId).subscribe({
@@ -98,57 +93,52 @@ addBankUser() {
           bankType: response.bankType,
         };
 
-        this.transactionhistory = (response.transactionhistory || []).sort((a: any, b: any) => {
-          const dateA = this.common.parseEntryDate(a.entryDate);
-          const dateB = this.common.parseEntryDate(b.entryDate);
-          return dateB.getTime() - dateA.getTime();
-        });
-
+        this.transactionhistory = (response.transactionhistory || []).sort(
+          (a: any, b: any) => {
+            const dateA = this.common.parseEntryDate(a.entryDate);
+            const dateB = this.common.parseEntryDate(b.entryDate);
+            return dateB.getTime() - dateA.getTime();
+          },
+        );
       },
       error: (err) => {
         console.error('Failed to fetch Bank details', err);
-      }
+      },
     });
   }
 
-get hasTransactionHistory(): boolean {
-  return Array.isArray(this.transactionhistory) && this.transactionhistory.length > 0;
-}
-
- backToIndexPage() {
-    this.router.navigate(['/bank'], {
-      queryParams: {
-         currentPage: this.currentPage,
-        statusIndex: this.statusIndex,
-        searchText: this.searchText,
-        size: this.size || 5
-      }
-    });
+  get hasTransactionHistory(): boolean {
+    return (
+      Array.isArray(this.transactionhistory) &&
+      this.transactionhistory.length > 0
+    );
   }
 
-
-
-confirmResetPassword(email: string, userId: number) {
-  if (confirm(`This will reset the user password and an email will be sent to the user. Do you wish to reset?`)) {
-    this.resetPassword(email, userId);
+  backToIndexPage() {
+    this.router.navigate(['/bank']);
   }
-}
 
-resetPassword(email: string, userId: number) {
+  confirmResetPassword(email: string, userId: number) {
+    if (
+      confirm(
+        `This will reset the user password and an email will be sent to the user. Do you wish to reset?`,
+      )
+    ) {
+      this.resetPassword(email, userId);
+    }
+  }
 
-}
-
+  resetPassword(email: string, userId: number) {}
 
   getBankDetailsById() {
-  this.dataprovider.getBankUsersByBankId(this.bankId).subscribe({
-    next: (users) => {
-      this.bankUsers = users || [];
-    },
-    error: (err) => {
-      console.error('Failed to fetch bank users', err);
-      this.bankUsers = [];
-    }
-  });
-}
-
+    this.dataprovider.getBankUsersByBankId(this.bankId).subscribe({
+      next: (users) => {
+        this.bankUsers = users || [];
+      },
+      error: (err) => {
+        console.error('Failed to fetch bank users', err);
+        this.bankUsers = [];
+      },
+    });
+  }
 }

@@ -6,7 +6,6 @@
 
     <h2 class="login-title">IBA LOGIN</h2>
 
-
     <!-- Error Message -->
     <div *ngIf="errorMessage" class="error-message">
       <span>{{ errorMessage }}</span>
@@ -15,10 +14,19 @@
 
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
       <input type="email" placeholder="Email Id" formControlName="email" />
-      <input type="password" placeholder="Password" formControlName="password" />
+      <input
+        type="password"
+        placeholder="Password"
+        formControlName="password"
+      />
 
       <div class="captcha-container">
-        <input type="text" maxlength="6" placeholder="Enter captcha." formControlName="captcha" />
+        <input
+          type="text"
+          maxlength="6"
+          placeholder="Enter captcha."
+          formControlName="captcha"
+        />
         <div class="captcha-value">{{ captchaValue }}</div>
 
         <button type="button" class="refresh-btn" (click)="loadCaptcha()">
@@ -28,20 +36,25 @@
 
       <div class="action-row">
         <button type="submit" class="login-btn">LOGIN</button>
-        <a *ngIf="!isProcessingForgotPassword" href="javascript:void(0)" class="forgot-password" (click)="onForgotPassword()">
+        <a
+          *ngIf="!isProcessingForgotPassword"
+          href="javascript:void(0)"
+          class="forgot-password"
+          (click)="onForgotPassword()"
+        >
           Forgot Password?
         </a>
 
         <!-- Show loader/processing text when clicked -->
-  <span *ngIf="isProcessingForgotPassword" class="processing-text">
-    Processing...
-  </span>
+        <span *ngIf="isProcessingForgotPassword" class="processing-text">
+          Processing...
+        </span>
       </div>
     </form>
   </div>
 
   <footer>
-    <p>2025 © IBAESG, All rights reserved.</p>
+    <p>&copy; {{ currentYear }} FLA ADMIN, All rights reserved.</p>
     <p>Powered by Web Element Solutions Limited</p>
   </footer>
 </div>
