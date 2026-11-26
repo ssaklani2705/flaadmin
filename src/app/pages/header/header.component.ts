@@ -3,16 +3,23 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { LoginService } from '../../service/login.service';
 import { environment } from '../../../environments/environment';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import Swal from 'sweetalert2';
+import { DataProviderService } from '../../service/data-provider.service';
+import { CryptoService } from '../../service/CryptoService';
+import { MatIcon, MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule,MatIconModule, MatButtonModule,
+    ReactiveFormsModule],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent {
+export class HeaderComponent { 
   @Output() toggleSidebar = new EventEmitter<void>();
 
   /** Collapse state from parent */
@@ -21,17 +28,51 @@ export class HeaderComponent {
   /** Dropdown open/close state */
   isVipulDropdownOpen = false;
 
-  constructor(private router: Router, private loginService: LoginService,private eRef: ElementRef) { }
+   changePasswordForm!: FormGroup;
+  showOldPassword = false;
+  showNewPassword = false;
+  showConfirmPassword = false;
+  isChangingPassword = false;
+
+  emailId: string = '';
+  userId: any;
+
+  constructor(private router: Router, private loginService: LoginService,private eRef: ElementRef,private dataProvider: DataProviderService,
+    private cryptoService: CryptoService,
+    private fb: FormBuilder,
+  ) { }
 
   username: string | null = null;
 
   imgUrl: any = environment.imgUrl;
 
-  ngOnInit() {
-    // this.username = sessionStorage.getItem('username');
+  // ngOnInit() {
+  //   // this.username = sessionStorage.getItem('username');
+  //   if (typeof window !== 'undefined' && sessionStorage) {
+  //     this.username = sessionStorage.getItem('username');
+  //   }
+  // }
+
+    ngOnInit() {
     if (typeof window !== 'undefined' && sessionStorage) {
       this.username = sessionStorage.getItem('username');
+      this.emailId = sessionStorage.getItem('emailId') || '';
+      this.userId = sessionStorage.getItem('userId') || '';
     }
+
+    this.changePasswordForm = this.fb.group(
+      {
+        oldPassword: ['', Validators.required],
+        newPassword: ['', [Validators.required, Validators.minLength(8)]],
+        confirmPassword: ['', Validators.required],
+      },
+      {
+        validators: [
+          this.passwordMismatchValidator,
+          this.differentPasswordValidator,
+        ],
+      },
+    );
   }
 
   /** Toggle sidebar: instantly collapse logo + inform parent */
@@ -88,5 +129,114 @@ export class HeaderComponent {
     }
   }
 
+
+  showChangePasswordModal = false;
+
+  changePasswordData = {
+    oldPassword: '',
+    newPassword: '',
+    confirmPassword: '',
+  };
+
+  onChangePasswordClick(): void {
+    this.resetChangePasswordForm();
+    this.showChangePasswordModal = true;
+  }
+
+  closeChangePasswordModal(): void {
+    if (this.isChangingPassword) {
+      return;
+    }
+
+    this.showChangePasswordModal = false;
+    this.resetChangePasswordForm();
+  }
+
+  resetChangePasswordForm(): void {
+    if (this.changePasswordForm) {
+      this.changePasswordForm.reset({
+        oldPassword: '',
+        newPassword: '',
+        confirmPassword: '',
+      });
+
+      this.changePasswordForm.markAsPristine();
+      this.changePasswordForm.markAsUntouched();
+      this.changePasswordForm.updateValueAndValidity();
+    }
+
+    this.showOldPassword = false;
+    this.showNewPassword = false;
+    this.showConfirmPassword = false;
+
+    this.isChangingPassword = false;
+  }
+
+  submitChangePassword(): void {
+    if (this.changePasswordForm.invalid) {
+      this.changePasswordForm.markAllAsTouched();
+      return;
+    }
+
+    const formValue = this.changePasswordForm.getRawValue();
+
+    const request = {
+      oldPassword: this.cryptoService.cipher(formValue.oldPassword),
+      newPassword: this.cryptoService.cipher(formValue.newPassword),
+      username: this.cryptoService.cipher(this.emailId),
+      userId: this.cryptoService.cipher(String(this.userId)),
+    };
+
+    this.dataProvider.updatePassword(request).subscribe({
+      next: (response: any) => {
+        if (response && response.success) {
+          Swal.fire('Success', response.message, 'success');
+          this.resetChangePasswordForm();
+          this.showChangePasswordModal = false;
+        } else {
+          const errorMessage =
+            response?.data || response?.message || 'Unable to change password.';
+
+          Swal.fire('Error', errorMessage, 'error');
+        }
+      },
+      error: (error: any) => {
+        console.error('Error changing password:', error);
+
+        const errorMessage =
+          error?.error?.data ||
+          error?.error?.message ||
+          error?.message ||
+          'Something went wrong.';
+        Swal.fire('Error', errorMessage, 'error');
+      },
+    });
+  }
+
+  private passwordMismatchValidator(
+    control: AbstractControl,
+  ): ValidationErrors | null {
+    const newPassword = control.get('newPassword')?.value;
+    const confirmPassword = control.get('confirmPassword')?.value;
+
+    if (!newPassword || !confirmPassword) {
+      return null;
+    }
+
+    return newPassword === confirmPassword ? null : { passwordMismatch: true };
+  }
+
+  private differentPasswordValidator(
+    control: AbstractControl,
+  ): ValidationErrors | null {
+    const oldPassword = control.get('oldPassword')?.value;
+    const newPassword = control.get('newPassword')?.value;
+
+    if (!oldPassword || !newPassword) {
+      return null;
+    }
+
+    return oldPassword === newPassword ? { samePassword: true } : null;
+  }
 
 }
