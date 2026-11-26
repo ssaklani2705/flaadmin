@@ -4,7 +4,11 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { ResponseApi } from '../classes/response-api.model';
 import { ApiResponse } from '../classes/ApiResponse';
-
+export interface StatusCount {
+  status: string;
+  count: number;
+  // adjust to match your API response
+}
 export interface GroupDTO {
   groupId: number;
   name: string;
@@ -586,14 +590,12 @@ export class DataProviderService {
     );
   }
 
-updatePassword(request: any) {
+  updatePassword(request: any) {
     const token = sessionStorage.getItem('authToken');
-
 
     const headers = {
       Authorization: `Bearer ${token}`,
     };
-
 
     return this.http.post<any>(
       `${environment.apiBaseUrl}auth/change_password`,
@@ -601,6 +603,10 @@ updatePassword(request: any) {
       { headers },
     );
   }
-  
-  
+
+  getDashboardStatusCount(bankId?: number): Observable<StatusCount[]> {
+    const base = `${environment.apiBaseUrl}admin/dasboard/status-count`;
+    const url = bankId != null ? `${base}/${bankId}` : base;
+    return this.http.get<StatusCount[]>(url);
+  }
 }

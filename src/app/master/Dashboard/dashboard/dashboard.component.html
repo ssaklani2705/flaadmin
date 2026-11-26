@@ -2,7 +2,12 @@
   <div class="row">
     @for (stat of stats; track stat.label) {
       <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-        <a class="dashboard-stat dashboard-stat-v2" [ngClass]="stat.bgClass" [routerLink]="stat.link">
+        <a
+          class="dashboard-stat dashboard-stat-v2"
+          [ngClass]="stat.bgClass"
+          [routerLink]="stat.link"
+          [queryParams]="{ status: stat.status }"
+        >
           <div class="visual">
             <i [class]="stat.icon"></i>
           </div>
