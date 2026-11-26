@@ -58,7 +58,6 @@
     </div>
   }
 
-  <!-- ===== Record summary + top pagination ===== -->
   <div class="summary-pagination-row">
     <div class="record-summary">{{ recordSummary }}</div>
 
@@ -120,6 +119,7 @@
             <th>Date of classification as fraud</th>
             <th>Date on which reported to RBI</th>
             <th>How the fraud was detected?</th>
+            <th>No Of Days</th>
             <th>Status</th>
             <th>Actions</th>
           </tr>
@@ -143,6 +143,8 @@
               <td>{{ d.dateOfClassification | date: "dd-MM-yyyy" }}</td>
               <td>{{ d.dateReportedToRbi | date: "dd-MM-yyyy" }}</td>
               <td>{{ d.howDetected }}</td>
+              <td>{{ d.noOfDays }}</td>
+
               <!-- <td></td> -->
 
               <td class="status_column">

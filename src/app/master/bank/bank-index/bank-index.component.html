@@ -109,44 +109,38 @@
               </span>
             </td>
 
-            <td class="actions">
-              <div class="actions-wrapper">
-                <!-- @if (viewPer === 'Y') { -->
-                <button
-                  title="View"
-                  (click)="viewBank(bank.bankId)"
-                  class="action-button"
-                >
-                  🔍
-                </button>
-                <!-- } -->
-                <ng-container *ngIf="bank.status === 1 || bank.status === 2">
-                  @if (editPer === "Y") {
-                    <button
-                      title="Edit"
-                      class="action-button"
-                      (click)="editBank(bank.bankId)"
-                    >
-                      ✏️
-                    </button>
-                  }
-                  @if (deletePer === "Y") {
-                    <button
-                      title="Delete"
-                      class="action-button delete"
-                      (click)="onDeleteBank(bank.bankId)"
-                    >
-                      ❌
-                    </button>
-                  }
-                </ng-container>
-
-                <!-- Empty placeholders to keep alignment -->
-                <ng-container *ngIf="!(bank.status === 1 || bank.status === 2)">
-                  <span class="action-placeholder"></span>
-                  <span class="action-placeholder"></span>
-                </ng-container>
-              </div>
+            <td class="actions_btn">
+              <a
+                href="javascript:;"
+                title="View"
+                (click)="viewBank(bank.bankId)"
+                class="view_ic"
+              >
+                <i class="fa-solid fa-magnifying-glass"></i>
+              </a>
+              <!-- } -->
+              <ng-container *ngIf="bank.status === 1 || bank.status === 2">
+                @if (editPer === "Y") {
+                  <a
+                    href="javascript:;"
+                    title="Edit"
+                    class="edit_ic"
+                    (click)="editBank(bank.bankId)"
+                  >
+                    <i class="fa-solid fa-pen"></i>
+                  </a>
+                }
+                @if (deletePer === "Y") {
+                  <a
+                    href="javascript:;"
+                    title="Delete"
+                    class="del_ic"
+                    (click)="onDeleteBank(bank.bankId)"
+                  >
+                    <i class="fa-solid fa-trash"></i>
+                  </a>
+                }
+              </ng-container>
             </td>
           </tr>
 

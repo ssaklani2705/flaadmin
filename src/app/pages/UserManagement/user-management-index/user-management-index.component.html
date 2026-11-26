@@ -2,31 +2,31 @@
 <mat-card class="header-card">
   <div class="module-header">
     <span class="module-title">
-      {{ moduleName || 'User Master' }}
+      {{ moduleName || "User Master" }}
     </span>
     <span class="toggle-arrow" (click)="showHeaderBar = !showHeaderBar">
-      {{ showHeaderBar ? '▼' : '▲' }}
+      {{ showHeaderBar ? "▼" : "▲" }}
     </span>
   </div>
 
   <div class="header-bar" *ngIf="showHeaderBar">
-    @if (addPer === 'Y') {
-    <button type="button" (click)="addUser()" class="add-button">
-      Add New +
-    </button>
+    @if (addPer === "Y") {
+      <button type="button" (click)="addUser()" class="add-button">
+        Add New +
+      </button>
     }
 
     <!-- Search Field -->
-    <input type="text"
-           [(ngModel)]="searchQuery"
-           placeholder="Search by User name / Email id / Mobile No"
-           class="search-input"
-           (keyup.enter)="onSearch()" />
+    <input
+      type="text"
+      [(ngModel)]="searchQuery"
+      placeholder="Search by User name / Email id / Mobile No"
+      class="search-input"
+      (keyup.enter)="onSearch()"
+    />
 
     <!-- Search Button -->
-    <button type="button" (click)="onSearch()" class="icon-button">
-      🔍
-    </button>
+    <button type="button" (click)="onSearch()" class="icon-button">🔍</button>
 
     <!-- Status Dropdown -->
     <select [(ngModel)]="selectedStatus" class="status-dropdown">
@@ -46,7 +46,6 @@
 <!-- ===== User List Card ===== -->
 <mat-card class="table-card">
   <mat-card-content>
-
     <!-- Summary & Pagination Top -->
     <div class="summary-pagination-row">
       <div class="record-summary">
@@ -54,15 +53,36 @@
       </div>
 
       <div class="pagination">
-        <button (click)="goToFirstPage()" [disabled]="currentPage === 1">« First</button>
-        <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">‹ Prev</button>
+        <button (click)="goToFirstPage()" [disabled]="currentPage === 1">
+          « First
+        </button>
+        <button
+          (click)="goToPage(currentPage - 1)"
+          [disabled]="currentPage === 1"
+        >
+          ‹ Prev
+        </button>
 
-        <button *ngFor="let page of pages()" (click)="goToPage(page)" [class.active]="page === currentPage">
+        <button
+          *ngFor="let page of pages()"
+          (click)="goToPage(page)"
+          [class.active]="page === currentPage"
+        >
           {{ page }}
         </button>
 
-        <button (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages">Next ›</button>
-        <button (click)="goToLastPage()" [disabled]="currentPage === totalPages">Last »</button>
+        <button
+          (click)="goToPage(currentPage + 1)"
+          [disabled]="currentPage === totalPages"
+        >
+          Next ›
+        </button>
+        <button
+          (click)="goToLastPage()"
+          [disabled]="currentPage === totalPages"
+        >
+          Last »
+        </button>
       </div>
     </div>
 
@@ -90,20 +110,39 @@
                 {{ getStatusLabel(user.status) }}
               </span>
             </td>
-            <td style="text-align: left;">
-                @if (viewPer === 'Y') {
-                <button title="View" (click)="viewUser(user.userId)" class="action-button">🔍</button>
+            <td class="actions_btn">
+              @if (viewPer === "Y") {
+                <a
+                  href="javascript:;"
+                  class="view_ic"
+                  title="View"
+                  (click)="viewUser(user.userId)"
+                >
+                  <i class="fa-solid fa-magnifying-glass"></i>
+                </a>
+              }
+              <ng-container *ngIf="user.status === 1 || user.status === 2">
+                @if (editPer === "Y") {
+                  <a
+                    href="javascript:;"
+                    class="edit_ic"
+                    title="Edit"
+                    (click)="editUser(user.userId)"
+                  >
+                    <i class="fa-solid fa-pen"></i>
+                  </a>
                 }
-                <ng-container *ngIf="user.status === 1 || user.status === 2">
-                  @if (editPer === 'Y') {
-                  <button title="Edit" class="action-button" (click)="editUser(user.userId)">✏️</button>
-                  }
-                  @if (deletePer === 'Y') {
-                  <button title="Delete" class="action-button delete" (click)="onDeleteUser(user.userId)">❌</button>
-                  }
-                </ng-container>
-                
-              
+                @if (deletePer === "Y") {
+                  <a
+                    href="javascript:;"
+                    class="del_ic"
+                    title="Delete"
+                    (click)="onDeleteUser(user.userId)"
+                  >
+                    <i class="fa-solid fa-trash"></i>
+                  </a>
+                }
+              </ng-container>
             </td>
           </tr>
           <tr *ngIf="paginatedUsers.length === 0">
@@ -115,16 +154,33 @@
 
     <!-- Bottom Pagination -->
     <div class="pagination">
-      <button (click)="goToFirstPage()" [disabled]="currentPage === 1">« First</button>
-      <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">‹ Prev</button>
+      <button (click)="goToFirstPage()" [disabled]="currentPage === 1">
+        « First
+      </button>
+      <button
+        (click)="goToPage(currentPage - 1)"
+        [disabled]="currentPage === 1"
+      >
+        ‹ Prev
+      </button>
 
-      <button *ngFor="let page of pages()" (click)="goToPage(page)" [class.active]="page === currentPage">
+      <button
+        *ngFor="let page of pages()"
+        (click)="goToPage(page)"
+        [class.active]="page === currentPage"
+      >
         {{ page }}
       </button>
 
-      <button (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages">Next ›</button>
-      <button (click)="goToLastPage()" [disabled]="currentPage === totalPages">Last »</button>
+      <button
+        (click)="goToPage(currentPage + 1)"
+        [disabled]="currentPage === totalPages"
+      >
+        Next ›
+      </button>
+      <button (click)="goToLastPage()" [disabled]="currentPage === totalPages">
+        Last »
+      </button>
     </div>
-
   </mat-card-content>
 </mat-card>

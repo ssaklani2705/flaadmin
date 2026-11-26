@@ -34,7 +34,6 @@
   gap: 12px;
 }
 
-
 /* ===== Actions ===== */
 .actions {
   display: flex;
@@ -53,7 +52,6 @@
   width: 32px; /* match button size */
 }
 
-
 .action-button {
   border: none;
   background: none;
@@ -65,13 +63,10 @@
   color: red;
 }
 
-
 .table-card {
   background-color: #ffffff; /* white */
   color: #333;
   margin-top: 16px;
   border-radius: 6px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1); /* optional for subtle shadow */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* optional for subtle shadow */
 }
-
-

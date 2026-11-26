@@ -39,9 +39,7 @@ import { GalleryGroupIndexComponent } from './GalleryGroup/gallery-group-index/g
 import { AddGalleryGroupComponent } from './GalleryGroup/add-gallery-group/add-gallery-group.component';
 import { ViewGalleryGroupComponent } from './GalleryGroup/view-gallery-group/view-gallery-group.component';
 // import { AddDataComponent } from './CommitteeMembers/add-data/add-data.component';
-import { DataIndexComponent } from './data/data-index/data-index.component';
-import { AddDataComponent } from './data/add-data/add-data.component';
-import { ViewDataComponent } from './data/view-data/view-data.component';
+
 import { DataIndexAdminComponent } from './data-index-admin/data-index-admin/data-index-admin.component';
 import { DataIndexAdminViewComponent } from './data-index-admin/data-index-admin-view/data-index-admin-view.component';
 
@@ -59,7 +57,6 @@ const routes: Routes = [
     component: AddCommitteeMembersComponent,
     data: { renderMode: 'csr' },
   },
-  { path: 'addData', component: AddDataComponent },
 
   //User Management
   { path: 'userManagement', component: UserManagementIndexComponent },
@@ -75,16 +72,7 @@ const routes: Routes = [
     data: { renderMode: 'csr' },
   },
 
-  // data
-  { path: 'data', component: DataIndexComponent },
-  { path: 'addData', component: AddDataComponent },
-  {
-    path: 'viewData/:dataId',
-    component: ViewDataComponent,
-    data: { renderMode: 'csr' },
-  },
-
-//Dashboard
+  //Dashboard
   { path: 'dashboard', component: DashboardComponent },
 
   // Bank User

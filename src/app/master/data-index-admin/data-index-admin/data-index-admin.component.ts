@@ -34,6 +34,7 @@ interface FraudData {
   howDetected: string;
   status: number; // 1 = Draft, 2 = Approval Pending, 3 = Approved
   bankName?: string;
+  noOfDays?: any;
 }
 interface BankItem {
   bankId: number;

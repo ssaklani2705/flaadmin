@@ -1,22 +1,24 @@
 /* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
 
 .btn-back {
-      background-color: black !important;
-      color: white !important;
-    }
+  background-color: black !important;
+  color: white !important;
+}
 
+.btn-reset {
+  background-color: #1bbdc9 !important;
+  color: white !important;
+}
 
-  .btn-reset {
-      background-color: #1bbdc9 !important;
-      color: white !important;
-    }   
-
-
-
-    
 // Base status badge style for Active inactive Deleted
 .status-badge {
   display: inline-block;
@@ -45,7 +47,6 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 }
 //End
 
-
 /*add Buttons */
 .add-button {
   background-color: #007bff;
@@ -61,7 +62,6 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   background-color: #0056b3;
 }
 /*add Buttons end*/
-
 
 /*Search And Go Buttons */
 .icon-button,
@@ -80,7 +80,6 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 }
 /*Search And Go Buttons end*/
 
-
 /*activ,inactive,delete Dropdown */
 .header-bar .status-dropdown {
   min-width: 140px;
@@ -97,8 +96,6 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   border: 1px solid #ccc;
   border-radius: 4px;
 }
-
-
 
 /* ===== Table Card ===== */
 .table-card,
@@ -140,9 +137,6 @@ table th {
   color: gray;
 }
 /* ===== Table Card end===== */
-
-
-
 
 /* ===== Responsive ===== */
 @media (max-width: 768px) {
@@ -233,9 +227,6 @@ table th {
 /* ===== Validation error end===== */
 
 /* ===== Card Color and all===== */
-
-
-
 
 /* ======================================================
    DATEPICKER  (navy header) - applies to all datepickers
@@ -339,7 +330,9 @@ $dp-muted: #9aa5b1;
   }
 
   .mat-calendar-body-cell:hover
-    .mat-calendar-body-cell-content:not(.mat-calendar-body-selected):not(.mat-calendar-body-disabled) {
+    .mat-calendar-body-cell-content:not(.mat-calendar-body-selected):not(
+      .mat-calendar-body-disabled
+    ) {
     background: $dp-navy-light !important;
     color: $dp-navy;
   }
@@ -360,7 +353,8 @@ $dp-muted: #9aa5b1;
   }
 
   // dates before [min]
-  .mat-calendar-body-disabled > .mat-calendar-body-cell-content:not(.mat-calendar-body-selected) {
+  .mat-calendar-body-disabled
+    > .mat-calendar-body-cell-content:not(.mat-calendar-body-selected) {
     color: #cfd6dd !important;
   }
 }
@@ -369,4 +363,30 @@ $dp-muted: #9aa5b1;
 .mat-datepicker-toggle {
   --mat-datepicker-toggle-icon-color: #{$dp-navy};
   --mat-datepicker-toggle-active-icon-color: #{$dp-navy};
+}
+
+.actions_btn {
+  white-space: nowrap;
+
+  a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 35px;
+    height: 30px;
+    margin-right: 6px;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 13px;
+    text-decoration: none;
+  }
+  .edit_ic {
+    background: #8e44ad;
+  }
+  .view_ic {
+    background: #000;
+  }
+  .del_ic {
+    background: #f06b7a;
+  }
 }
