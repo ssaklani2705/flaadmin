@@ -3,5 +3,6 @@ export const environment = {
   apiBaseUrl: 'http://localhost:8080/flaadmin/',
   // apiBaseUrl: 'https://app.webelement.cc/flaadmin/',
   imgUrl: '',
-  // imgUrl: '/IBAESG/',
+  algorithm: 'DES',
+  secretKey: 'PP@S@800',
 };

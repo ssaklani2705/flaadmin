@@ -585,4 +585,22 @@ export class DataProviderService {
       },
     );
   }
+
+updatePassword(request: any) {
+    const token = sessionStorage.getItem('authToken');
+
+
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+
+
+    return this.http.post<any>(
+      `${environment.apiBaseUrl}auth/change_password`,
+      request,
+      { headers },
+    );
+  }
+  
+  
 }
