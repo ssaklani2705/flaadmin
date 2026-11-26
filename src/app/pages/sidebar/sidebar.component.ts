@@ -87,7 +87,7 @@ export class SidebarComponent {
         icon: 'fa fa-cogs',
         expanded: false,
         children: [
-          { moduleId: 2, label: 'Data', route: '/data' },
+          // { moduleId: 2, label: 'Data', route: '/data' },
           { moduleId: 12, label: 'Data-index', route: '/data-index' },
           // { moduleId: 2, label: 'Bank User', route: '/bankuser' },
           // { moduleId: 3, label: 'Gallery', route: '/gallery' },
