@@ -1,6 +1,14 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { Component, Inject, Input, PLATFORM_ID } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import {
+  Component,
+  Inject,
+  Input,
+  OnDestroy,
+  OnInit,
+  PLATFORM_ID,
+} from '@angular/core';
+import { NavigationEnd, Router, RouterModule } from '@angular/router';
+import { filter, Subscription } from 'rxjs';
 
 interface MenuItem {
   moduleId?: number;
@@ -18,13 +26,13 @@ interface MenuItem {
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss'],
 })
-export class SidebarComponent {
+export class SidebarComponent implements OnInit, OnDestroy {
   @Input() isCollapsed = false;
 
   modules: any[] = [];
   menuItems: MenuItem[] = [];
   selectedModuleId: number | null = null; // ✅ Track selected submenu
-
+  private routerSub?: Subscription;
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
     private router: Router,
@@ -51,7 +59,51 @@ export class SidebarComponent {
       allowedModuleIds,
     );
 
+    this.syncActiveWithUrl(this.router.url);
+
+    // ...and on every navigation (dashboard cards, buttons, back button)
+    this.routerSub = this.router.events
+      .pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd))
+      .subscribe((e) => this.syncActiveWithUrl(e.urlAfterRedirects));
+
     // Auto-expand parents if child route is active
+    // this.expandActiveParents(this.menuItems);
+  }
+  ngOnDestroy(): void {
+    this.routerSub?.unsubscribe();
+  }
+
+  private syncActiveWithUrl(fullUrl: string): void {
+    const url = fullUrl.split('?')[0].split('#')[0];
+
+    const flat: MenuItem[] = [];
+    const walk = (items: MenuItem[]) =>
+      items.forEach((i) => {
+        if (i.route) flat.push(i);
+        if (i.children) walk(i.children);
+      });
+    walk(this.menuItems);
+
+    const match = flat.find(
+      (i) => url === i.route || url.startsWith(i.route + '/'),
+    );
+
+    if (!match) return; // e.g. add/edit pages not in the menu: keep the current highlight
+
+    this.selectedModuleId = match.moduleId ?? null;
+
+    // Keep permissions/module name in sync for the page we landed on
+    if (
+      isPlatformBrowser(this.platformId) &&
+      match.moduleId !== undefined &&
+      match.moduleId !== -1
+    ) {
+      const detail = this.getModuleDetail(match.moduleId);
+      if (detail) {
+        sessionStorage.setItem('selectedModuleDetail', JSON.stringify(detail));
+      }
+    }
+
     this.expandActiveParents(this.menuItems);
   }
 

@@ -510,10 +510,7 @@ export class DataIndexAdminComponent
   ): string {
     const value = (main ?? '').trim();
     if (value.toLowerCase() == 'other') {
-      return (
-        (other ?? '').trim() ||
-        '      ssssssssssssssssssssssssssssssssssssssssss'
-      ); // fall back to "Other" if nothing was typed
+      return (other ?? '').trim() || ''; // fall back to "Other" if nothing was typed
     }
     return value;
   }

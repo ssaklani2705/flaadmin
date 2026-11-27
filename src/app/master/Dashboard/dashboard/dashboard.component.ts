@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
-import { NgClass } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser, NgClass } from '@angular/common';
+
 import { CounterDirective } from '../../../classes/counter.directive';
 import { DataProviderService } from '../../../service/data-provider.service';
 
+import { Router } from '@angular/router';
 interface StatCard {
   label: string;
   value: number;
@@ -16,18 +17,19 @@ interface StatCard {
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [NgClass, RouterLink, CounterDirective],
+  imports: [NgClass, CounterDirective],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit {
+  private readonly FILTER_KEY = 'dataIndexAdminState';
   stats: StatCard[] = [
     {
       label: 'Total Records',
       value: 0,
       icon: 'fa-solid fa-copy',
       bgClass: 'total_records_bg',
-      link: '/data',
+      link: '/data-index',
       status: 0,
     },
     {
@@ -35,7 +37,7 @@ export class DashboardComponent {
       value: 0,
       icon: 'fa-regular fa-pen-to-square',
       bgClass: 'draft_bg',
-      link: '/data',
+      link: '/data-index',
       status: 1,
     },
     {
@@ -43,7 +45,7 @@ export class DashboardComponent {
       value: 0,
       icon: 'fa-solid fa-clock-rotate-left',
       bgClass: 'pen_app_bg',
-      link: '/data',
+      link: '/data-index',
       status: 2,
     },
     {
@@ -51,12 +53,16 @@ export class DashboardComponent {
       value: 0,
       icon: 'fa-solid fa-user-check',
       bgClass: 'approved_bg',
-      link: '/data',
+      link: '/data-index',
       status: 3,
     },
   ];
 
-  constructor(private dataProvider: DataProviderService) {}
+  constructor(
+    private dataProvider: DataProviderService,
+    private router: Router,
+    @Inject(PLATFORM_ID) private platformId: Object,
+  ) {}
 
   ngOnInit(): void {
     this.getDashboardStatusCount();
@@ -92,5 +98,21 @@ export class DashboardComponent {
         console.error('Error fetching dashboard status count:', error);
       },
     });
+  }
+
+  openData(stat: StatCard): void {
+    if (isPlatformBrowser(this.platformId)) {
+      sessionStorage.setItem(
+        this.FILTER_KEY,
+        JSON.stringify({
+          currentPage: 1,
+          size: 5,
+          statusIndex: stat.status,
+          search: '',
+          bankId: 0,
+        }),
+      );
+    }
+    this.router.navigate([stat.link]);
   }
 }

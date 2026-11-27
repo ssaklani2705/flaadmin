@@ -5,8 +5,8 @@
         <a
           class="dashboard-stat dashboard-stat-v2"
           [ngClass]="stat.bgClass"
-          [routerLink]="stat.link"
-          [queryParams]="{ status: stat.status }"
+          style="cursor: pointer"
+          (click)="openData(stat)"
         >
           <div class="visual">
             <i [class]="stat.icon"></i>
