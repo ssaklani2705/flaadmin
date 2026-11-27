@@ -27,6 +27,7 @@
         <option value="1">Draft</option>
         <option value="2">Approval Pending</option>
         <option value="3">Approved</option>
+        <option value="4">Delete</option>
       </select>
 
       <select
@@ -164,6 +165,11 @@
                     <span class="approved_ic"
                       ><i class="fa-regular fa-circle-check"></i> Approved</span
                     >
+                  }
+                  @case (4) {
+                    <span class="deleted_ic">
+                      <i class="fa-regular fa-trash-can"></i> Deleted
+                    </span>
                   }
                 }
               </td>

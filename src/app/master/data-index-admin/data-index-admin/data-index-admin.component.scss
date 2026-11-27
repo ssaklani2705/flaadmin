@@ -265,7 +265,8 @@
 /* ===== Status badges ===== */
 .draft_ic,
 .app_pen_ic,
-.approved_ic {
+.approved_ic,
+.deleted_ic {
   display: inline-block;
   padding: 5px 4px;
   border-radius: 4px;
@@ -283,6 +284,9 @@
 }
 .approved_ic {
   background-color: #198754;
+}
+.deleted_ic {
+  background-color: #dc3545;
 }
 
 /* ===== Action buttons ===== */
