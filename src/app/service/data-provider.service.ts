@@ -609,4 +609,14 @@ export class DataProviderService {
     const url = bankId != null ? `${base}/${bankId}` : base;
     return this.http.get<StatusCount[]>(url);
   }
+
+  delBankUser(bankUserId: number, userId: number | null): Observable<any> {
+    return this.http.post<any>(
+      `${environment.apiBaseUrl}admin/deleteBankUser`,
+      {
+        bankUserId,
+        userId,
+      },
+    );
+  }
 }

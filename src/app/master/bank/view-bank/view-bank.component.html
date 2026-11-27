@@ -2,10 +2,16 @@
   <div class="user-header">
     <h2 class="section-title">VIEW BANK</h2>
     <div class="action-buttons">
-      <button mat-raised-button class="btn-back" color="accent" (click)="backToIndexPage()">Back to Index</button>
+      <button
+        mat-raised-button
+        class="btn-back"
+        color="accent"
+        (click)="backToIndexPage()"
+      >
+        Back to Index
+      </button>
     </div>
   </div>
-
 
   <mat-card class="user-info-card">
     <mat-card-content>
@@ -28,59 +34,80 @@
     </mat-card-content>
   </mat-card>
 
+  <mat-card class="bank-users-card">
+    <mat-card-header class="bank-users-header">
+      <mat-card-title class="section-title action-title"
+        >BANK USERS</mat-card-title
+      >
+      <button
+        mat-raised-button
+        color="primary"
+        class="btn-add-user"
+        (click)="addBankUser()"
+      >
+        <mat-icon>add</mat-icon> Add Bank User
+      </button>
+    </mat-card-header>
 
+    <mat-card-content>
+      <div *ngIf="!hasBankUsers" class="no-records-box">
+        No user(s) found for this bank.
+      </div>
 
-<mat-card class="bank-users-card">
-  <mat-card-header class="bank-users-header">
-    <mat-card-title class="section-title action-title">BANK USERS</mat-card-title>
-    <button mat-raised-button color="primary" class="btn-add-user" (click)="addBankUser()">
-      <mat-icon>add</mat-icon> Add Bank User
-    </button>
-  </mat-card-header>
+      <div *ngIf="hasBankUsers" class="table-container">
+        <table mat-table [dataSource]="bankUsers" class="mat-elevation-z1">
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>User Name</th>
+            <td mat-cell *matCellDef="let u">{{ u.name }}</td>
+          </ng-container>
 
-  <mat-card-content>
-    <div *ngIf="!hasBankUsers" class="no-records-box">
-      No user(s) found for this bank.
-    </div>
+          <ng-container matColumnDef="email">
+            <th mat-header-cell *matHeaderCellDef>Email ID</th>
+            <td mat-cell *matCellDef="let u">{{ u.email }}</td>
+          </ng-container>
 
-    <div *ngIf="hasBankUsers" class="table-container">
-      <table mat-table [dataSource]="bankUsers" class="mat-elevation-z1">
+          <ng-container matColumnDef="contactNo">
+            <th mat-header-cell *matHeaderCellDef>Mobile No.</th>
+            <td mat-cell *matCellDef="let u">{{ u.contactNo }}</td>
+          </ng-container>
 
-        <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef> User Name </th>
-          <td mat-cell *matCellDef="let u"> {{ u.name }} </td>
-        </ng-container>
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef>Status</th>
+            <td mat-cell *matCellDef="let u">
+              <span [ngClass]="common.getStatusClass(u.status)">
+                {{ common.getStatusLabel(u.status) }}
+              </span>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Actions</th>
+            <td mat-cell *matCellDef="let u">
+              <button mat-icon-button title="Edit" (click)="editBankUser(u)">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                color="warn"
+                title="Delete"
+                (click)="onDeleteBankUser(u.bankUserId)"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
 
-        <ng-container matColumnDef="email">
-          <th mat-header-cell *matHeaderCellDef> Email ID </th>
-          <td mat-cell *matCellDef="let u"> {{ u.email }} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="contactNo">
-          <th mat-header-cell *matHeaderCellDef> Mobile No. </th>
-          <td mat-cell *matCellDef="let u"> {{ u.contactNo }} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="status">
-          <th mat-header-cell *matHeaderCellDef> Status </th>
-          <td mat-cell *matCellDef="let u">
-            <span [ngClass]="common.getStatusClass(u.status)">
-              {{ common.getStatusLabel(u.status) }}
-            </span>
-          </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="userColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: userColumns;"></tr>
-      </table>
-    </div>
-  </mat-card-content>
-</mat-card>
-
+          <tr mat-header-row *matHeaderRowDef="userColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: userColumns"></tr>
+        </table>
+      </div>
+    </mat-card-content>
+  </mat-card>
 
   <mat-card class="action-history-card">
     <mat-card-header>
-      <mat-card-title class="section-title action-title">ACTION HISTORY</mat-card-title>
+      <mat-card-title class="section-title action-title"
+        >ACTION HISTORY</mat-card-title
+      >
     </mat-card-header>
 
     <mat-card-content>
@@ -89,29 +116,44 @@
       </div>
 
       <div *ngIf="hasTransactionHistory" class="table-container">
-        <table mat-table [dataSource]="transactionhistory" class="mat-elevation-z1" matSort>
-
+        <table
+          mat-table
+          [dataSource]="transactionhistory"
+          class="mat-elevation-z1"
+          matSort
+        >
           <!-- Performed By Column -->
           <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Performed By </th>
-            <td mat-cell *matCellDef="let record"> {{ record.name }} </td>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              Performed By
+            </th>
+            <td mat-cell *matCellDef="let record">{{ record.name }}</td>
           </ng-container>
 
           <!-- Date & Time Column -->
           <ng-container matColumnDef="entryDate">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Date & Time </th>
-            <td mat-cell *matCellDef="let record"> {{ record.entryDate }} </td>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              Date & Time
+            </th>
+            <td mat-cell *matCellDef="let record">{{ record.entryDate }}</td>
           </ng-container>
 
           <!-- Action Column -->
           <ng-container matColumnDef="action">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Action </th>
-            <td mat-cell *matCellDef="let record"> {{ record.action }} </td>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Action</th>
+            <td mat-cell *matCellDef="let record">{{ record.action }}</td>
           </ng-container>
 
-          <tr mat-header-row *matHeaderRowDef="['name','entryDate','action']"></tr>
-          <tr mat-row *matRowDef="let row; columns: ['name','entryDate','action'];"></tr>
+          <tr
+            mat-header-row
+            *matHeaderRowDef="['name', 'entryDate', 'action']"
+          ></tr>
+          <tr
+            mat-row
+            *matRowDef="let row; columns: ['name', 'entryDate', 'action']"
+          ></tr>
         </table>
       </div>
     </mat-card-content>
   </mat-card>
+</div>

@@ -10,11 +10,11 @@
   </div>
 
   <div class="header-bar" *ngIf="showHeaderBar">
-    @if (addPer === "Y") {
+    <!-- @if (addPer === "Y") {
       <button type="button" (click)="addBank()" class="add-button">
         Add New +
       </button>
-    }
+    } -->
     <!-- Search Input -->
     <input
       type="text"
@@ -119,7 +119,7 @@
                 <i class="fa-solid fa-magnifying-glass"></i>
               </a>
               <!-- } -->
-              <ng-container *ngIf="bank.status === 1 || bank.status === 2">
+              <!-- <ng-container *ngIf="bank.status === 1 || bank.status === 2">
                 @if (editPer === "Y") {
                   <a
                     href="javascript:;"
@@ -140,7 +140,7 @@
                     <i class="fa-solid fa-trash"></i>
                   </a>
                 }
-              </ng-container>
+              </ng-container> -->
             </td>
           </tr>
 

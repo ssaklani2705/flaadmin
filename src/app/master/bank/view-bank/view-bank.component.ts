@@ -13,6 +13,7 @@ import { Common } from '../../../classes/common';
 import { DataProviderService } from '../../../service/data-provider.service';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AddBankUserDialogComponent } from '../add-bank-user-dialog/add-bank-user-dialog.component';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-view-bank',
@@ -41,7 +42,7 @@ export class ViewBankComponent {
   transactionhistory: any[] = []; // ✅ initialized to avoid undefined error
   common = new Common();
   bankUsers: any[] = [];
-  userColumns = ['name', 'email', 'contactNo', 'status'];
+  userColumns = ['name', 'email', 'contactNo', 'status', 'actions'];
 
   constructor(
     private route: ActivatedRoute,
@@ -49,8 +50,9 @@ export class ViewBankComponent {
     private router: Router,
     private dialog: MatDialog,
   ) {}
-
+  userId: any;
   ngOnInit(): void {
+    this.userId = sessionStorage.getItem('userId');
     this.bankId = +this.route.snapshot.paramMap.get('bankId')!;
     const queryParams = this.route.snapshot.queryParamMap;
     this.currentPage = Number(queryParams.get('currentPage')) || 1;
@@ -139,6 +141,47 @@ export class ViewBankComponent {
         console.error('Failed to fetch bank users', err);
         this.bankUsers = [];
       },
+    });
+  }
+
+  editBankUser(user: any) {
+    this.dialog
+      .open(AddBankUserDialogComponent, {
+        width: '500px',
+        disableClose: true,
+        data: { bankId: this.bankId, bankName: this.bank?.name, user }, // user present = edit mode
+      })
+      .afterClosed()
+      .subscribe((saved) => {
+        if (saved) this.getBankDetailsById();
+      });
+  }
+
+  onDeleteBankUser(id: number) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you want to delete this bank user?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Delete',
+      confirmButtonColor: '#d33',
+    }).then((result) => {
+      if (!result.isConfirmed) return;
+
+      this.dataprovider.delBankUser(id, this.userId).subscribe({
+        next: (res: any) => {
+          Swal.fire(
+            res.data ? 'Deleted!' : 'Warning!',
+            res.message,
+            res.data ? 'success' : 'warning',
+          );
+          if (res.success) {
+            this.getBankDetailsById();
+          }
+        },
+        error: () =>
+          Swal.fire('Error!', 'Unable to delete bank user.', 'error'),
+      });
     });
   }
 }
