@@ -92,7 +92,7 @@ export class ViewBankComponent {
         this.bank = {
           name: response.name,
           status: response.status,
-          bankType: response.bankType,
+          associationName: response.associationName,
         };
 
         this.transactionhistory = (response.transactionhistory || []).sort(

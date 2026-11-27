@@ -19,21 +19,24 @@
     <input
       type="text"
       [(ngModel)]="searchQuery"
-      placeholder="Search by Bank name / Bank Type"
+      placeholder="Search by Bank name"
       class="search-input"
       (keyup.enter)="onSearch()"
     />
 
     <!-- Search Button -->
     <button type="button" (click)="onSearch()" class="icon-button">🔍</button>
-
-    <!-- Status Dropdown -->
-    <select [(ngModel)]="selectedStatus" class="status-dropdown">
-      <option value="">--All Status--</option>
-      <option value="1">Active</option>
-      <option value="2">Inactive</option>
-      <option value="3">Deleted</option>
+    <select
+      [(ngModel)]="selectedAssociation"
+      class="status-dropdown"
+      (ngModelChange)="onAssociationChange($event)"
+    >
+      <option value="">--All Category--</option>
+      @for (a of associationList; track a.id) {
+        <option [value]="a.id">{{ a.name }}</option>
+      }
     </select>
+    <!-- Status Dropdown -->
 
     <!-- Go Button -->
     <button type="button" (click)="onChangeRecordsPerPage()" class="go-button">
@@ -92,8 +95,8 @@
           <tr>
             <th>#</th>
             <th>Bank Name</th>
-            <th>Bank Type</th>
-            <th>Status</th>
+            <th>Category</th>
+
             <th>Action</th>
           </tr>
         </thead>
@@ -102,12 +105,7 @@
           <tr *ngFor="let bank of paginatedBanks; let i = index">
             <td>{{ (currentPage - 1) * recordsPerPage + i + 1 }}</td>
             <td>{{ bank.name }}</td>
-            <td>{{ bank.bankType }}</td>
-            <td>
-              <span [ngClass]="common.getStatusClass(bank.status)">
-                {{ common.getStatusLabel(bank.status) }}
-              </span>
-            </td>
+            <td>{{ bank.associationName }}</td>
 
             <td class="actions_btn">
               <a

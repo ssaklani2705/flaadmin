@@ -18,7 +18,14 @@ interface Bank {
   bankId: number;
   name: string;
   status: number;
-  bankType: string;
+  associateId: number;
+  associationName: string;
+}
+
+export interface AssociationItem {
+  id: number;
+  name: string;
+  status?: number;
 }
 
 @Component({
@@ -115,6 +122,7 @@ export class BankIndexComponent implements OnInit, OnDestroy {
 
     this.getBankDetails();
     this.getActiveBankTypes();
+    this.loadAssociations();
   }
 
   ngOnDestroy() {
@@ -129,6 +137,7 @@ export class BankIndexComponent implements OnInit, OnDestroy {
         this.currentPage = +s.currentPage || 1;
         this.statusIndex = +s.statusIndex || 0;
         this.search = s.search || '';
+        this.associationId = +s.associationId || 0;
       } catch {
         /* ignore corrupted state */
       }
@@ -149,6 +158,7 @@ export class BankIndexComponent implements OnInit, OnDestroy {
         size: this.size,
         statusIndex: this.statusIndex,
         search: this.search,
+        associationId: this.associationId,
       }),
     );
   }
@@ -164,7 +174,13 @@ export class BankIndexComponent implements OnInit, OnDestroy {
     this.saveState();
 
     this.dataprovider
-      .getBankDetails(this.page, this.size, this.statusIndex, this.search)
+      .getBankDetails(
+        this.page,
+        this.size,
+        this.statusIndex,
+        this.search,
+        this.associationId,
+      )
       .subscribe({
         next: (response) => {
           // If the last record of a page was deleted, step back one page
@@ -229,6 +245,8 @@ export class BankIndexComponent implements OnInit, OnDestroy {
 
   onChangeRecordsPerPage(): void {
     this.statusIndex = this.selectedStatus === '' ? 0 : +this.selectedStatus;
+    this.associationId =
+      this.selectedAssociation === '' ? 0 : +this.selectedAssociation;
     this.currentPage = 1;
     this.page = 0;
     this.getBankDetails();
@@ -298,5 +316,25 @@ export class BankIndexComponent implements OnInit, OnDestroy {
 
   addBank() {
     this.router.navigate(['/add-bank']);
+  }
+
+  associationList: AssociationItem[] = [];
+  selectedAssociation = '';
+  associationId = 0;
+
+  private loadAssociations(): void {
+    this.dataprovider.associationCategory().subscribe({
+      next: (res: any) => {
+        this.associationList = Array.isArray(res) ? res : (res?.data ?? []);
+      },
+      error: (e) => console.error('Error loading associations:', e),
+    });
+  }
+  onAssociationChange(value: string): void {
+    this.selectedAssociation = value;
+    this.associationId = value === '' ? 0 : +value;
+    this.currentPage = 1;
+    this.page = 0;
+    this.getBankDetails();
   }
 }
