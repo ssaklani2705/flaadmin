@@ -256,19 +256,19 @@
               </tr>
             </thead>
             <tbody>
-              @for (h of history; track $index; let i = $index) {
-                <tr>
-                  <td>{{ i + 1 }}</td>
-                  <td>{{ h.actionDate | date: "dd-MM-yyyy hh:mm a" }}</td>
-                  <td>{{ h.userName }}</td>
-                  <td>{{ h.action }}</td>
-                </tr>
-              } @empty {
-                <tr>
-                  <td colspan="4" class="no-data">No history found</td>
-                </tr>
-              }
-            </tbody>
+  @for (h of history; track $index; let i = $index) {
+    <tr>
+      <td>{{ i + 1 }}</td>
+      <td>{{ h.entryDate }}</td>
+      <td>{{ h.name || 'NA' }}</td>
+      <td>{{ h.action || 'NA' }}</td>
+    </tr>
+  } @empty {
+    <tr>
+      <td colspan="4" class="no-data">No history found</td>
+    </tr>
+  }
+</tbody>
           </table>
         </div>
       </div>

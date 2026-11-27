@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -22,17 +22,54 @@ import { ValidationUtils } from '../../../classes/ValidationUtils';
   templateUrl: './add-bank-user-dialog.component.html',
   styleUrls: ['./add-bank-user-dialog.component.scss']
 })
-export class AddBankUserDialogComponent {
+
+export class AddBankUserDialogComponent implements OnInit {
   user: any = {};
   nameError = '';
   isSubmitting = false;
+  isLoading = false;
+  bankUserId: number | null = null;
   userId: any = sessionStorage.getItem('userId');
+
+  get isEditMode(): boolean {
+    return this.bankUserId !== null;
+  }
 
   constructor(
     private dataprovider: DataProviderService,
     private dialogRef: MatDialogRef<AddBankUserDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { bankId: number; bankName: string }
+    @Inject(MAT_DIALOG_DATA)
+    public data: { bankId: number; bankName: string; user?: any }
   ) {}
+
+  ngOnInit(): void {
+    if (this.data.user?.bankUserId) {
+      this.bankUserId = this.data.user.bankUserId;
+      this.loadUser();
+    }
+  }
+
+  private loadUser(): void {
+    if (this.bankUserId === null) return;
+    this.isLoading = true;
+
+    this.dataprovider.getBankUserById(this.bankUserId).subscribe({
+      next: (u: any) => {
+        this.isLoading = false;
+        this.user = {
+          name: u?.name ?? '',
+          email: u?.email ?? '',
+          mobile: u?.contactNo ?? u?.mobile ?? '',
+          status: u?.status,
+        };
+      },
+      error: () => {
+        this.isLoading = false;
+        alert('Unable to load user details.');
+        this.dialogRef.close(false);
+      },
+    });
+  }
 
   allowOnlyNumbers(event: KeyboardEvent) {
     const charCode = event.which ? event.which : event.keyCode;
@@ -47,6 +84,11 @@ export class AddBankUserDialogComponent {
   }
 
   onReset(form: any) {
+    if (this.isEditMode) {
+      this.nameError = '';
+      this.loadUser();          // restore the saved values
+      return;
+    }
     form.resetForm();
     this.user = {};
     this.nameError = '';
@@ -65,13 +107,13 @@ export class AddBankUserDialogComponent {
     this.isSubmitting = true;
 
     const payload = {
-      bankUserId: -1,
+      bankUserId: this.bankUserId ?? -1,
       name: this.user.name,
       email: this.user.email,
       contactNo: this.user.mobile,
       status: this.user.status,
       bankId: this.data.bankId,
-      userId: this.userId ? Number(this.userId) : null
+      userId: this.userId ? Number(this.userId) : null,
     };
 
     this.dataprovider.updateBankUser(payload).subscribe({
@@ -79,7 +121,7 @@ export class AddBankUserDialogComponent {
         this.isSubmitting = false;
         if (res.success) {
           alert(res.message);
-          this.dialogRef.close(true);   // tells View Bank to refresh
+          this.dialogRef.close(true);
         } else {
           alert('Error: ' + res.message);
         }
@@ -87,7 +129,7 @@ export class AddBankUserDialogComponent {
       error: (err) => {
         this.isSubmitting = false;
         alert(err.error?.message || 'Unexpected error occurred');
-      }
+      },
     });
   }
 }

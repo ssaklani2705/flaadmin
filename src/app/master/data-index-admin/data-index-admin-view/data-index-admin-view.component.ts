@@ -61,7 +61,7 @@ export class DataIndexAdminViewComponent implements OnInit {
           this.data = null; // shows "Record not found."
         } else {
           this.data = res.data;
-          this.history = res.history ?? [];
+          this.history = res.history ?? res.history ?? [];
         }
         this.loading = false;
       },

@@ -621,6 +621,10 @@ export class DataProviderService {
     );
   }
 
+  getBankUserById(userId: number) {
+  // Use the same base URL / path prefix as your other bank user calls
+  return this.http.get<any>(`${environment.apiBaseUrl}admin/${userId}`);
+}
   associationCategory() {
     return this.http.get<any[]>(
       `${environment.apiBaseUrl}admin/association/list`,

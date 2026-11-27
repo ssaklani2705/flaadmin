@@ -135,19 +135,19 @@ export class SidebarComponent implements OnInit, OnDestroy {
         ],
       },
       {
-        label: 'Activity',
+        moduleId: 12,
+        label: 'Data',
         icon: 'fa fa-cogs',
-        expanded: false,
-        children: [
-          // { moduleId: 2, label: 'Data', route: '/data' },
-          { moduleId: 12, label: 'Data-index', route: '/data-index' },
-          // { moduleId: 2, label: 'Bank User', route: '/bankuser' },
-          // { moduleId: 3, label: 'Gallery', route: '/gallery' },
-          // { moduleId: 4, label: 'Regulatory Links', route: '/regulatorylinks' },
-          // { moduleId: 5, label: 'Events and Webinar', route: '/eventsandwebinar' },
-          // { moduleId: 6, label: 'Knowledge Sharing', route: '/knowledgesharing' },
-        ],
+        route: '/data-index',
       },
+      // {
+      //   label: 'Activity',
+      //   icon: 'fa fa-cogs',
+      //   expanded: false,
+      //   children: [
+      //     { moduleId: 12, label: 'Data', route: '/data-index' }
+      //   ],
+      // },
       {
         label: 'Reports',
         icon: 'fa fa-bar-chart',

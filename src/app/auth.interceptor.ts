@@ -152,7 +152,7 @@ export class AuthInterceptor implements HttpInterceptor {
     // if (req.url.includes('/auth/login') || req.url.includes('/auth/captcha') ||  req.url.includes('/auth/forgotpasswordMail') ||  req.url.includes('/auth/forgotpassword')) {
     //   return next.handle(req);
     // }
-        if (req.url.includes('/auth/login') || req.url.includes('/auth/captcha')) {
+        if (req.url.includes('/auth/login') || req.url.includes('/auth/captcha') || req.url.includes('/auth/forgotpasswordMail') || req.url.includes('/auth/forgotpassword')) {
       return next.handle(req);
     }
 
