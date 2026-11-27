@@ -153,3 +153,36 @@ footer {
   font-size: 0.9rem;
   margin-left: 10px;
 }
+
+
+//Login Page
+//New Added
+input {
+  width: 100%;
+  box-sizing: border-box;   // add this
+  padding: 10px;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  border-radius: 2px;
+  font-size: 14px;
+}
+
+.captcha-container {
+  display: flex;
+  align-items: center;
+
+  input {
+    flex: 1;
+    min-width: 0;   // lets the input shrink inside the flex row
+  }
+
+  .refresh-btn {
+    margin-left: 5px;
+    width: 32px;
+    flex-shrink: 0;
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+  }
+}

@@ -1,7 +1,10 @@
-<h2 mat-dialog-title>ADD BANK USER</h2>
+<h2 mat-dialog-title>{{ isEditMode ? 'EDIT BANK USER' : 'ADD BANK USER' }}</h2>
 
 <form #bankUserForm="ngForm" (ngSubmit)="onSubmit(bankUserForm)" novalidate>
   <mat-dialog-content class="dialog-content">
+     @if (isLoading) {
+      <div>Loading...</div>
+    }
 
     <div class="bank-label">Bank: <b>{{ data.bankName }}</b></div>
 
@@ -46,8 +49,8 @@
     <button mat-stroked-button type="button" (click)="onCancel()">Cancel</button>
     <button mat-stroked-button color="warn" type="button" (click)="onReset(bankUserForm)">Reset</button>
     <button mat-raised-button color="primary" type="submit"
-            [disabled]="bankUserForm.invalid || isSubmitting">
-      {{ isSubmitting ? 'Submitting...' : 'Submit' }}
+            [disabled]="bankUserForm.invalid || isSubmitting || isLoading">
+      {{ isSubmitting ? 'Submitting...' : (isEditMode ? 'Update' : 'Submit') }}
     </button>
   </mat-dialog-actions>
 </form>

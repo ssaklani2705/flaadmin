@@ -134,7 +134,7 @@ export class LoginComponent implements OnInit {
       },
       error: (err) => {
         console.error('Forgot password error:', err);
-        alert(err.error?.message || 'Error while processing request.');
+        alert(err);
         this.isProcessingForgotPassword = false;
       },
     });
