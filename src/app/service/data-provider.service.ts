@@ -73,9 +73,10 @@ export class DataProviderService {
     size: any,
     statusIndex: any,
     search: any,
+    associationId: number = 0,
   ): Observable<any> {
     return this.http.get(
-      `${environment.apiBaseUrl}admin/getBankDetails?page=${page}&size=${size}&statusIndex=${statusIndex}&search=${search}`,
+      `${environment.apiBaseUrl}admin/getBankDetails?page=${page}&size=${size}&statusIndex=${statusIndex}&search=${search}&associationId=${associationId}`,
     );
   }
   getBankById(id: any): Observable<any> {
@@ -624,4 +625,9 @@ export class DataProviderService {
   // Use the same base URL / path prefix as your other bank user calls
   return this.http.get<any>(`${environment.apiBaseUrl}admin/${userId}`);
 }
+  associationCategory() {
+    return this.http.get<any[]>(
+      `${environment.apiBaseUrl}admin/association/list`,
+    );
+  }
 }

@@ -67,7 +67,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
       .subscribe((e) => this.syncActiveWithUrl(e.urlAfterRedirects));
 
     // Auto-expand parents if child route is active
-    // this.expandActiveParents(this.menuItems);
+    this.expandActiveParents(this.menuItems);
   }
   ngOnDestroy(): void {
     this.routerSub?.unsubscribe();
